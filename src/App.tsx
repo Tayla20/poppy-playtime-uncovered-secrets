@@ -12,6 +12,9 @@ import Contact from "./pages/Contact";
 import Documents from "./pages/Documents";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import Orphanage from "./pages/Orphanage";
+import Prison from "./pages/Prison";
+import Departments from "./pages/Departments";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +32,9 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/documents" element={<Documents />} />
+          <Route path="/orphanage" element={<Orphanage />} />
+          <Route path="/prison" element={<Prison />} />
+          <Route path="/departments" element={<Departments />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
