@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Eye, Search } from "lucide-react";
+import { Eye, Search, LogIn } from "lucide-react";
 
 const Index = () => {
   const [glitchActive, setGlitchActive] = useState(false);
@@ -45,8 +45,8 @@ const Index = () => {
             <Link to="/factory" className="hover:text-pink-200 transition-colors">Factory Tour</Link>
             <Link to="/contact" className="hover:text-pink-200 transition-colors">Contact</Link>
             {secretFound && (
-              <Link to="/documents" className="text-red-200 hover:text-red-100 transition-colors animate-pulse">
-                [CLASSIFIED]
+              <Link to="/login" className="text-green-200 hover:text-green-100 transition-colors animate-pulse">
+                [STAFF LOGIN]
               </Link>
             )}
           </nav>
@@ -137,13 +137,13 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Hidden Element */}
+      {/* Hidden Elements */}
       {secretFound && (
         <div className="fixed bottom-4 right-4 animate-pulse">
-          <Link to="/documents">
-            <Button variant="destructive" size="sm" className="bg-red-600 hover:bg-red-700">
-              <Eye className="w-4 h-4 mr-2" />
-              View Files
+          <Link to="/login">
+            <Button variant="destructive" size="sm" className="bg-green-600 hover:bg-green-700">
+              <LogIn className="w-4 h-4 mr-2" />
+              Staff Access
             </Button>
           </Link>
         </div>

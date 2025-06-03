@@ -1,27 +1,129 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, File, Lock, Search } from "lucide-react";
+import { Eye, File, Lock, Search, LogOut, User } from "lucide-react";
+
+interface User {
+  username: string;
+  role: 'staff' | 'researcher' | 'executive';
+  name: string;
+  clearanceLevel: number;
+}
 
 const Documents = () => {
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
-  const [accessGranted, setAccessGranted] = useState(false);
-  const [password, setPassword] = useState("");
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
 
-  const handlePasswordSubmit = () => {
-    if (password.toLowerCase() === "poppy" || password === "1006") {
-      setAccessGranted(true);
+  useEffect(() => {
+    const userData = localStorage.getItem('playtime_user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    } else {
+      navigate('/login');
     }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('playtime_user');
+    navigate('/');
   };
 
   const documents = [
+    // Level 1 - Staff Access
+    {
+      id: "incident-001",
+      title: "Minor Incident Report",
+      date: "1995-07-10",
+      classification: "INTERNAL",
+      clearanceLevel: 1,
+      content: `INCIDENT REPORT - MINOR
+Date: July 10, 1995
+Location: Production Floor A
+Reported by: Security Guard Johnson
+
+A toy malfunction occurred during routine testing. Subject 1170 exhibited unexpected movement during power-down sequence. No injuries reported.
+
+Maintenance team notified. Issue resolved by replacing power coupling.
+
+Status: Closed`,
+    },
+    {
+      id: "staff-memo",
+      title: "Staff Safety Memo",
+      date: "1995-06-15",
+      classification: "INTERNAL", 
+      clearanceLevel: 1,
+      content: `STAFF SAFETY MEMO
+Date: June 15, 1995
+To: All Production Staff
+
+Reminder: When working with larger prototype toys, always maintain minimum 10-foot distance during active testing.
+
+New safety protocols:
+- Wear protective equipment at all times
+- Report any unusual toy behavior immediately
+- Do not approach toys during "rest mode"
+
+Management`,
+    },
+
+    // Level 2 - Researcher Access
+    {
+      id: "test-results",
+      title: "Behavioral Test Results",
+      date: "1995-08-01",
+      classification: "CONFIDENTIAL",
+      clearanceLevel: 2,
+      content: `BEHAVIORAL ANALYSIS REPORT
+Date: August 1, 1995
+Subject: Multiple prototype subjects
+Researcher: Dr. Sarah Chen
+
+Observations:
+- Subjects show increased attachment to researchers
+- Aggressive responses when separated from "favored" humans
+- Intelligence levels exceed initial projections
+- Subjects appear to communicate with each other
+
+Recommendation: Further study required before public release.
+
+[WARNING: Some behaviors concerning - request supervisory review]`,
+    },
+    {
+      id: "psychological-profile",
+      title: "Subject Psychological Profiles",
+      date: "1995-07-25",
+      classification: "CONFIDENTIAL",
+      clearanceLevel: 2,
+      content: `PSYCHOLOGICAL EVALUATION
+Date: July 25, 1995
+Evaluator: Dr. Roberts
+
+Subject 1006 "Huggy Wuggy":
+- Displays protective instincts
+- Forms strong emotional bonds
+- Shows signs of jealousy when attention diverted
+- Intelligence: Above average child level
+
+Subject 1170 "Kissy Missy":
+- Empathetic responses
+- Nurturing behavior patterns
+- Responds to emotional distress in others
+- Potential therapeutic applications
+
+Note: Subjects seem to understand more than they let on.`,
+    },
+
+    // Level 3 - Executive Access (Original documents plus new ones)
     {
       id: "exp-1006",
       title: "Experiment 1006",
       date: "1995-03-15",
       classification: "TOP SECRET",
+      clearanceLevel: 3,
       content: `EXPERIMENT LOG 1006
 Date: March 15, 1995
 Subject: Project Playtime Initiative
@@ -38,33 +140,34 @@ Note: Recommend immediate review of containment protocols.
 [DOCUMENT ENDS]`,
     },
     {
-      id: "missing-employees",
-      title: "Employee Status Report",
-      date: "1995-08-22",
-      classification: "CONFIDENTIAL",
-      content: `EMPLOYEE STATUS REPORT
-Date: August 22, 1995
-Department: Human Resources
+      id: "bigger-bodies",
+      title: "Bigger Bodies Initiative",
+      date: "1990-12-01",
+      classification: "TOP SECRET",
+      clearanceLevel: 3,
+      content: `PROJECT: BIGGER BODIES INITIATIVE
+Phase: Alpha Testing
+Date: December 1, 1990
+Lead: Dr. Ludwig
 
-MISSING PERSONNEL:
-- Dr. Sarah Chen (Research Division) - Last seen 08/15/95
-- Marcus Webb (Security) - Last seen 08/16/95  
-- Jennifer Adams (Testing) - Last seen 08/17/95
-- Robert Klein (Maintenance) - Last seen 08/18/95
+Objective: Create large-scale toys capable of independent operation and emotional attachment.
 
-Total missing this month: 47 employees
+Current Subjects:
+- Subject 1006: "Huggy Wuggy" - 17 feet tall, blue fur, extendable arms
+- Subject 1170: "Kissy Missy" - 15 feet tall, pink fur, heightened empathy protocols
 
-Security footage from Testing Area 02 shows employees entering but no footage of them leaving. All access cards remain active. Personal belongings found in lockers untouched.
+The synthetic biology integration is showing promise. Subjects display genuine emotional responses and protective instincts. However, power requirements are enormous.
 
-Dr. Ludwig has instructed all staff that missing employees have been "transferred to other projects." No further questions are to be asked.
+Dr. Ludwig's notes: "We need a renewable energy source. Something... organic."
 
-[CLASSIFIED]`,
+[WARNING: LEVEL 3 CLEARANCE REQUIRED FOR FULL DOCUMENTATION]`,
     },
     {
       id: "hour-of-joy",
       title: "Incident Report - Hour of Joy",
       date: "1995-08-08",
       classification: "EYES ONLY",
+      clearanceLevel: 3,
       content: `INCIDENT REPORT
 Date: August 8, 1995, 11:00 AM
 Event Code Name: "Hour of Joy"
@@ -85,70 +188,106 @@ Facility sealed indefinitely. Cover story: Gas leak closure.
 [END REPORT]`,
     },
     {
-      id: "bigger-bodies",
-      title: "Bigger Bodies Initiative",
-      date: "1990-12-01",
-      classification: "SECRET",
-      content: `PROJECT: BIGGER BODIES INITIATIVE
-Phase: Alpha Testing
-Date: December 1, 1990
+      id: "missing-employees",
+      title: "Employee Status Report",
+      date: "1995-08-22",
+      classification: "TOP SECRET",
+      clearanceLevel: 3,
+      content: `EMPLOYEE STATUS REPORT
+Date: August 22, 1995
+Department: Human Resources
 
-Objective: Create large-scale toys capable of independent operation and emotional attachment.
+MISSING PERSONNEL:
+- Dr. Sarah Chen (Research Division) - Last seen 08/15/95
+- Marcus Webb (Security) - Last seen 08/16/95  
+- Jennifer Adams (Testing) - Last seen 08/17/95
+- Robert Klein (Maintenance) - Last seen 08/18/95
 
-Current Subjects:
-- Subject 1006: "Huggy Wuggy" - 17 feet tall, blue fur, extendable arms
-- Subject 1170: "Kissy Missy" - 15 feet tall, pink fur, heightened empathy protocols
+Total missing this month: 47 employees
 
-The synthetic biology integration is showing promise. Subjects display genuine emotional responses and protective instincts. However, power requirements are enormous.
+Security footage from Testing Area 02 shows employees entering but no footage of them leaving. All access cards remain active. Personal belongings found in lockers untouched.
 
-Dr. Ludwig's notes: "We need a renewable energy source. Something... organic."
+Dr. Ludwig has instructed all staff that missing employees have been "transferred to other projects." No further questions are to be asked.
 
-[WARNING: LEVEL 5 CLEARANCE REQUIRED FOR FULL DOCUMENTATION]`,
+[CLASSIFIED]`,
+    },
+    {
+      id: "energy-source",
+      title: "Alternative Energy Research",
+      date: "1994-11-30",
+      classification: "EYES ONLY",
+      clearanceLevel: 3,
+      content: `CONFIDENTIAL RESEARCH NOTES
+Date: November 30, 1994
+Researcher: Dr. Ludwig
+Project: Sustainable Power Source
+
+Traditional power sources insufficient for Bigger Bodies project. Subjects require enormous energy input to maintain consciousness and mobility.
+
+Discovery: Organic matter provides more efficient energy conversion. Initial tests with plant matter showed 300% efficiency increase.
+
+Further research into... alternative organic sources shows promising results. Human bioelectric fields may be key to solving power crisis.
+
+Note: Ethics committee review bypassed due to project urgency.
+
+[AUTHORIZATION: EXECUTIVE LEVEL ONLY]`,
+    },
+    {
+      id: "prototype-ai",
+      title: "Artificial Intelligence Integration",
+      date: "1993-05-20",
+      classification: "TOP SECRET",
+      clearanceLevel: 3,
+      content: `AI INTEGRATION REPORT
+Date: May 20, 1993
+Lead Researcher: Dr. Ludwig
+Project: Consciousness Transfer
+
+Breakthrough achieved in artificial consciousness development. Successfully transferred human personality patterns into prototype subjects.
+
+Test Subject: Employee #4732 (volunteer)
+Result: Complete personality integration with Subject 1006
+Retention: 94% of original memories and behaviors
+
+Side effects:
+- Increased aggression toward perceived threats
+- Protective instincts amplified beyond normal parameters
+- Memories of "previous life" cause distress
+
+Recommendation: Continue testing with additional volunteers.
+
+[VOLUNTEER PROGRAM EXPANDED - SEE ATTACHED FORMS]`,
     }
   ];
 
-  if (!accessGranted) {
-    return (
-      <div className="min-h-screen bg-black text-green-400 font-mono">
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-md mx-auto">
-            <div className="text-center mb-8">
-              <Lock className="w-16 h-16 mx-auto mb-4" />
-              <h1 className="text-2xl font-bold mb-4">RESTRICTED ACCESS</h1>
-              <p className="mb-6">This area requires authorization</p>
-            </div>
-            
-            <div className="space-y-4">
-              <input
-                type="password"
-                placeholder="Enter access code..."
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-3 bg-gray-900 border border-green-400 text-green-400 rounded"
-                onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
-              />
-              <Button 
-                onClick={handlePasswordSubmit}
-                className="w-full bg-green-600 hover:bg-green-700"
-              >
-                ACCESS
-              </Button>
-              <div className="text-center">
-                <Link to="/" className="text-green-400 hover:text-green-300 underline">
-                  Return to Main Site
-                </Link>
-              </div>
-            </div>
-            
-            <div className="mt-8 text-xs text-green-600 text-center">
-              <p>Hint: What was the first doll's name?</p>
-              <p>Or try the experiment number...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  // Filter documents based on user clearance level
+  const accessibleDocuments = user 
+    ? documents.filter(doc => doc.clearanceLevel <= user.clearanceLevel)
+    : [];
+
+  if (!user) {
+    return <div className="min-h-screen bg-gray-900 text-green-400 font-mono flex items-center justify-center">
+      <div>Loading...</div>
+    </div>;
   }
+
+  const getRoleColor = (role: string) => {
+    switch (role) {
+      case 'staff': return 'text-green-400';
+      case 'researcher': return 'text-yellow-400';
+      case 'executive': return 'text-red-400';
+      default: return 'text-green-400';
+    }
+  };
+
+  const getRoleDisplay = (role: string) => {
+    switch (role) {
+      case 'staff': return 'STAFF LEVEL';
+      case 'researcher': return 'RESEARCHER LEVEL';
+      case 'executive': return 'EXECUTIVE LEVEL';
+      default: return 'UNKNOWN';
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-green-400 font-mono">
@@ -156,11 +295,23 @@ Dr. Ludwig's notes: "We need a renewable energy source. Something... organic."
       <header className="bg-gray-800 border-b border-green-400 p-4">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-xl font-bold">PLAYTIME CO. - CLASSIFIED DATABASE</h1>
-          <Link to="/">
-            <Button variant="outline" size="sm" className="border-green-400 text-green-400 hover:bg-green-400 hover:text-black">
-              Exit System
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4" />
+              <span className={`text-sm ${getRoleColor(user.role)}`}>
+                {user.name} | {getRoleDisplay(user.role)} | Clearance {user.clearanceLevel}
+              </span>
+            </div>
+            <Button 
+              onClick={handleLogout}
+              variant="outline" 
+              size="sm" 
+              className="border-red-400 text-red-400 hover:bg-red-400 hover:text-black"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
             </Button>
-          </Link>
+          </div>
         </div>
       </header>
 
@@ -170,10 +321,10 @@ Dr. Ludwig's notes: "We need a renewable energy source. Something... organic."
           <div className="md:col-span-1">
             <h2 className="text-lg font-bold mb-4 flex items-center">
               <File className="w-5 h-5 mr-2" />
-              CLASSIFIED FILES
+              ACCESSIBLE FILES ({accessibleDocuments.length})
             </h2>
             <div className="space-y-2">
-              {documents.map((doc) => (
+              {accessibleDocuments.map((doc) => (
                 <Card 
                   key={doc.id}
                   className={`cursor-pointer transition-all bg-gray-800 border-green-400 hover:bg-gray-700 ${
@@ -184,9 +335,18 @@ Dr. Ludwig's notes: "We need a renewable energy source. Something... organic."
                   <CardContent className="p-3">
                     <div className="flex items-center justify-between mb-1">
                       <h3 className="font-bold text-sm text-green-400">{doc.title}</h3>
-                      <span className="text-xs text-red-400">{doc.classification}</span>
+                      <span className={`text-xs ${
+                        doc.classification === 'INTERNAL' ? 'text-green-400' :
+                        doc.classification === 'CONFIDENTIAL' ? 'text-yellow-400' :
+                        'text-red-400'
+                      }`}>
+                        {doc.classification}
+                      </span>
                     </div>
                     <p className="text-xs text-gray-400">{doc.date}</p>
+                    <div className="text-xs text-blue-400 mt-1">
+                      Clearance Level {doc.clearanceLevel}
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -200,20 +360,24 @@ Dr. Ludwig's notes: "We need a renewable energy source. Something... organic."
                 <CardHeader>
                   <CardTitle className="text-green-400 flex items-center">
                     <Eye className="w-5 h-5 mr-2" />
-                    {documents.find(d => d.id === selectedDoc)?.title}
+                    {accessibleDocuments.find(d => d.id === selectedDoc)?.title}
                   </CardTitle>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">
-                      {documents.find(d => d.id === selectedDoc)?.date}
+                      {accessibleDocuments.find(d => d.id === selectedDoc)?.date}
                     </span>
-                    <span className="text-red-400">
-                      {documents.find(d => d.id === selectedDoc)?.classification}
+                    <span className={`${
+                      accessibleDocuments.find(d => d.id === selectedDoc)?.classification === 'INTERNAL' ? 'text-green-400' :
+                      accessibleDocuments.find(d => d.id === selectedDoc)?.classification === 'CONFIDENTIAL' ? 'text-yellow-400' :
+                      'text-red-400'
+                    }`}>
+                      {accessibleDocuments.find(d => d.id === selectedDoc)?.classification}
                     </span>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <pre className="whitespace-pre-wrap text-sm text-green-300 leading-relaxed">
-                    {documents.find(d => d.id === selectedDoc)?.content}
+                    {accessibleDocuments.find(d => d.id === selectedDoc)?.content}
                   </pre>
                 </CardContent>
               </Card>
@@ -222,6 +386,10 @@ Dr. Ludwig's notes: "We need a renewable energy source. Something... organic."
                 <CardContent className="p-8 text-center">
                   <Search className="w-16 h-16 mx-auto mb-4 text-gray-600" />
                   <p className="text-gray-400">Select a document to view its contents</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Your clearance level: {user.clearanceLevel} | 
+                    Available documents: {accessibleDocuments.length}
+                  </p>
                 </CardContent>
               </Card>
             )}
