@@ -12,8 +12,8 @@ const Products = () => {
       name: "Huggy Wuggy",
       price: "$29.99",
       description: "Your best friend forever! Huggy loves to play and give the biggest hugs!",
-      darkDescription: "17 feet of pure nightmare. Extended arms can reach up to 25 feet. Teeth count: 142.",
-      image: "🤗",
+      darkDescription: "17 feet of pure nightmare. Extended arms can reach up to 25 feet. Teeth count: 142. Password hint: experiment followed by his designation number...",
+      image: "https://static.wikia.nocookie.net/poppyplaytime/images/8/8e/Huggy_Wuggy_Render.png",
       status: "BESTSELLER"
     },
     {
@@ -21,8 +21,8 @@ const Products = () => {
       name: "Kissy Missy",
       price: "$24.99",
       description: "Spread love everywhere with Kissy! She's always ready for a sweet kiss!",
-      darkDescription: "More docile than 1006. Programmed with enhanced empathy protocols. Still dangerous.",
-      image: "😘",
+      darkDescription: "More docile than 1006. Programmed with enhanced empathy protocols. Still dangerous. Research access: research789",
+      image: "https://static.wikia.nocookie.net/poppyplaytime/images/f/f7/Kissy_Missy_Render.png",
       status: "NEW"
     },
     {
@@ -30,8 +30,8 @@ const Products = () => {
       name: "Poppy Playtime Doll",
       price: "$199.99",
       description: "The first truly amazing doll! Poppy is perfect in every way!",
-      darkDescription: "The original. First successful subject. Intelligence level: Unknown. Motives: Classified.",
-      image: "🌺",
+      darkDescription: "The original. First successful subject. Intelligence level: Unknown. Executive clearance required. Dr. Ludwig's project: biggerbodies",
+      image: "https://static.wikia.nocookie.net/poppyplaytime/images/6/60/Poppy_Playtime_Doll.png",
       status: "CLASSIC"
     },
     {
@@ -39,8 +39,8 @@ const Products = () => {
       name: "Mommy Long Legs",
       price: "$34.99",
       description: "The most caring mother figure! She loves to play games with children!",
-      darkDescription: "Subject 1222. Elasticated limbs. Obsessed with 'games'. 47 casualties recorded.",
-      image: "🕷️",
+      darkDescription: "Subject 1222. Elasticated limbs. Obsessed with 'games'. 47 casualties recorded. Access via /documents",
+      image: "https://static.wikia.nocookie.net/poppyplaytime/images/4/4b/Mommy_Long_Legs_Render.png",
       status: "LIMITED"
     },
     {
@@ -48,8 +48,8 @@ const Products = () => {
       name: "Boxy Boo",
       price: "$19.99",
       description: "Jack-in-the-box fun! Boxy loves surprises and making friends!",
-      darkDescription: "Containment unit. Spring-loaded mechanism can launch at 60 mph. Approach with caution.",
-      image: "📦",
+      darkDescription: "Containment unit. Spring-loaded mechanism can launch at 60 mph. Facility director password: hourofkjoy",
+      image: "https://static.wikia.nocookie.net/poppyplaytime/images/1/1c/Boxy_Boo_Render.png",
       status: "NEW"
     },
     {
@@ -57,25 +57,35 @@ const Products = () => {
       name: "CatBee",
       price: "$16.99",
       description: "Part cat, part bee, all cute! CatBee loves to buzz around and play!",
-      darkDescription: "Genetic hybrid experiment. Flight capable. Stinger contains paralytic venom.",
-      image: "🐱",
+      darkDescription: "Genetic hybrid experiment. Flight capable. Stinger contains paralytic venom. Maintenance access: factory456",
+      image: "https://static.wikia.nocookie.net/poppyplaytime/images/5/5c/CatBee_Render.png",
       status: "SOLD OUT"
     }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-100 to-purple-100">
+      {/* Navigation Bar */}
+      <nav className="bg-white shadow-lg sticky top-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center py-4">
+            <Link to="/" className="text-2xl font-bold text-pink-600">PLAYTIME CO.</Link>
+            <div className="hidden md:flex space-x-8">
+              <Link to="/" className="text-gray-700 hover:text-pink-600 transition-colors">Home</Link>
+              <Link to="/about" className="text-gray-700 hover:text-pink-600 transition-colors">About Us</Link>
+              <Link to="/products" className="text-pink-600 hover:text-pink-800 transition-colors font-medium border-b-2 border-pink-600">Our Toys</Link>
+              <Link to="/factory" className="text-gray-700 hover:text-pink-600 transition-colors">Factory Tour</Link>
+              <Link to="/contact" className="text-gray-700 hover:text-pink-600 transition-colors">Contact</Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Header */}
       <header className="bg-pink-500 text-white p-4 shadow-lg">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold">PLAYTIME CO.</Link>
-          <nav className="hidden md:flex space-x-6">
-            <Link to="/" className="hover:text-pink-200 transition-colors">Home</Link>
-            <Link to="/about" className="hover:text-pink-200 transition-colors">About Us</Link>
-            <Link to="/products" className="text-pink-200">Our Toys</Link>
-            <Link to="/factory" className="hover:text-pink-200 transition-colors">Factory Tour</Link>
-            <Link to="/contact" className="hover:text-pink-200 transition-colors">Contact</Link>
-          </nav>
+        <div className="container mx-auto">
+          <h1 className="text-3xl font-bold">Our Amazing Toy Collection</h1>
+          <p className="text-pink-100">Discover the magic that brings joy to children worldwide</p>
         </div>
       </header>
 
@@ -95,8 +105,12 @@ const Products = () => {
               onMouseLeave={() => setHoveredProduct(null)}
             >
               <CardHeader className="text-center">
-                <div className="text-8xl mb-4 transition-all duration-300">
-                  {product.image}
+                <div className="w-full h-48 mb-4 overflow-hidden rounded-lg">
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-full object-contain transition-all duration-300"
+                  />
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <CardTitle className="text-xl">{product.name}</CardTitle>
@@ -113,7 +127,7 @@ const Products = () => {
                 <p className="text-2xl font-bold text-purple-600">{product.price}</p>
               </CardHeader>
               <CardContent>
-                <p className={`text-gray-600 transition-all duration-500 ${
+                <p className={`text-gray-600 transition-all duration-500 text-sm ${
                   hoveredProduct === product.id ? 'text-red-600 font-bold' : ''
                 }`}>
                   {hoveredProduct === product.id ? product.darkDescription : product.description}
@@ -130,7 +144,7 @@ const Products = () => {
                   disabled={product.status === 'SOLD OUT'}
                 >
                   {product.status === 'SOLD OUT' ? 'Out of Stock' : 
-                   hoveredProduct === product.id ? 'EXPERIMENT SUBJECT' : 'Add to Cart'}
+                   hoveredProduct === product.id ? 'CLASSIFIED DATA' : 'Add to Cart'}
                 </button>
               </CardContent>
             </Card>
@@ -146,12 +160,20 @@ const Products = () => {
                 All Playtime Co. toys are manufactured using our proprietary <strong>Bigger Bodies</strong> 
                 technology, ensuring your child's toy will be a companion for life!
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 mb-2">
                 *Side effects may include: attachment anxiety, protective behavior, and enhanced emotional bonding. 
                 Not suitable for children under 6 or adults over 65. Please supervise playtime.
               </p>
+              <p className="text-xs text-gray-400">
+                For staff access to detailed specifications, visit our secure portal with proper credentials.
+              </p>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Hidden Research Note */}
+        <div className="mt-8 p-4 bg-gray-100 border-l-4 border-gray-400 text-xs text-gray-600">
+          <p><strong>Internal Note:</strong> Dr. Sawyer's experiment logs require executive password. Lab technicians use standard research protocols. Maintenance staff use facility access codes.</p>
         </div>
       </div>
 
