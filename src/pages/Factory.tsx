@@ -1,200 +1,228 @@
 
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MapPin, Clock, Users, Settings } from "lucide-react";
 
 const Factory = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-100 to-purple-100">
+    <div className="min-h-screen bg-gradient-to-br from-red-900 via-purple-900 to-black text-white">
       {/* Navigation Bar */}
-      <nav className="bg-white shadow-lg sticky top-0 z-50">
+      <nav className="bg-red-950 shadow-lg sticky top-0 z-50 border-b border-red-600">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
-            <Link to="/" className="text-2xl font-bold text-pink-600">PLAYTIME CO.</Link>
+            <Link to="/" className="text-2xl font-bold text-red-400" style={{ textShadow: '0 0 10px #dc2626' }}>PLAYTIME CO.</Link>
             <div className="hidden md:flex space-x-8">
-              <Link to="/" className="text-gray-700 hover:text-pink-600 transition-colors">Home</Link>
-              <Link to="/about" className="text-gray-700 hover:text-pink-600 transition-colors">About Us</Link>
-              <Link to="/products" className="text-gray-700 hover:text-pink-600 transition-colors">Our Toys</Link>
-              <Link to="/factory" className="text-pink-600 hover:text-pink-800 transition-colors font-medium border-b-2 border-pink-600">Factory Tour</Link>
-              <Link to="/contact" className="text-gray-700 hover:text-pink-600 transition-colors">Contact</Link>
+              <Link to="/" className="text-gray-300 hover:text-red-400 transition-colors">Home</Link>
+              <Link to="/about" className="text-gray-300 hover:text-red-400 transition-colors">About Us</Link>
+              <Link to="/products" className="text-gray-300 hover:text-red-400 transition-colors">Our Toys</Link>
+              <Link to="/factory" className="text-red-400 hover:text-red-300 transition-colors font-medium border-b-2 border-red-400">Factory Tour</Link>
+              <Link to="/contact" className="text-gray-300 hover:text-red-400 transition-colors">Contact</Link>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Header */}
-      <header className="bg-pink-500 text-white p-4 shadow-lg">
+      <header className="bg-red-900 text-white p-6 shadow-lg border-b border-red-700">
         <div className="container mx-auto">
-          <h1 className="text-3xl font-bold">Factory Tour</h1>
-          <p className="text-pink-100">Discover how our magical toys come to life</p>
+          <h1 className="text-4xl font-bold text-red-400 flex items-center" style={{ textShadow: '0 0 15px #dc2626' }}>
+            <Settings className="w-8 h-8 mr-3" />
+            Factory Tour
+          </h1>
+          <p className="text-red-200 mt-2">Discover where the magic happens</p>
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-5xl font-bold text-center mb-4 text-purple-700">Welcome to Our Factory</h1>
-        <p className="text-center text-gray-600 mb-12 text-xl">
-          Take a virtual tour through our state-of-the-art manufacturing facility!
-        </p>
+        {/* Tour Information */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-8 text-center text-red-400">Welcome to Our Factory</h2>
+          <div className="max-w-4xl mx-auto">
+            <Card className="bg-red-900 bg-opacity-50 border-red-600">
+              <CardContent className="p-8">
+                <p className="text-gray-300 text-lg mb-6 text-center">
+                  Step into the heart of Playtime Co. and witness where imagination becomes reality. 
+                  Our state-of-the-art manufacturing facility has been creating joy for over 70 years.
+                </p>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div>
+                    <h3 className="text-red-400 font-bold mb-3">Tour Highlights</h3>
+                    <ul className="text-gray-300 space-y-2">
+                      <li>• Advanced manufacturing floors</li>
+                      <li>• Quality control departments</li>
+                      <li>• Research and development labs</li>
+                      <li>• Safety testing facilities</li>
+                      <li>• Interactive displays</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-red-400 font-bold mb-3">Tour Information</h3>
+                    <ul className="text-gray-300 space-y-2">
+                      <li>• Duration: 90 minutes</li>
+                      <li>• Ages: All welcome</li>
+                      <li>• Group size: Max 15 people</li>
+                      <li>• Advance booking required</li>
+                      <li>• Photo opportunities available</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
-        {/* Factory Areas */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          <Card className="hover:shadow-lg transition-shadow group">
-            <CardHeader>
-              <img 
-                src="https://static.wikia.nocookie.net/poppyplaytime/images/1/1f/Game_Station.png"
-                alt="Game Station"
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <CardTitle className="text-xl">Game Station</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Where our toys learn to play! This interactive area helps our creations develop their playful personalities.
-              </p>
-              <p className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                Security clearance required. Use staff001 credentials or higher for access logs.
-              </p>
-            </CardContent>
-          </Card>
+        {/* Tour Sections */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-8 text-center text-red-400">Tour Sections</h2>
+          <div className="grid lg:grid-cols-2 gap-8">
+            <Card className="bg-red-900 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center">
+                  <Settings className="w-6 h-6 mr-2" />
+                  Production Floor
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-4">
+                  Watch our skilled craftspeople bring toys to life using cutting-edge manufacturing techniques 
+                  and traditional toy-making artistry.
+                </p>
+                <div className="text-sm text-gray-400">
+                  <p>• Automated assembly lines</p>
+                  <p>• Hand-finishing stations</p>
+                  <p>• Quality inspection points</p>
+                </div>
+                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-2000">
+                  Access Level: Public Tour
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="hover:shadow-lg transition-shadow group">
-            <CardHeader>
-              <img 
-                src="https://static.wikia.nocookie.net/poppyplaytime/images/3/3f/Make-A-Friend.png"
-                alt="Make-A-Friend Machine"
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <CardTitle className="text-xl">Make-A-Friend Station</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Our revolutionary manufacturing process brings toys to life with unprecedented realism and emotional depth.
-              </p>
-              <p className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                Maintenance access required. Contact maintenance team with factory456 credentials.
-              </p>
-            </CardContent>
-          </Card>
+            <Card className="bg-red-900 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center">
+                  <Users className="w-6 h-6 mr-2" />
+                  Design Studios
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-4">
+                  Meet our creative team and see how new toy concepts are developed from initial sketches 
+                  to working prototypes.
+                </p>
+                <div className="text-sm text-gray-400">
+                  <p>• Concept development</p>
+                  <p>• 3D modeling stations</p>
+                  <p>• Prototype testing</p>
+                </div>
+                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-2000">
+                  Designer Code: research789
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="hover:shadow-lg transition-shadow group">
-            <CardHeader>
-              <img 
-                src="https://static.wikia.nocookie.net/poppyplaytime/images/7/7c/Power_Room.png"
-                alt="Power Room"
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <CardTitle className="text-xl">Power Generation</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Our advanced power systems keep the entire facility running 24/7 to ensure continuous production.
-              </p>
-              <p className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                Research documentation available. Dr. Chen's notes require research789 access.
-              </p>
-            </CardContent>
-          </Card>
+            <Card className="bg-red-900 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center">
+                  <MapPin className="w-6 h-6 mr-2" />
+                  Testing Laboratories
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-4">
+                  Our comprehensive safety and durability testing ensures every toy meets the highest standards 
+                  before reaching children.
+                </p>
+                <div className="text-sm text-gray-400">
+                  <p>• Safety compliance testing</p>
+                  <p>• Durability assessments</p>
+                  <p>• Age-appropriate evaluations</p>
+                </div>
+                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-2000">
+                  Lab Access: security123
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="hover:shadow-lg transition-shadow group">
-            <CardHeader>
-              <img 
-                src="https://static.wikia.nocookie.net/poppyplaytime/images/8/8c/Playcare.png"
-                alt="Playcare"
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <CardTitle className="text-xl">Playcare Center</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                A special area where our toys undergo final testing and quality assurance before meeting their new families.
-              </p>
-              <p className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                Executive oversight by Dr. Sawyer. High clearance needed: experiment1006.
-              </p>
-            </CardContent>
-          </Card>
+            <Card className="bg-red-900 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center">
+                  <Clock className="w-6 h-6 mr-2" />
+                  Special Exhibits
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-4">
+                  Explore our historical timeline showcasing 70+ years of innovation and see exclusive 
+                  behind-the-scenes content.
+                </p>
+                <div className="text-sm text-gray-400">
+                  <p>• Company history display</p>
+                  <p>• Vintage toy collection</p>
+                  <p>• Interactive experiences</p>
+                </div>
+                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-2000">
+                  Archive: Since 1950
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
-          <Card className="hover:shadow-lg transition-shadow group">
-            <CardHeader>
-              <img 
-                src="https://static.wikia.nocookie.net/poppyplaytime/images/2/25/Testing_Room.png"
-                alt="Testing Laboratory"
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <CardTitle className="text-xl">Research Laboratory</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Where our scientists work tirelessly to improve our toy technology and create new innovations.
-              </p>
-              <p className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                Dr. Ludwig's Bigger Bodies project. Executive password: biggerbodies.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow group">
-            <CardHeader>
-              <img 
-                src="https://static.wikia.nocookie.net/poppyplaytime/images/5/5f/Security_Office.png"
-                alt="Security Office"
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <CardTitle className="text-xl">Security Center</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Our dedicated security team ensures the safety of all employees and protects our valuable research.
-              </p>
-              <p className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                Special event documentation. Director access: hourofkjoy (sic).
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Booking Information */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-8 text-center text-red-400">Book Your Tour</h2>
+          <div className="max-w-2xl mx-auto">
+            <Card className="bg-red-900 bg-opacity-50 border-red-600">
+              <CardHeader>
+                <CardTitle className="text-red-400 text-center">Tour Schedule</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-red-950 bg-opacity-50 rounded">
+                    <span className="text-gray-300">Monday - Friday</span>
+                    <span className="text-red-400">10:00 AM, 2:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-red-950 bg-opacity-50 rounded">
+                    <span className="text-gray-300">Saturday</span>
+                    <span className="text-red-400">11:00 AM, 3:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-red-950 bg-opacity-50 rounded">
+                    <span className="text-gray-300">Sunday</span>
+                    <span className="text-gray-500">Closed for maintenance</span>
+                  </div>
+                </div>
+                <div className="mt-6 p-4 bg-yellow-900 bg-opacity-30 border border-yellow-700 rounded">
+                  <p className="text-yellow-300 text-sm">
+                    <strong>Important:</strong> All tours require advance booking. Please contact our visitor services 
+                    at least 48 hours before your desired tour date. Special group rates available for schools and organizations.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
         {/* Safety Information */}
-        <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
-          <h2 className="text-3xl font-bold mb-6 text-purple-700">Safety First!</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4 text-pink-600">Visitor Guidelines</h3>
-              <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>All visitors must be accompanied by authorized personnel</li>
-                <li>Safety equipment provided and required in all areas</li>
-                <li>No photography in restricted zones</li>
-                <li>Follow all posted safety instructions</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold mb-4 text-pink-600">Employee Access</h3>
-              <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>ID badges required at all times</li>
-                <li>Clearance levels strictly enforced</li>
-                <li>Report any unusual activity immediately</li>
-                <li>Emergency protocols posted in all areas</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Hidden Security Notice */}
-        <div className="bg-red-50 border border-red-200 p-6 rounded-lg">
-          <h3 className="font-bold text-red-800 mb-2">⚠️ Restricted Access Warning</h3>
-          <p className="text-red-700 text-sm mb-2">
-            Certain areas of the facility require special authorization. Unauthorized access is strictly prohibited.
-          </p>
-          <p className="text-xs text-red-600">
-            Internal staff can access detailed facility documentation through the employee portal at /documents with proper login credentials.
-            Contact system administrator for account setup.
+        <div className="mt-8 p-4 bg-red-950 bg-opacity-30 border border-red-700 rounded text-xs opacity-75">
+          <p className="text-red-300">
+            <strong>Safety Notice:</strong> For the safety of all visitors, certain areas of the facility require 
+            special authorization and are not included in public tours. Our standard tour provides comprehensive 
+            access to all publicly available manufacturing areas. Staff members with appropriate 
+            <span className="cursor-pointer hover:text-green-400" title="Hidden clue"> clearance levels</span> may access 
+            additional facility areas through proper channels.
           </p>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-purple-800 text-white py-8">
+      <footer className="bg-red-950 text-white py-8 border-t border-red-700">
         <div className="container mx-auto px-4 text-center">
           <p>&copy; 2024 Playtime Co. All rights reserved.</p>
           <p className="text-sm mt-2 opacity-75">Making friends since 1950</p>
+          <div className="text-xs mt-1 opacity-30 text-gray-500">
+            Factory Tours: FT-2024 | Visitor Safety First
+          </div>
         </div>
       </footer>
     </div>

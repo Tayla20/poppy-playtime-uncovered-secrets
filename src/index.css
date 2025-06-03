@@ -5,83 +5,83 @@
 
 @layer base {
   :root {
-    --background: 220 13% 18%;
-    --foreground: 220 9% 85%;
+    --background: 7 89% 4%;
+    --foreground: 0 0% 85%;
 
-    --card: 220 13% 16%;
-    --card-foreground: 220 9% 85%;
+    --card: 7 89% 8%;
+    --card-foreground: 0 0% 85%;
 
-    --popover: 220 13% 16%;
-    --popover-foreground: 220 9% 85%;
+    --popover: 7 89% 8%;
+    --popover-foreground: 0 0% 85%;
 
-    --primary: 263 70% 50%;
-    --primary-foreground: 220 9% 85%;
+    --primary: 0 84% 50%;
+    --primary-foreground: 0 0% 85%;
 
-    --secondary: 220 13% 25%;
-    --secondary-foreground: 220 9% 85%;
+    --secondary: 7 89% 15%;
+    --secondary-foreground: 0 0% 85%;
 
-    --muted: 220 13% 25%;
-    --muted-foreground: 220 9% 60%;
+    --muted: 7 89% 15%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 0 70% 50%;
-    --accent-foreground: 220 9% 85%;
+    --accent: 0 84% 50%;
+    --accent-foreground: 0 0% 85%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 13% 25%;
-    --input: 220 13% 25%;
-    --ring: 263 70% 50%;
+    --border: 7 89% 15%;
+    --input: 7 89% 15%;
+    --ring: 0 84% 50%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 220 13% 16%;
-    --sidebar-foreground: 220 9% 85%;
-    --sidebar-primary: 263 70% 50%;
-    --sidebar-primary-foreground: 220 9% 85%;
-    --sidebar-accent: 220 13% 25%;
-    --sidebar-accent-foreground: 220 9% 85%;
-    --sidebar-border: 220 13% 25%;
-    --sidebar-ring: 263 70% 50%;
+    --sidebar-background: 7 89% 8%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 0 84% 50%;
+    --sidebar-primary-foreground: 0 0% 85%;
+    --sidebar-accent: 7 89% 15%;
+    --sidebar-accent-foreground: 0 0% 85%;
+    --sidebar-border: 7 89% 15%;
+    --sidebar-ring: 0 84% 50%;
   }
 
   .dark {
-    --background: 220 13% 18%;
-    --foreground: 220 9% 85%;
+    --background: 7 89% 4%;
+    --foreground: 0 0% 85%;
 
-    --card: 220 13% 16%;
-    --card-foreground: 220 9% 85%;
+    --card: 7 89% 8%;
+    --card-foreground: 0 0% 85%;
 
-    --popover: 220 13% 16%;
-    --popover-foreground: 220 9% 85%;
+    --popover: 7 89% 8%;
+    --popover-foreground: 0 0% 85%;
 
-    --primary: 263 70% 50%;
-    --primary-foreground: 220 9% 85%;
+    --primary: 0 84% 50%;
+    --primary-foreground: 0 0% 85%;
 
-    --secondary: 220 13% 25%;
-    --secondary-foreground: 220 9% 85%;
+    --secondary: 7 89% 15%;
+    --secondary-foreground: 0 0% 85%;
 
-    --muted: 220 13% 25%;
-    --muted-foreground: 220 9% 60%;
+    --muted: 7 89% 15%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 0 70% 50%;
-    --accent-foreground: 220 9% 85%;
+    --accent: 0 84% 50%;
+    --accent-foreground: 0 0% 85%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 13% 25%;
-    --input: 220 13% 25%;
-    --ring: 263 70% 50%;
+    --border: 7 89% 15%;
+    --input: 7 89% 15%;
+    --ring: 0 84% 50%;
 
-    --sidebar-background: 220 13% 16%;
-    --sidebar-foreground: 220 9% 85%;
-    --sidebar-primary: 263 70% 50%;
-    --sidebar-primary-foreground: 220 9% 85%;
-    --sidebar-accent: 220 13% 25%;
-    --sidebar-accent-foreground: 220 9% 85%;
-    --sidebar-border: 220 13% 25%;
-    --sidebar-ring: 263 70% 50%;
+    --sidebar-background: 7 89% 8%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 0 84% 50%;
+    --sidebar-primary-foreground: 0 0% 85%;
+    --sidebar-accent: 7 89% 15%;
+    --sidebar-accent-foreground: 0 0% 85%;
+    --sidebar-border: 7 89% 15%;
+    --sidebar-ring: 0 84% 50%;
   }
 }
 
@@ -97,15 +97,15 @@
 
 /* Poppy Playtime specific styles */
 .poppy-gradient {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+  background: linear-gradient(135deg, #7f1d1d 0%, #581c87 50%, #000000 100%);
 }
 
 .poppy-text-glow {
-  text-shadow: 0 0 10px #8b5cf6, 0 0 20px #8b5cf6, 0 0 30px #8b5cf6;
+  text-shadow: 0 0 10px #dc2626, 0 0 20px #dc2626, 0 0 30px #dc2626;
 }
 
 .poppy-card-glow {
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
 }
 
 .glitch {
@@ -119,4 +119,36 @@
   60% { transform: translate(2px, 2px); }
   80% { transform: translate(2px, -2px); }
   100% { transform: translate(0); }
+}
+
+/* Additional Poppy Playtime themed styles */
+.horror-glow {
+  text-shadow: 0 0 5px #dc2626, 0 0 10px #dc2626;
+}
+
+.subtle-horror {
+  transition: all 0.3s ease;
+}
+
+.subtle-horror:hover {
+  text-shadow: 0 0 8px #dc2626;
+  color: #fbbf24;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #7f1d1d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dc2626;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b91c1c;
 }

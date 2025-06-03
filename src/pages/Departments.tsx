@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -97,31 +98,31 @@ const Departments = () => {
   ];
 
   return (
-    <div className="min-h-screen poppy-gradient text-white">
+    <div className="min-h-screen bg-gradient-to-br from-red-900 via-purple-900 to-black text-white">
       {/* Navigation Bar */}
-      <nav className="bg-slate-900 shadow-lg sticky top-0 z-50 border-b border-purple-500">
+      <nav className="bg-red-950 shadow-lg sticky top-0 z-50 border-b border-red-600">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
-            <Link to="/" className="text-2xl font-bold text-purple-400 poppy-text-glow">PLAYTIME CO.</Link>
+            <Link to="/" className="text-2xl font-bold text-red-400" style={{ textShadow: '0 0 10px #dc2626' }}>PLAYTIME CO.</Link>
             <div className="hidden md:flex space-x-8">
-              <Link to="/" className="text-gray-300 hover:text-purple-400 transition-colors">Home</Link>
-              <Link to="/about" className="text-gray-300 hover:text-purple-400 transition-colors">About Us</Link>
-              <Link to="/products" className="text-gray-300 hover:text-purple-400 transition-colors">Our Toys</Link>
-              <Link to="/factory" className="text-gray-300 hover:text-purple-400 transition-colors">Factory Tour</Link>
-              <Link to="/contact" className="text-gray-300 hover:text-purple-400 transition-colors">Contact</Link>
+              <Link to="/" className="text-gray-300 hover:text-red-400 transition-colors">Home</Link>
+              <Link to="/about" className="text-gray-300 hover:text-red-400 transition-colors">About Us</Link>
+              <Link to="/products" className="text-gray-300 hover:text-red-400 transition-colors">Our Toys</Link>
+              <Link to="/factory" className="text-gray-300 hover:text-red-400 transition-colors">Factory Tour</Link>
+              <Link to="/contact" className="text-gray-300 hover:text-red-400 transition-colors">Contact</Link>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Header */}
-      <header className="bg-purple-900 text-white p-6 shadow-lg border-b border-purple-700">
+      <header className="bg-red-900 text-white p-6 shadow-lg border-b border-red-700">
         <div className="container mx-auto">
-          <h1 className="text-4xl font-bold poppy-text-glow flex items-center">
+          <h1 className="text-4xl font-bold text-red-400 flex items-center" style={{ textShadow: '0 0 15px #dc2626' }}>
             <Users className="w-8 h-8 mr-3" />
             Department Directory
           </h1>
-          <p className="text-purple-200 mt-2">Organizational structure and personnel management</p>
+          <p className="text-red-200 mt-2">Organizational structure and personnel management</p>
         </div>
       </header>
 
@@ -273,11 +274,11 @@ const Departments = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-8 border-t border-purple-700">
+      <footer className="bg-red-950 text-white py-8 border-t border-red-700">
         <div className="container mx-auto px-4 text-center">
           <p>&copy; 2024 Playtime Co. Human Resources Division. All rights reserved.</p>
           <p className="text-sm mt-2 opacity-75">Internal Use Only - Confidential</p>
-          <p className="text-xs text-purple-400 mt-1 opacity-50">
+          <p className="text-xs text-red-400 mt-1 opacity-50">
             HR Access: hr-files | Executive Override: experiment1006
           </p>
         </div>
