@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Flask, Wrench, Shield, Brain, Heart } from "lucide-react";
+import { Users, Beaker, Wrench, Shield, Brain, Heart } from "lucide-react";
 
 const Departments = () => {
   const [selectedDept, setSelectedDept] = useState<string | null>(null);
@@ -12,7 +11,7 @@ const Departments = () => {
       id: "research",
       name: "Research & Development",
       head: "Dr. Harley Sawyer",
-      icon: Flask,
+      icon: Beaker,
       personnel: 15,
       status: "Active",
       description: "Advanced toy development and consciousness research",
