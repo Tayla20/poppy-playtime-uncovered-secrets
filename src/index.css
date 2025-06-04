@@ -5,83 +5,66 @@
 
 @layer base {
   :root {
-    --background: 7 89% 4%;
-    --foreground: 0 0% 85%;
+    --background: 220 13% 9%;
+    --foreground: 220 9% 90%;
 
-    --card: 7 89% 8%;
-    --card-foreground: 0 0% 85%;
+    --card: 220 13% 12%;
+    --card-foreground: 220 9% 90%;
 
-    --popover: 7 89% 8%;
-    --popover-foreground: 0 0% 85%;
+    --popover: 220 13% 12%;
+    --popover-foreground: 220 9% 90%;
 
-    --primary: 0 84% 50%;
-    --primary-foreground: 0 0% 85%;
+    --primary: 346 87% 43%;
+    --primary-foreground: 220 9% 90%;
 
-    --secondary: 7 89% 15%;
-    --secondary-foreground: 0 0% 85%;
+    --secondary: 220 13% 18%;
+    --secondary-foreground: 220 9% 90%;
 
-    --muted: 7 89% 15%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 220 13% 18%;
+    --muted-foreground: 220 9% 60%;
 
-    --accent: 0 84% 50%;
-    --accent-foreground: 0 0% 85%;
+    --accent: 346 87% 43%;
+    --accent-foreground: 220 9% 90%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 7 89% 15%;
-    --input: 7 89% 15%;
-    --ring: 0 84% 50%;
+    --border: 220 13% 18%;
+    --input: 220 13% 18%;
+    --ring: 346 87% 43%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 7 89% 8%;
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 0 84% 50%;
-    --sidebar-primary-foreground: 0 0% 85%;
-    --sidebar-accent: 7 89% 15%;
-    --sidebar-accent-foreground: 0 0% 85%;
-    --sidebar-border: 7 89% 15%;
-    --sidebar-ring: 0 84% 50%;
+    --sidebar-background: 220 13% 12%;
+    --sidebar-foreground: 220 9% 90%;
+    --sidebar-primary: 346 87% 43%;
+    --sidebar-primary-foreground: 220 9% 90%;
+    --sidebar-accent: 220 13% 18%;
+    --sidebar-accent-foreground: 220 9% 90%;
+    --sidebar-border: 220 13% 18%;
+    --sidebar-ring: 346 87% 43%;
   }
 
   .dark {
-    --background: 7 89% 4%;
-    --foreground: 0 0% 85%;
-
-    --card: 7 89% 8%;
-    --card-foreground: 0 0% 85%;
-
-    --popover: 7 89% 8%;
-    --popover-foreground: 0 0% 85%;
-
-    --primary: 0 84% 50%;
-    --primary-foreground: 0 0% 85%;
-
-    --secondary: 7 89% 15%;
-    --secondary-foreground: 0 0% 85%;
-
-    --muted: 7 89% 15%;
-    --muted-foreground: 0 0% 60%;
-
-    --accent: 0 84% 50%;
-    --accent-foreground: 0 0% 85%;
-
+    --background: 220 13% 9%;
+    --foreground: 220 9% 90%;
+    --card: 220 13% 12%;
+    --card-foreground: 220 9% 90%;
+    --popover: 220 13% 12%;
+    --popover-foreground: 220 9% 90%;
+    --primary: 346 87% 43%;
+    --primary-foreground: 220 9% 90%;
+    --secondary: 220 13% 18%;
+    --secondary-foreground: 220 9% 90%;
+    --muted: 220 13% 18%;
+    --muted-foreground: 220 9% 60%;
+    --accent: 346 87% 43%;
+    --accent-foreground: 220 9% 90%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 7 89% 15%;
-    --input: 7 89% 15%;
-    --ring: 0 84% 50%;
-
-    --sidebar-background: 7 89% 8%;
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 0 84% 50%;
-    --sidebar-primary-foreground: 0 0% 85%;
-    --sidebar-accent: 7 89% 15%;
-    --sidebar-accent-foreground: 0 0% 85%;
-    --sidebar-border: 7 89% 15%;
-    --sidebar-ring: 0 84% 50%;
+    --border: 220 13% 18%;
+    --input: 220 13% 18%;
+    --ring: 346 87% 43%;
   }
 }
 
@@ -92,63 +75,207 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Georgia', 'Times New Roman', serif;
   }
 }
 
-/* Poppy Playtime specific styles */
-.poppy-gradient {
-  background: linear-gradient(135deg, #7f1d1d 0%, #581c87 50%, #000000 100%);
+/* Welcome Home inspired styles */
+.welcome-gradient {
+  background: linear-gradient(135deg, #1a1c2e 0%, #2d1b3d 30%, #4a1d3a  60%, #0f0f0f 100%);
 }
 
-.poppy-text-glow {
-  text-shadow: 0 0 10px #dc2626, 0 0 20px #dc2626, 0 0 30px #dc2626;
+.nostalgic-text {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-.poppy-card-glow {
-  box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
+.subtle-glow {
+  text-shadow: 0 0 8px rgba(220, 38, 87, 0.3);
 }
 
-.glitch {
-  animation: glitch 0.3s ease-in-out;
+.card-hover {
+  transition: all 0.4s ease;
+  transform-style: preserve-3d;
 }
 
-@keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
+.card-hover:hover {
+  transform: translateY(-2px) rotateX(2deg);
+  box-shadow: 0 8px 25px rgba(220, 38, 87, 0.15);
 }
 
-/* Additional Poppy Playtime themed styles */
-.horror-glow {
-  text-shadow: 0 0 5px #dc2626, 0 0 10px #dc2626;
+.mystery-reveal {
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
 }
 
-.subtle-horror {
+.mystery-reveal:hover {
+  opacity: 1;
+}
+
+.vintage-border {
+  border-image: linear-gradient(45deg, #dc2657, #4a1d3a, #dc2657) 1;
+  border-style: solid;
+  border-width: 2px;
+}
+
+.creepy-hover {
   transition: all 0.3s ease;
 }
 
-.subtle-horror:hover {
-  text-shadow: 0 0 8px #dc2626;
-  color: #fbbf24;
+.creepy-hover:hover {
+  filter: hue-rotate(180deg) contrast(1.2);
+  transform: scale(1.02);
 }
 
-/* Scrollbar styling */
+.glitch-text {
+  position: relative;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.glitch-text::before {
+  animation: glitch-1 0.3s infinite;
+  color: #ff0040;
+  z-index: -1;
+}
+
+.glitch-text::after {
+  animation: glitch-2 0.3s infinite;
+  color: #00ffff;
+  z-index: -2;
+}
+
+@keyframes glitch-1 {
+  0%, 14%, 15%, 49%, 50%, 99%, 100% {
+    transform: translate(0);
+    opacity: 0;
+  }
+  15%, 49% {
+    transform: translate(-2px, 1px);
+    opacity: 0.7;
+  }
+}
+
+@keyframes glitch-2 {
+  0%, 19%, 20%, 44%, 45%, 99%, 100% {
+    transform: translate(0);
+    opacity: 0;
+  }
+  20%, 44% {
+    transform: translate(2px, -1px);
+    opacity: 0.7;
+  }
+}
+
+.typing-effect {
+  overflow: hidden;
+  border-right: 2px solid #dc2657;
+  white-space: nowrap;
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: #dc2657; }
+}
+
+.static-noise {
+  position: relative;
+  overflow: hidden;
+}
+
+.static-noise::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle, transparent 20%, rgba(255,255,255,0.1) 21%, rgba(255,255,255,0.1) 34%, transparent 35%, transparent),
+    linear-gradient(0deg, transparent 24%, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05) 76%, transparent 77%, transparent);
+  background-size: 8px 8px;
+  opacity: 0;
+  animation: static 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes static {
+  0% { opacity: 0; }
+  5% { opacity: 0.1; }
+  10% { opacity: 0; }
+  15% { opacity: 0.05; }
+  20% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Enhanced scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #7f1d1d;
+  background: #1a1c2e;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #dc2626;
+  background: #dc2657;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b91c1c;
+  background: #b91c4c;
 }
+
+/* Hidden message styles */
+.hidden-morse {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  opacity: 0.1;
+  transition: opacity 2s ease;
+}
+
+.hidden-morse:hover {
+  opacity: 0.8;
+}
+
+.invisible-text {
+  color: transparent;
+  text-shadow: 0 0 0 rgba(220, 38, 87, 0);
+  transition: all 1s ease;
+  user-select: none;
+}
+
+.invisible-text:hover {
+  color: #dc2657;
+  text-shadow: 0 0 8px rgba(220, 38, 87, 0.6);
+  user-select: text;
+}
+
+.backwards-text {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  opacity: 0.3;
+  transition: opacity 1s ease;
+}
+
+.backwards-text:hover {
+  opacity: 1;
+}
+
