@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertTriangle, Clock, Users, FileText, Settings, LogOut, Eye, Zap } from "lucide-react";
+import { AlertTriangle, Clock, Users, FileText, Camera, LogOut, Eye, Zap } from "lucide-react";
 
 interface ChatMessage {
   id: string;
@@ -44,34 +44,35 @@ const ExecutivePortal = () => {
 
   const chatRooms = {
     general: [
-      { id: '1', sender: 'Dr. Ludwig', message: 'The Bigger Bodies Initiative is ahead of schedule. Huggy Wuggy prototype showing remarkable adaptation rates.', timestamp: '2024-08-15 09:30', department: 'Research', classification: 'normal' },
-      { id: '2', sender: 'Director Stella', message: 'Excellent. What about the other prototypes?', timestamp: '2024-08-15 09:32', department: 'Management', classification: 'normal' },
-      { id: '3', sender: 'Dr. Sawyer', message: 'Mommy Long Legs is responding well to behavioral conditioning. The children love the interactive elements.', timestamp: '2024-08-15 09:35', department: 'Innovation', classification: 'normal' },
-      { id: '4', sender: 'Leith Pierre', message: 'We need to discuss the Prototype situation privately. Some... developments require immediate attention.', timestamp: '2024-08-15 10:00', department: 'Special Projects', classification: 'urgent' },
+      { id: '1', sender: 'Dr. Ludwig', message: 'The Bigger Bodies Initiative is showing excellent progress. Huggy Wuggy prototype exceeding expectations.', timestamp: '2024-08-15 09:30', department: 'Research', classification: 'normal' },
+      { id: '2', sender: 'Director Stella', message: 'Has anyone noticed the toys acting unusual lately? Security reported some movement after hours.', timestamp: '2024-08-15 09:32', department: 'Management', classification: 'normal' },
+      { id: '3', sender: 'Dr. Ludwig', message: 'Completely normal. We\'ve designed them with limited nocturnal movement programming to prevent joint stiffness.', timestamp: '2024-08-15 09:35', department: 'Research', classification: 'normal' },
+      { id: '4', sender: 'Leith Pierre', message: 'I\'m getting unusual readings from the Prototype containment area. Might need to investigate.', timestamp: '2024-08-15 10:00', department: 'Special Projects', classification: 'urgent' },
+      { id: '5', sender: 'The Doctor', message: 'All security systems operating within normal parameters. No cause for concern.', timestamp: '2024-08-15 10:05', department: 'Security', classification: 'normal' },
+    ],
+    research: [
+      { id: '6', sender: 'Leith Pierre', message: 'Has anyone else noticed the power fluctuations in Sector 7? They\'re increasing in frequency.', timestamp: '2024-08-14 14:20', department: 'Special Projects', classification: 'classified' },
+      { id: '7', sender: 'Dr. Ludwig', message: 'The red gas formula is stabilized. All test subjects are responding positively.', timestamp: '2024-08-14 14:25', department: 'Research', classification: 'classified' },
+      { id: '8', sender: 'Dr. Chen', message: 'Some children reported hearing the toys talking when no one\'s around. Recommending psychological evaluation.', timestamp: '2024-08-14 15:00', department: 'Medical', classification: 'classified' },
+      { id: '9', sender: 'Director Stella', message: 'Keep this quiet. We don\'t need rumors jeopardizing the new product launch.', timestamp: '2024-08-14 15:05', department: 'Management', classification: 'classified' },
+      { id: '10', sender: 'The Doctor', message: 'Security footage review shows nothing unusual. Children\'s imaginations are active.', timestamp: '2024-08-14 15:10', department: 'Security', classification: 'classified' },
     ],
     prototype: [
-      { id: '5', sender: 'Leith Pierre', message: 'The Prototype has been exhibiting unusual behavior. It seems to be learning faster than anticipated.', timestamp: '2024-08-14 14:20', department: 'Special Projects', classification: 'classified' },
-      { id: '6', sender: 'Dr. Ludwig', message: 'All subjects show increased aggression when exposed to the red gas. We may need to reconsider the formula.', timestamp: '2024-08-14 14:25', department: 'Research', classification: 'classified' },
-      { id: '7', sender: 'Dr. Sawyer', message: 'The Prototype designation 1006 has been compromised. It knows about the experiment. Recommend immediate containment protocols.', timestamp: '2024-08-14 15:00', department: 'Innovation', classification: 'classified' },
-      { id: '8', sender: 'Director Stella', message: 'How is this possible? Our security measures were foolproof.', timestamp: '2024-08-14 15:05', department: 'Management', classification: 'classified' },
-      { id: '9', sender: 'Leith Pierre', message: 'The Prototype has been influencing other toys. CatNap, PuppyCorn, even the Smiling Critters are showing signs of... awareness.', timestamp: '2024-08-14 15:10', department: 'Special Projects', classification: 'classified' },
-    ],
-    hourOfJoy: [
-      { id: '10', sender: 'Dr. Sawyer', message: 'The Hour of Joy protocol is nearly complete. All toys are responding to the conditioning signals.', timestamp: '2024-08-16 08:00', department: 'Innovation', classification: 'classified' },
-      { id: '11', sender: 'Director Stella', message: 'Are we certain this is the right path? The children... they trust these toys completely.', timestamp: '2024-08-16 08:05', department: 'Management', classification: 'classified' },
-      { id: '12', sender: 'Dr. Ludwig', message: 'The Bigger Bodies Initiative has created the perfect vessels. They\'re strong enough, smart enough, and the children love them unconditionally.', timestamp: '2024-08-16 08:10', department: 'Research', classification: 'classified' },
-      { id: '13', sender: 'Leith Pierre', message: 'The Prototype grows stronger. It may try to prevent the Hour of Joy. We need contingency plans.', timestamp: '2024-08-16 08:15', department: 'Special Projects', classification: 'classified' },
-      { id: '14', sender: 'Dr. Sawyer', message: 'Miss Delight and her sisters are ready. The School sector will be... cleansed first.', timestamp: '2024-08-16 08:20', department: 'Innovation', classification: 'classified' },
-      { id: '15', sender: 'Director Stella', message: 'God help us all. The children will never see it coming.', timestamp: '2024-08-16 08:25', department: 'Management', classification: 'classified' },
+      { id: '11', sender: 'Leith Pierre', message: 'I need clearance to increase Prototype containment field strength. It\'s showing unusual brain activity patterns.', timestamp: '2024-08-16 08:00', department: 'Special Projects', classification: 'classified' },
+      { id: '12', sender: 'Director Stella', message: 'Granted. What kind of activity are we talking about?', timestamp: '2024-08-16 08:05', department: 'Management', classification: 'classified' },
+      { id: '13', sender: 'Leith Pierre', message: 'It\'s... communicating somehow. With the other toys. I\'ve seen it happen.', timestamp: '2024-08-16 08:10', department: 'Special Projects', classification: 'classified' },
+      { id: '14', sender: 'Dr. Ludwig', message: 'Impossible. The toys operate on isolated systems. There's no network connecting them.', timestamp: '2024-08-16 08:15', department: 'Research', classification: 'classified' },
+      { id: '15', sender: 'The Doctor', message: 'All systems showing normal operation. Perhaps we need to evaluate researcher stress levels.', timestamp: '2024-08-16 08:20', department: 'Security', classification: 'classified' },
+      { id: '16', sender: 'Director Stella', message: 'I want 24/7 observation on the Prototype. Something doesn\'t feel right.', timestamp: '2024-08-16 08:25', department: 'Management', classification: 'classified' },
     ]
   };
 
   const projects = [
     { name: 'Bigger Bodies Initiative', status: 'Active', lead: 'Dr. Ludwig', progress: 89 },
-    { name: 'Hour of Joy Protocol', status: 'Final Phase', lead: 'Dr. Sawyer', progress: 95 },
-    { name: 'Prototype Containment', status: 'Critical', lead: 'Leith Pierre', progress: 67 },
-    { name: 'Red Gas Distribution', status: 'Testing', lead: 'Operations', progress: 78 },
-    { name: 'School Sector Prep', status: 'Complete', lead: 'Miss Delight', progress: 100 },
+    { name: 'Toy Material Research', status: 'Testing', lead: 'Dr. Chen', progress: 76 },
+    { name: 'Prototype Containment', status: 'Critical', lead: 'Leith Pierre', progress: 62 },
+    { name: 'Red Gas Formulation', status: 'Testing', lead: 'Research Team', progress: 78 },
+    { name: 'Security System Upgrades', status: 'In Progress', lead: 'The Doctor', progress: 85 },
   ];
 
   if (!user) return null;
@@ -121,20 +122,20 @@ const ExecutivePortal = () => {
                       General Executive
                     </Button>
                     <Button 
+                      variant={selectedChat === 'research' ? 'destructive' : 'outline'}
+                      className="w-full justify-start nostalgic-text"
+                      onClick={() => setSelectedChat('research')}
+                    >
+                      <AlertTriangle className="w-4 h-4 mr-2" />
+                      Research Development
+                    </Button>
+                    <Button 
                       variant={selectedChat === 'prototype' ? 'destructive' : 'outline'}
                       className="w-full justify-start nostalgic-text"
                       onClick={() => setSelectedChat('prototype')}
                     >
-                      <AlertTriangle className="w-4 h-4 mr-2" />
-                      Prototype Containment
-                    </Button>
-                    <Button 
-                      variant={selectedChat === 'hourOfJoy' ? 'destructive' : 'outline'}
-                      className="w-full justify-start nostalgic-text"
-                      onClick={() => setSelectedChat('hourOfJoy')}
-                    >
                       <Clock className="w-4 h-4 mr-2" />
-                      Hour of Joy Planning
+                      Prototype Monitoring
                     </Button>
                   </div>
                 </CardContent>
@@ -145,8 +146,8 @@ const ExecutivePortal = () => {
                   <CardTitle className="text-red-400 nostalgic-text flex items-center">
                     <FileText className="w-5 h-5 mr-2" />
                     {selectedChat === 'general' && 'General Executive Chat'}
-                    {selectedChat === 'prototype' && 'Prototype Containment - CLASSIFIED'}
-                    {selectedChat === 'hourOfJoy' && 'Hour of Joy Planning - TOP SECRET'}
+                    {selectedChat === 'research' && 'Research Development - CLASSIFIED'}
+                    {selectedChat === 'prototype' && 'Prototype Monitoring - TOP SECRET'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -172,6 +173,15 @@ const ExecutivePortal = () => {
                       ))}
                     </div>
                   </ScrollArea>
+
+                  <div className="mt-4">
+                    <Button 
+                      asChild 
+                      className="bg-red-600 hover:bg-red-700"
+                    >
+                      <Link to="/prototype-conversations">Investigate Communications</Link>
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -186,7 +196,7 @@ const ExecutivePortal = () => {
                       {project.name}
                       <span className={`text-sm px-2 py-1 rounded ${
                         project.status === 'Critical' ? 'bg-red-600' :
-                        project.status === 'Final Phase' ? 'bg-yellow-600 text-black' :
+                        project.status === 'Testing' ? 'bg-yellow-600 text-black' :
                         project.status === 'Complete' ? 'bg-green-600' :
                         'bg-blue-600'
                       }`}>
@@ -210,6 +220,13 @@ const ExecutivePortal = () => {
                           style={{ width: `${project.progress}%` }}
                         />
                       </div>
+                      <Button asChild size="sm" className="mt-2 bg-blue-600 hover:bg-blue-700">
+                        <Link to={project.name === 'Prototype Containment' ? '/prototype-conversations' : 
+                               project.name === 'Security System Upgrades' ? '/the-doctor' :
+                               project.name === 'Bigger Bodies Initiative' ? '/make-a-friend' : '/departments'}>
+                          View Details
+                        </Link>
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -225,19 +242,36 @@ const ExecutivePortal = () => {
               <CardContent>
                 <div className="space-y-4">
                   <div className="p-4 bg-red-900 bg-opacity-50 border border-red-500 rounded">
-                    <h3 className="font-bold text-red-400 mb-2">URGENT: Prototype Breach - Sector 7</h3>
-                    <p className="text-gray-300 nostalgic-text mb-2">The Prototype has breached containment in Sector 7. Multiple toys showing signs of external influence. Recommend immediate lockdown procedures.</p>
+                    <h3 className="font-bold text-red-400 mb-2">URGENT: Security Anomalies in Sector 7</h3>
+                    <p className="text-gray-300 nostalgic-text mb-2">Security cameras in Sector 7 experienced unexpected outages last night. The Doctor reports technical issues, but no evidence of unauthorized access.</p>
                     <span className="text-xs text-red-400">Reported by: Security Chief - 2024-08-16 06:30</span>
+                    <div className="mt-3">
+                      <Button asChild size="sm" className="bg-red-600 hover:bg-red-700">
+                        <Link to="/the-doctor">Security Investigation</Link>
+                      </Button>
+                    </div>
                   </div>
+
                   <div className="p-4 bg-yellow-900 bg-opacity-50 border border-yellow-500 rounded">
                     <h3 className="font-bold text-yellow-400 mb-2">WARNING: Red Gas Leak - Playcare</h3>
                     <p className="text-gray-300 nostalgic-text mb-2">Minor red gas leak detected in Playcare sector. Children evacuated as precaution. Leak contained, but exposure monitoring required.</p>
                     <span className="text-xs text-yellow-400">Reported by: Dr. Chen - 2024-08-15 14:20</span>
+                    <div className="mt-3">
+                      <Button asChild size="sm" className="bg-yellow-600 hover:bg-yellow-700 text-black">
+                        <Link to="/playcare">Visit Playcare</Link>
+                      </Button>
+                    </div>
                   </div>
+
                   <div className="p-4 bg-blue-900 bg-opacity-50 border border-blue-500 rounded">
-                    <h3 className="font-bold text-blue-400 mb-2">INFO: New Toy Integration Complete</h3>
-                    <p className="text-gray-300 nostalgic-text mb-2">Successfully integrated DogDay and Bobby BearHug into the Smiling Critters program. Children showing positive response rates.</p>
-                    <span className="text-xs text-blue-400">Reported by: Toy Designer - 2024-08-14 10:15</span>
+                    <h3 className="font-bold text-blue-400 mb-2">STAFF CHANGE: Dr. Sawyer Reassignment</h3>
+                    <p className="text-gray-300 nostalgic-text mb-2">Dr. Harley Sawyer has been reassigned to a classified special project. "The Doctor" has assumed security oversight responsibilities.</p>
+                    <span className="text-xs text-blue-400">Reported by: HR Department - 2024-08-03 09:15</span>
+                    <div className="mt-3">
+                      <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700">
+                        <Link to="/the-doctor">Security Personnel</Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -254,29 +288,45 @@ const ExecutivePortal = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white nostalgic-text">
-                    <Zap className="w-4 h-4 mr-2" />
-                    Initiate Hour of Joy Protocol
+                  <Button asChild className="w-full bg-red-600 hover:bg-red-700 text-white nostalgic-text">
+                    <Link to="/prison">
+                      <Zap className="w-4 h-4 mr-2" />
+                      Prototype Breach Protocol
+                    </Link>
                   </Button>
-                  <Button className="w-full bg-yellow-600 hover:bg-yellow-700 text-black nostalgic-text">
-                    <AlertTriangle className="w-4 h-4 mr-2" />
-                    Prototype Containment Breach
+                  <Button asChild className="w-full bg-yellow-600 hover:bg-yellow-700 text-black nostalgic-text">
+                    <Link to="/prison">
+                      <AlertTriangle className="w-4 h-4 mr-2" />
+                      Containment Breach Response
+                    </Link>
                   </Button>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white nostalgic-text">
-                    <Settings className="w-4 h-4 mr-2" />
-                    Facility Lockdown
+                  <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 text-white nostalgic-text">
+                    <Link to="/the-doctor">
+                      <Camera className="w-4 h-4 mr-2" />
+                      Facility Lockdown
+                    </Link>
                   </Button>
                 </div>
+                
                 <div className="mt-6 p-4 bg-black bg-opacity-50 border border-red-400 rounded">
                   <p className="text-red-400 text-sm nostalgic-text">
-                    <strong>REMINDER:</strong> The Hour of Joy is scheduled for August 8th, 1995. All personnel must be clear of active areas. 
-                    The toys will handle the transition. No witnesses.
+                    <strong>SAFETY REMINDER:</strong> In case of facility emergency, executives should proceed to the secure bunker 
+                    on sublevel B4. Security team will provide escort. All containment procedures must be initiated before evacuation.
                   </p>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
+      </div>
+      
+      {/* Hidden Portal Link */}
+      <div className="fixed bottom-4 right-4 opacity-30 hover:opacity-100 transition-opacity">
+        <Link to="/prototype-conversations">
+          <Button variant="outline" size="sm" className="border-red-400 text-red-400">
+            <Eye className="w-4 h-4" />
+          </Button>
+        </Link>
       </div>
     </div>
   );

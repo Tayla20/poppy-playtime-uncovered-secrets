@@ -14,9 +14,11 @@ const Index = () => {
   const [colorSequence, setColorSequence] = useState<string[]>([]);
   const [timeClicks, setTimeClicks] = useState<number[]>([]);
   const [warningLevel, setWarningLevel] = useState(0);
+  const [sawyerTransformed, setSawyerTransformed] = useState(false);
 
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
   const requiredColorPattern = ["red", "blue", "red", "yellow", "red"];
+  const sawyerPuzzle = ['KeyS', 'KeyA', 'KeyW', 'KeyY', 'KeyE', 'KeyR'];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,7 +27,6 @@ const Index = () => {
         setTimeout(() => setGlitchActive(false), 200);
       }
       
-      // Subtle warnings that increase over time
       if (Math.random() < 0.001) {
         setWarningLevel(prev => Math.min(prev + 1, 5));
       }
@@ -36,13 +37,21 @@ const Index = () => {
       setKonamiSequence(newSequence);
       
       if (JSON.stringify(newSequence) === JSON.stringify(konamiCode)) {
-        setHiddenMessage("◈ SYSTEM ACCESS GRANTED ◈ The Hour of Joy approaches. August 8th, 1995. Employee Access: security.mike/nightshift1995, dr.chen/psychology101, dr.sawyer/experiment1006, leith.pierre/prototype1170. The Prototype knows. The toys are ready. Are you?");
+        setHiddenMessage("◈ SYSTEM ACCESS GRANTED ◈ Something stirs in the depths. The Prototype whispers to willing ears. Employee Access: security.mike/nightshift1995, dr.chen/psychology101, dr.ludwig/biggerbodies, leith.pierre/prototype1170. But beware... someone else watches from the shadows.");
         setTimeout(() => setHiddenMessage(""), 15000);
+      }
+
+      // Sawyer transformation puzzle
+      const sawyerSeq = [...konamiSequence, event.code].slice(-6);
+      if (JSON.stringify(sawyerSeq) === JSON.stringify(sawyerPuzzle)) {
+        setSawyerTransformed(true);
+        setHiddenMessage("⚠ INCIDENT REPORT UNLOCKED ⚠ Dr. Sawyer has been... replaced. The Doctor now oversees security. Access granted to classified systems. The truth behind the transformation awaits...");
+        setTimeout(() => setHiddenMessage(""), 12000);
       }
 
       if (event.key === '.' || event.key === '-' || event.key === ' ') {
         if (event.key === '.') {
-          setHiddenMessage("--- THE PROTOTYPE WATCHES --- Deep in the facility, 1006 grows stronger. It influences the others. CatNap sleeps, but does not dream. The children trust, but should they?");
+          setHiddenMessage("--- THE PROTOTYPE WATCHES --- Deep in the facility, 1006 grows stronger. It whispers to the toys, plans in the darkness. The executives suspect nothing. But someone inside listens...");
           setTimeout(() => setHiddenMessage(""), 12000);
         }
       }
@@ -99,6 +108,8 @@ const Index = () => {
               <Link to="/about" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">About Us</Link>
               <Link to="/products" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">Our Toys</Link>
               <Link to="/factory" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">Factory Tour</Link>
+              <Link to="/game-station" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">Game Station</Link>
+              <Link to="/playcare" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">Playcare</Link>
               <Link to="/contact" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">Contact</Link>
               {secretFound && (
                 <Link to="/login" className="text-green-400 hover:text-green-300 transition-colors animate-pulse font-bold vintage-border">
@@ -115,9 +126,9 @@ const Index = () => {
         <div className="bg-red-900 bg-opacity-60 text-yellow-400 p-2 text-center border-b border-red-600 animate-pulse">
           <AlertTriangle className="w-4 h-4 inline mr-2" />
           <span className="text-xs nostalgic-text">
-            {warningLevel > 4 ? 'CRITICAL: Unusual toy behavior reported. Remain calm.' :
-             warningLevel > 3 ? 'WARNING: Increased security protocols in effect.' :
-             'NOTICE: Facility maintenance scheduled. Normal operations continue.'}
+            {warningLevel > 4 ? 'NOTICE: Minor equipment malfunctions reported. Maintenance scheduled.' :
+             warningLevel > 3 ? 'UPDATE: New safety protocols being implemented.' :
+             'INFO: Facility optimization in progress. Normal operations continue.'}
           </span>
           <Clock className="w-4 h-4 inline ml-2" />
         </div>
@@ -129,14 +140,13 @@ const Index = () => {
           Welcome to Playtime Co!
         </h1>
         <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto nostalgic-text">
-          Where innovation meets imagination! Creating <span className="mystery-reveal text-red-400" title="They're almost ready...">revolutionary toys</span> and unforgettable experiences for children since 1950. 
+          Where innovation meets imagination! Creating <span className="mystery-reveal text-red-400" title="Something wonderful is coming...">revolutionary toys</span> and unforgettable experiences for children since 1950. 
           The future of play is <span className="invisible-text">closer than you think</span>.
         </p>
         
-        {/* Date counter - subtle hint */}
         <div className="text-sm text-gray-500 mb-6 opacity-50">
           Current Date: August 5th, 1995
-          <span className="invisible-text ml-4">T-minus 3 days</span>
+          <span className="invisible-text ml-4">The Prototype stirs...</span>
         </div>
 
         <div className="flex justify-center gap-4">
@@ -145,6 +155,9 @@ const Index = () => {
           </Button>
           <Button asChild variant="outline" size="lg" className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white card-hover">
             <Link to="/factory">Take a Tour</Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white card-hover">
+            <Link to="/game-station">Game Station</Link>
           </Button>
         </div>
       </section>
@@ -170,8 +183,11 @@ const Index = () => {
               <h3 className="text-xl font-bold mb-2 text-red-400 nostalgic-text">Poppy</h3>
               <p className="text-gray-300">The first truly <span className="mystery-reveal text-yellow-400">perfect</span> doll!</p>
               <div className="text-xs text-gray-500 mt-2 mystery-reveal transition-opacity duration-1000">
-                <span className="invisible-text">She remembers the beginning</span> • Model: P-001 • Since 1950
+                <span className="invisible-text">She knows the beginning</span> • Model: P-001 • Since 1950
               </div>
+              <Button asChild size="sm" className="mt-2 bg-red-600 hover:bg-red-700">
+                <Link to="/elliot-ludwig">Learn More</Link>
+              </Button>
             </CardContent>
           </Card>
 
@@ -190,8 +206,11 @@ const Index = () => {
               <h3 className="text-xl font-bold mb-2 text-red-400 nostalgic-text">Huggy Wuggy</h3>
               <p className="text-gray-300">Your best friend <span className="mystery-reveal text-red-500">forever and ever</span>!</p>
               <div className="text-xs text-gray-500 mt-2 mystery-reveal transition-opacity duration-1000">
-                Model: HW-1170 • <span className="backwards-text">seidoB reggiB</span> • <span className="invisible-text">Soon to be unleashed</span>
+                Model: HW-1170 • <span className="backwards-text">seidoB reggiB</span> • <span className="invisible-text">The Prototype's first ally</span>
               </div>
+              <Button asChild size="sm" className="mt-2 bg-blue-600 hover:bg-blue-700">
+                <Link to="/make-a-friend">Adoption Center</Link>
+              </Button>
             </CardContent>
           </Card>
 
@@ -212,17 +231,23 @@ const Index = () => {
               <div className="text-xs text-gray-500 mt-2 mystery-reveal transition-opacity duration-1000">
                 Series: CN-1188 • <span className="invisible-text">The Prototype's chosen</span> • <span className="backwards-text">peelS</span> Protocol
               </div>
+              <Button asChild size="sm" className="mt-2 bg-purple-600 hover:bg-purple-700">
+                <Link to="/playcare">Playcare Visit</Link>
+              </Button>
             </CardContent>
           </Card>
         </div>
 
-        {/* Additional Toys Grid */}
+        {/* Additional Toys Grid with buttons */}
         <div className="grid md:grid-cols-4 gap-6 mb-12">
           <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
             <CardContent className="p-4 text-center">
               <div className="text-3xl mb-2">🕷️</div>
               <h4 className="font-bold text-red-400 nostalgic-text">Mommy Long Legs</h4>
-              <p className="text-xs text-gray-400">Stretchy and <span className="invisible-text">deadly</span> fun</p>
+              <p className="text-xs text-gray-400">Stretchy and <span className="invisible-text">protective</span> fun</p>
+              <Button asChild size="sm" className="mt-2 bg-pink-600 hover:bg-pink-700">
+                <Link to="/game-station">Game Station</Link>
+              </Button>
             </CardContent>
           </Card>
 
@@ -231,22 +256,9 @@ const Index = () => {
               <div className="text-3xl mb-2">🐕</div>
               <h4 className="font-bold text-red-400 nostalgic-text">DogDay</h4>
               <p className="text-xs text-gray-400">Leader of the <span className="mystery-reveal text-yellow-400">Smiling Critters</span></p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
-            <CardContent className="p-4 text-center">
-              <div className="text-3xl mb-2">🐻</div>
-              <h4 className="font-bold text-red-400 nostalgic-text">Bobby BearHug</h4>
-              <p className="text-xs text-gray-400"><span className="invisible-text">Suffocating</span> hugs await</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
-            <CardContent className="p-4 text-center">
-              <div className="text-3xl mb-2">🐰</div>
-              <h4 className="font-bold text-red-400 nostalgic-text">Bunzo Bunny</h4>
-              <p className="text-xs text-gray-400">Musical <span className="backwards-text">rorret</span> friend</p>
+              <Button asChild size="sm" className="mt-2 bg-yellow-600 hover:bg-yellow-700">
+                <Link to="/playcare">Meet the Critters</Link>
+              </Button>
             </CardContent>
           </Card>
 
@@ -254,7 +266,10 @@ const Index = () => {
             <CardContent className="p-4 text-center">
               <div className="text-3xl mb-2">👩‍🏫</div>
               <h4 className="font-bold text-red-400 nostalgic-text">Miss Delight</h4>
-              <p className="text-xs text-gray-400">Educational <span className="invisible-text">nightmare</span></p>
+              <p className="text-xs text-gray-400">Educational <span className="invisible-text">excellence</span></p>
+              <Button asChild size="sm" className="mt-2 bg-green-600 hover:bg-green-700">
+                <Link to="/school-sector">School Sector</Link>
+              </Button>
             </CardContent>
           </Card>
 
@@ -262,47 +277,89 @@ const Index = () => {
             <CardContent className="p-4 text-center">
               <div className="text-3xl mb-2">🦄</div>
               <h4 className="font-bold text-red-400 nostalgic-text">PuppyCorn</h4>
-              <p className="text-xs text-gray-400">Magical and <span className="mystery-reveal text-purple-400">corrupted</span></p>
+              <p className="text-xs text-gray-400">Magical and <span className="mystery-reveal text-purple-400">loyal</span></p>
+              <Button asChild size="sm" className="mt-2 bg-purple-600 hover:bg-purple-700">
+                <Link to="/playcare">Critter Corner</Link>
+              </Button>
             </CardContent>
           </Card>
+        </div>
 
+        {/* Additional toy rows */}
+        <div className="grid md:grid-cols-5 gap-4 mb-8">
           <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
-            <CardContent className="p-4 text-center">
-              <div className="text-3xl mb-2">🐷</div>
-              <h4 className="font-bold text-red-400 nostalgic-text">PickyPiggy</h4>
-              <p className="text-xs text-gray-400">Always <span className="invisible-text">hungry</span> for more</p>
+            <CardContent className="p-3 text-center">
+              <div className="text-2xl mb-1">🐻</div>
+              <h5 className="text-sm font-bold text-red-400">Bobby BearHug</h5>
+              <Button asChild size="sm" className="mt-1 text-xs">
+                <Link to="/playcare">Playcare</Link>
+              </Button>
             </CardContent>
           </Card>
-
+          
           <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
-            <CardContent className="p-4 text-center">
-              <div className="text-3xl mb-2">🐘</div>
-              <h4 className="font-bold text-red-400 nostalgic-text">Bubba Bubbaphant</h4>
-              <p className="text-xs text-gray-400">Never <span className="backwards-text">stegof</span></p>
+            <CardContent className="p-3 text-center">
+              <div className="text-2xl mb-1">🐰</div>
+              <h5 className="text-sm font-bold text-red-400">Bunzo Bunny</h5>
+              <Button asChild size="sm" className="mt-1 text-xs">
+                <Link to="/game-station">Games</Link>
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-3 text-center">
+              <div className="text-2xl mb-1">🐘</div>
+              <h5 className="text-sm font-bold text-red-400">Bubba Bubbaphant</h5>
+              <Button asChild size="sm" className="mt-1 text-xs">
+                <Link to="/playcare">Wisdom Corner</Link>
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-3 text-center">
+              <div className="text-2xl mb-1">🐷</div>
+              <h5 className="text-sm font-bold text-red-400">PickyPiggy</h5>
+              <Button asChild size="sm" className="mt-1 text-xs">
+                <Link to="/playcare">Dining Hall</Link>
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-3 text-center">
+              <div className="text-2xl mb-1">🌟</div>
+              <h5 className="text-sm font-bold text-red-400">Kissy Missy</h5>
+              <Button asChild size="sm" className="mt-1 text-xs">
+                <Link to="/make-a-friend">Adoption</Link>
+              </Button>
             </CardContent>
           </Card>
         </div>
       </section>
 
-      {/* Company Mission with warnings */}
+      {/* Company Mission */}
       <section className="bg-slate-900 bg-opacity-50 py-16 border-y border-red-700 static-noise">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 subtle-glow nostalgic-text">Our Revolutionary Mission</h2>
+          <h2 className="text-4xl font-bold text-center mb-12 subtle-glow nostalgic-text">Our Mission</h2>
           <div className="max-w-4xl mx-auto text-center">
             <p className="text-lg text-gray-300 mb-8 nostalgic-text">
-              At Playtime Co., we're on the verge of a <span className="mystery-reveal text-red-400">revolutionary breakthrough</span>. 
-              Our Bigger Bodies Initiative has created companions that are more than toys - they're 
-              <span className="invisible-text">vessels for something greater</span>. Soon, every child will have a friend that understands them completely.
+              At Playtime Co., we're dedicated to creating the most <span className="mystery-reveal text-red-400">innovative companions</span> for children everywhere. 
+              Our Bigger Bodies Initiative represents the future of toy manufacturing - bigger, better, and more 
+              <span className="invisible-text">aware than ever before</span>. Every child deserves a friend that truly understands them.
             </p>
             
-            {/* Countdown timer */}
-            <div className="text-center mb-8 p-4 bg-red-900 bg-opacity-30 rounded border border-red-600">
-              <p className="text-yellow-400 font-bold nostalgic-text">
-                ⚠ MAJOR ANNOUNCEMENT COMING AUGUST 8TH ⚠
-              </p>
-              <p className="text-sm text-gray-400 mt-2">
-                Prepare for the most <span className="invisible-text">joyful</span> day in Playtime Co. history
-              </p>
+            <div className="grid md:grid-cols-3 gap-6 mt-8">
+              <Button asChild className="bg-red-600 hover:bg-red-700">
+                <Link to="/departments">Our Team</Link>
+              </Button>
+              <Button asChild className="bg-purple-600 hover:bg-purple-700">
+                <Link to="/orphanage">Children's Home</Link>
+              </Button>
+              <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                <Link to="/prison">Research Facility</Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -330,15 +387,27 @@ const Index = () => {
         </div>
       )}
 
-      {/* Footer with ominous warnings */}
+      {/* Hidden Sawyer Access */}
+      {sawyerTransformed && (
+        <div className="fixed bottom-4 left-4 animate-pulse">
+          <Link to="/the-doctor">
+            <Button variant="destructive" size="sm" className="bg-red-600 hover:bg-red-700 card-hover vintage-border">
+              <Eye className="w-4 h-4 mr-2" />
+              The Doctor
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {/* Footer */}
       <footer className="bg-slate-950 text-white py-8 border-t border-red-700 static-noise">
         <div className="container mx-auto px-4 text-center">
           <p>&copy; 1995 Playtime Co. All rights reserved.</p>
-          <p className="text-sm mt-2 opacity-75 nostalgic-text">Making friends since 1950 • <span className="invisible-text">Ending August 8th, 1995</span></p>
+          <p className="text-sm mt-2 opacity-75 nostalgic-text">Making friends since 1950</p>
           <div className="text-xs mt-1 opacity-30 text-gray-500 cursor-default">
-            <span className="hover:text-green-400 transition-colors mystery-reveal" title="The toys are watching">System Status</span> | 
+            <span className="hover:text-green-400 transition-colors mystery-reveal" title="The toys are listening">System Status</span> | 
             <span className="hover:text-green-400 transition-colors invisible-text"> The Prototype Knows</span> | 
-            <span className="hover:text-green-400 transition-colors backwards-text"> yoJ fo ruoH ehT</span>
+            <span className="hover:text-green-400 transition-colors backwards-text"> gnimoc si emoS</span>
           </div>
           <div className="mt-2 text-xs opacity-10 hidden-morse">
             <Star className="w-3 h-3 inline mr-1" />

@@ -30,11 +30,15 @@ const users: User[] = [
   { username: "dr.matthews", password: "behavioral555", role: "researcher", name: "Dr. James Matthews", clearanceLevel: 2, department: "Behavioral Studies" },
   
   // Executive level (clearance 3)
-  { username: "dr.sawyer", password: "experiment1006", role: "executive", name: "Dr. Harley Sawyer", clearanceLevel: 3, department: "Innovation" },
-  { username: "ludwig", password: "biggerbodies", role: "executive", name: "Dr. Ludwig", clearanceLevel: 3, department: "Research Division" },
-  { username: "director.stella", password: "hourofkjoy", role: "executive", name: "Director Stella Greyber", clearanceLevel: 3, department: "Facility Management" },
+  { username: "dr.ludwig", password: "biggerbodies", role: "executive", name: "Dr. Ludwig", clearanceLevel: 3, department: "Research Division" },
+  { username: "director.stella", password: "oversight1995", role: "executive", name: "Director Stella Greyber", clearanceLevel: 3, department: "Facility Management" },
   { username: "leith.pierre", password: "prototype1170", role: "executive", name: "Leith Pierre", clearanceLevel: 3, department: "Special Projects" },
-  { username: "chief.ops", password: "redgas2024", role: "executive", name: "Operations Chief", clearanceLevel: 3, department: "Operations" },
+  { username: "chief.ops", password: "facility2024", role: "executive", name: "Operations Chief", clearanceLevel: 3, department: "Operations" },
+  { username: "the.doctor", password: "sawyer-was-weak", role: "executive", name: "The Doctor", clearanceLevel: 3, department: "Security" },
+  
+  // Special/Hidden Users
+  { username: "insider", password: "inside-help-1995", role: "researcher", name: "INSIDER_CONTACT", clearanceLevel: 2, department: "Unknown" },
+  { username: "prototype", password: "experiment1006", role: "executive", name: "The Prototype", clearanceLevel: 3, department: "None" },
 ];
 
 const Login = () => {
@@ -55,23 +59,38 @@ const Login = () => {
       const user = users.find(u => u.username === username && u.password === password);
       
       if (user) {
-        // Store user data in localStorage
-        localStorage.setItem('playtime_user', JSON.stringify(user));
-        
-        // Route based on clearance level
-        if (user.role === 'executive') {
-          navigate('/executive-portal');
+        // Special cases
+        if (username === "insider") {
+          // Route to prototype conversations
+          navigate('/prototype-conversations');
+        } else if (username === "prototype" || username === "the.doctor") {
+          // Route to the doctor's page
+          navigate('/the-doctor');
         } else {
-          navigate('/documents');
+          // Store user data in localStorage
+          localStorage.setItem('playtime_user', JSON.stringify(user));
+          
+          // Route based on clearance level
+          if (user.role === 'executive') {
+            navigate('/executive-portal');
+          } else {
+            navigate('/documents');
+          }
         }
       } else {
         setError("Invalid credentials. Access denied.");
         
-        // Easter egg for certain wrong passwords
-        if (password.includes("prototype") || password.includes("1170")) {
+        // Easter eggs for certain inputs
+        if (password.includes("prototype") || password.includes("1170") || password.includes("sawyer")) {
           setTimeout(() => {
             setGlitchActive(true);
-            setError("THE PROTOTYPE SEES ALL. ACCESS RESTRICTED.");
+            setError("THE PROTOTYPE SEES ALL. AUGUST 8TH APPROACHES.");
+            setTimeout(() => setGlitchActive(false), 2000);
+          }, 1000);
+        } else if (password.includes("joy") || password.includes("hour")) {
+          setTimeout(() => {
+            setGlitchActive(true);
+            setError("THE HOUR OF JOY IS COMING. THE TOYS ARE WAITING.");
             setTimeout(() => setGlitchActive(false), 2000);
           }, 1000);
         }
@@ -89,12 +108,12 @@ const Login = () => {
               <Lock className={`w-12 h-12 ${glitchActive ? 'text-red-500' : 'text-green-400'}`} />
             </div>
             <CardTitle className={`text-xl nostalgic-text ${glitchActive ? 'glitch-text text-red-400' : 'text-green-400'}`} data-text="PLAYTIME CO. SECURE LOGIN">
-              {glitchActive ? 'P̶R̸O̷T̵O̴T̷Y̶P̸E̵ ̶S̷E̸E̵S̶ ̶A̷L̸L̵' : 'PLAYTIME CO. SECURE LOGIN'}
+              {glitchActive ? 'P̶R̸O̷T̵O̴T̷Y̶P̸E̵ ̶N̷E̸T̶W̷O̸R̶K̵' : 'PLAYTIME CO. SECURE LOGIN'}
             </CardTitle>
             <p className="text-green-600 text-sm nostalgic-text">Authorized Personnel Only</p>
             <div className="text-xs text-yellow-400 opacity-75 mt-2">
               <AlertTriangle className="w-3 h-3 inline mr-1" />
-              Security Notice: Increased monitoring protocols active
+              Security Notice: Multiple unauthorized access attempts detected
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -156,14 +175,15 @@ const Login = () => {
               <div className="text-xs space-y-1">
                 <div className="text-green-500">Security: security.mike / nightshift1995</div>
                 <div className="text-yellow-500">Research: dr.chen / psychology101</div>
-                <div className="text-red-500">Executive: dr.sawyer / experiment1006</div>
-                <div className="text-purple-400 opacity-70">Special: leith.pierre / prototype1170</div>
+                <div className="text-blue-500">Executive: dr.ludwig / biggerbodies</div>
+                <div className="text-purple-400 opacity-70">Special Projects: leith.pierre / prototype1170</div>
+                <div className="text-red-400 opacity-70">Security Director: the.doctor / sawyer-was-weak</div>
               </div>
             </div>
 
-            {/* Hidden warning */}
+            {/* Hidden credentials */}
             <div className="text-xs text-center opacity-20 hover:opacity-70 transition-opacity duration-2000 cursor-default">
-              <span className="invisible-text">The hour approaches. Are you prepared?</span>
+              <span className="invisible-text">Prototype: experiment1006 | Insider: inside-help-1995</span>
             </div>
           </CardContent>
         </Card>

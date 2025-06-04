@@ -16,6 +16,13 @@ import Orphanage from "./pages/Orphanage";
 import Prison from "./pages/Prison";
 import Departments from "./pages/Departments";
 import ExecutivePortal from "./pages/ExecutivePortal";
+import GameStation from "./pages/GameStation";
+import Playcare from "./pages/Playcare";
+import SchoolSector from "./pages/SchoolSector";
+import PrototypeConversations from "./pages/PrototypeConversations";
+import MakeAFriend from "./pages/MakeAFriend";
+import ElliotLudwig from "./pages/ElliotLudwig";
+import TheDoctor from "./pages/TheDoctor";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +44,13 @@ const App = () => (
           <Route path="/orphanage" element={<Orphanage />} />
           <Route path="/prison" element={<Prison />} />
           <Route path="/departments" element={<Departments />} />
+          <Route path="/game-station" element={<GameStation />} />
+          <Route path="/playcare" element={<Playcare />} />
+          <Route path="/school-sector" element={<SchoolSector />} />
+          <Route path="/prototype-conversations" element={<PrototypeConversations />} />
+          <Route path="/make-a-friend" element={<MakeAFriend />} />
+          <Route path="/elliot-ludwig" element={<ElliotLudwig />} />
+          <Route path="/the-doctor" element={<TheDoctor />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
