@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import Orphanage from "./pages/Orphanage";
 import Prison from "./pages/Prison";
 import Departments from "./pages/Departments";
+import ExecutivePortal from "./pages/ExecutivePortal";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/documents" element={<Documents />} />
+          <Route path="/executive-portal" element={<ExecutivePortal />} />
           <Route path="/orphanage" element={<Orphanage />} />
           <Route path="/prison" element={<Prison />} />
           <Route path="/departments" element={<Departments />} />

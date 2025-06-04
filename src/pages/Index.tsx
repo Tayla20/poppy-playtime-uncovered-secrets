@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { LogIn, Eye, Star } from "lucide-react";
+import { LogIn, Eye, Star, Clock, AlertTriangle } from "lucide-react";
 
 const Index = () => {
   const [glitchActive, setGlitchActive] = useState(false);
@@ -11,15 +11,12 @@ const Index = () => {
   const [clickCount, setClickCount] = useState(0);
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
   const [hiddenMessage, setHiddenMessage] = useState("");
-  const [mousePositions, setMousePositions] = useState<{x: number, y: number}[]>([]);
-  const [morseProgress, setMorseProgress] = useState<string>("");
   const [colorSequence, setColorSequence] = useState<string[]>([]);
   const [timeClicks, setTimeClicks] = useState<number[]>([]);
+  const [warningLevel, setWarningLevel] = useState(0);
 
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
-  const morseCodeSequence = ".--.  ---  .--.  .--.  -.--"; // POPPY in morse
-  const requiredColorPattern = ["red", "blue", "red", "yellow", "red"]; // Product hover order
-  const timingPattern = [1, 2, 1, 2, 3]; // Seconds between clicks
+  const requiredColorPattern = ["red", "blue", "red", "yellow", "red"];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,68 +24,50 @@ const Index = () => {
         setGlitchActive(true);
         setTimeout(() => setGlitchActive(false), 200);
       }
+      
+      // Subtle warnings that increase over time
+      if (Math.random() < 0.001) {
+        setWarningLevel(prev => Math.min(prev + 1, 5));
+      }
     }, 12000);
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Konami code detection
       const newSequence = [...konamiSequence, event.code].slice(-10);
       setKonamiSequence(newSequence);
       
       if (JSON.stringify(newSequence) === JSON.stringify(konamiCode)) {
-        setHiddenMessage("◈ SYSTEM ACCESS GRANTED ◈ Employee Database: security123, research789, medical456, factory456, experiment1006, catnap-protocol, biggerbodies. Archive Portal: /documents. Remember: We see everything you do.");
+        setHiddenMessage("◈ SYSTEM ACCESS GRANTED ◈ The Hour of Joy approaches. August 8th, 1995. Employee Access: security.mike/nightshift1995, dr.chen/psychology101, dr.sawyer/experiment1006, leith.pierre/prototype1170. The Prototype knows. The toys are ready. Are you?");
         setTimeout(() => setHiddenMessage(""), 15000);
       }
 
-      // Morse code detection (dots and dashes using . and -)
       if (event.key === '.' || event.key === '-' || event.key === ' ') {
-        const newMorse = morseProgress + event.key;
-        setMorseProgress(newMorse);
-        
-        if (newMorse.includes(morseCodeSequence)) {
-          setHiddenMessage("--- POPPY PROTOCOL ACTIVATED --- Deep access unlocked. Subject files: /prison. Orphan records: /orphanage. Management oversight: /departments");
-          setMorseProgress("");
+        if (event.key === '.') {
+          setHiddenMessage("--- THE PROTOTYPE WATCHES --- Deep in the facility, 1006 grows stronger. It influences the others. CatNap sleeps, but does not dream. The children trust, but should they?");
           setTimeout(() => setHiddenMessage(""), 12000);
         }
-        
-        if (newMorse.length > 50) setMorseProgress("");
       }
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const newPos = { x: event.clientX, y: event.clientY };
-      setMousePositions(prev => [...prev.slice(-100), newPos]);
-    };
-
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('mousemove', handleMouseMove);
     
     return () => {
       clearInterval(interval);
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [konamiSequence, morseProgress]);
+  }, [konamiSequence]);
 
   const handleLogoClick = () => {
     const now = Date.now();
     setTimeClicks(prev => [...prev, now]);
     setClickCount(prev => prev + 1);
     
-    // Check timing pattern
-    if (timeClicks.length >= 4) {
-      const intervals = timeClicks.slice(-4).map((time, index, arr) => 
-        index > 0 ? Math.round((time - arr[index - 1]) / 1000) : 0
-      ).slice(1);
-      
-      if (JSON.stringify(intervals) === JSON.stringify(timingPattern.slice(0, 3))) {
-        setSecretFound(true);
-        setHiddenMessage("⚠ TEMPORAL PATTERN RECOGNIZED ⚠ Advanced access protocols enabled. Staff portal is now visible.");
-        setTimeout(() => setHiddenMessage(""), 8000);
-      }
-    }
-    
     if (clickCount >= 12) {
       setSecretFound(true);
+    }
+
+    if (clickCount === 8) {
+      setHiddenMessage("⚠ TEMPORAL ANOMALY DETECTED ⚠ The Hour of Joy countdown has begun. T-minus 72 hours. All toys are in position. The children suspect nothing.");
+      setTimeout(() => setHiddenMessage(""), 8000);
     }
   };
 
@@ -97,7 +76,7 @@ const Index = () => {
     setColorSequence(newSequence);
     
     if (JSON.stringify(newSequence) === JSON.stringify(requiredColorPattern)) {
-      setHiddenMessage("☾ COLOR SEQUENCE COMPLETE ☽ The children remember. Hidden pathways revealed. Check the shadows between the lines...");
+      setHiddenMessage("☾ TOY SEQUENCE COMPLETE ☽ The Bigger Bodies Initiative nears completion. Huggy Wuggy, Mommy Long Legs, CatNap - all vessels for something greater. The Prototype sees through their eyes.");
       setTimeout(() => setHiddenMessage(""), 10000);
     }
   };
@@ -131,17 +110,18 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* Header with hidden elements */}
-      <header className="bg-slate-900 bg-opacity-60 text-white p-6 shadow-lg border-b border-red-900 static-noise">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="text-lg nostalgic-text">
-            Welcome to our <span className="invisible-text" title="Something feels wrong here...">wonderful</span> world of toys!
-          </div>
-          <div className="text-sm opacity-75 hidden-morse" title="Try typing morse code: . - . . - - -">
-            <span className="backwards-text">0591 ecniS sdneirf gnikaM</span>
-          </div>
+      {/* Warning Header - appears based on warning level */}
+      {warningLevel > 2 && (
+        <div className="bg-red-900 bg-opacity-60 text-yellow-400 p-2 text-center border-b border-red-600 animate-pulse">
+          <AlertTriangle className="w-4 h-4 inline mr-2" />
+          <span className="text-xs nostalgic-text">
+            {warningLevel > 4 ? 'CRITICAL: Unusual toy behavior reported. Remain calm.' :
+             warningLevel > 3 ? 'WARNING: Increased security protocols in effect.' :
+             'NOTICE: Facility maintenance scheduled. Normal operations continue.'}
+          </span>
+          <Clock className="w-4 h-4 inline ml-2" />
         </div>
-      </header>
+      )}
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 text-center relative">
@@ -149,8 +129,16 @@ const Index = () => {
           Welcome to Playtime Co!
         </h1>
         <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto nostalgic-text">
-          Where imagination comes to life! Creating <span className="mystery-reveal text-red-400" title="Or do they create us?">magical toys</span> and unforgettable experiences for children everywhere since 1950.
+          Where innovation meets imagination! Creating <span className="mystery-reveal text-red-400" title="They're almost ready...">revolutionary toys</span> and unforgettable experiences for children since 1950. 
+          The future of play is <span className="invisible-text">closer than you think</span>.
         </p>
+        
+        {/* Date counter - subtle hint */}
+        <div className="text-sm text-gray-500 mb-6 opacity-50">
+          Current Date: August 5th, 1995
+          <span className="invisible-text ml-4">T-minus 3 days</span>
+        </div>
+
         <div className="flex justify-center gap-4">
           <Button asChild size="lg" className="bg-red-600 hover:bg-red-700 text-white card-hover">
             <Link to="/products">Explore Our Toys</Link>
@@ -159,17 +147,14 @@ const Index = () => {
             <Link to="/factory">Take a Tour</Link>
           </Button>
         </div>
-        
-        {/* Hidden puzzle element */}
-        <div className="mt-8 opacity-10 hover:opacity-30 transition-opacity duration-2000 text-xs">
-          <p className="hidden-morse">--- .-. .--. .... .- -. .- --. .</p>
-        </div>
       </section>
 
-      {/* Featured Products with color sequence puzzle */}
+      {/* Featured Products - All Poppy Playtime Toys */}
       <section className="container mx-auto px-4 py-16">
-        <h2 className="text-4xl font-bold text-center mb-12 subtle-glow nostalgic-text">Our Beloved Characters</h2>
-        <div className="grid md:grid-cols-3 gap-8">
+        <h2 className="text-4xl font-bold text-center mb-12 subtle-glow nostalgic-text">Our Revolutionary Collection</h2>
+        
+        {/* Main Characters */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
           <Card 
             className="bg-slate-800 bg-opacity-50 border-red-600 hover:border-yellow-500 hover:shadow-xl transition-all duration-300 group card-hover static-noise"
             onMouseEnter={() => handleProductHover("red")}
@@ -185,7 +170,7 @@ const Index = () => {
               <h3 className="text-xl font-bold mb-2 text-red-400 nostalgic-text">Poppy</h3>
               <p className="text-gray-300">The first truly <span className="mystery-reveal text-yellow-400">perfect</span> doll!</p>
               <div className="text-xs text-gray-500 mt-2 mystery-reveal transition-opacity duration-1000">
-                <span className="invisible-text">She knows your name</span> • Model: P-001 • Est. 1950
+                <span className="invisible-text">She remembers the beginning</span> • Model: P-001 • Since 1950
               </div>
             </CardContent>
           </Card>
@@ -205,7 +190,7 @@ const Index = () => {
               <h3 className="text-xl font-bold mb-2 text-red-400 nostalgic-text">Huggy Wuggy</h3>
               <p className="text-gray-300">Your best friend <span className="mystery-reveal text-red-500">forever and ever</span>!</p>
               <div className="text-xs text-gray-500 mt-2 mystery-reveal transition-opacity duration-1000">
-                Model: HW-1006 • <span className="backwards-text">llacsid fo tseT</span> • Special Edition
+                Model: HW-1170 • <span className="backwards-text">seidoB reggiB</span> • <span className="invisible-text">Soon to be unleashed</span>
               </div>
             </CardContent>
           </Card>
@@ -225,78 +210,100 @@ const Index = () => {
               <h3 className="text-xl font-bold mb-2 text-red-400 nostalgic-text">CatNap</h3>
               <p className="text-gray-300">Sweet dreams <span className="mystery-reveal text-purple-400">are guaranteed</span>!</p>
               <div className="text-xs text-gray-500 mt-2 mystery-reveal transition-opacity duration-1000">
-                Series: CN-1188 • <span className="invisible-text">The Prototype watches</span> • Dream Collection
+                Series: CN-1188 • <span className="invisible-text">The Prototype's chosen</span> • <span className="backwards-text">peelS</span> Protocol
               </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Additional Toys Grid */}
+        <div className="grid md:grid-cols-4 gap-6 mb-12">
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl mb-2">🕷️</div>
+              <h4 className="font-bold text-red-400 nostalgic-text">Mommy Long Legs</h4>
+              <p className="text-xs text-gray-400">Stretchy and <span className="invisible-text">deadly</span> fun</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl mb-2">🐕</div>
+              <h4 className="font-bold text-red-400 nostalgic-text">DogDay</h4>
+              <p className="text-xs text-gray-400">Leader of the <span className="mystery-reveal text-yellow-400">Smiling Critters</span></p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl mb-2">🐻</div>
+              <h4 className="font-bold text-red-400 nostalgic-text">Bobby BearHug</h4>
+              <p className="text-xs text-gray-400"><span className="invisible-text">Suffocating</span> hugs await</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl mb-2">🐰</div>
+              <h4 className="font-bold text-red-400 nostalgic-text">Bunzo Bunny</h4>
+              <p className="text-xs text-gray-400">Musical <span className="backwards-text">rorret</span> friend</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl mb-2">👩‍🏫</div>
+              <h4 className="font-bold text-red-400 nostalgic-text">Miss Delight</h4>
+              <p className="text-xs text-gray-400">Educational <span className="invisible-text">nightmare</span></p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl mb-2">🦄</div>
+              <h4 className="font-bold text-red-400 nostalgic-text">PuppyCorn</h4>
+              <p className="text-xs text-gray-400">Magical and <span className="mystery-reveal text-purple-400">corrupted</span></p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl mb-2">🐷</div>
+              <h4 className="font-bold text-red-400 nostalgic-text">PickyPiggy</h4>
+              <p className="text-xs text-gray-400">Always <span className="invisible-text">hungry</span> for more</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl mb-2">🐘</div>
+              <h4 className="font-bold text-red-400 nostalgic-text">Bubba Bubbaphant</h4>
+              <p className="text-xs text-gray-400">Never <span className="backwards-text">stegof</span></p>
             </CardContent>
           </Card>
         </div>
       </section>
 
-      {/* Company Values with hidden department codes */}
+      {/* Company Mission with warnings */}
       <section className="bg-slate-900 bg-opacity-50 py-16 border-y border-red-700 static-noise">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 subtle-glow nostalgic-text">Our Mission</h2>
+          <h2 className="text-4xl font-bold text-center mb-12 subtle-glow nostalgic-text">Our Revolutionary Mission</h2>
           <div className="max-w-4xl mx-auto text-center">
             <p className="text-lg text-gray-300 mb-8 nostalgic-text">
-              At Playtime Co., we believe every child deserves a <span className="mystery-reveal text-red-400">special</span> friend. 
-              Our innovative toy manufacturing has revolutionized the industry, creating companions that are 
-              <span className="invisible-text">too</span> lifelike <span className="invisible-text">to be toys</span>.
+              At Playtime Co., we're on the verge of a <span className="mystery-reveal text-red-400">revolutionary breakthrough</span>. 
+              Our Bigger Bodies Initiative has created companions that are more than toys - they're 
+              <span className="invisible-text">vessels for something greater</span>. Soon, every child will have a friend that understands them completely.
             </p>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center group cursor-pointer card-hover" title="Research & Development">
-                <div className="text-4xl mb-4">🧪</div>
-                <h3 className="font-bold mb-2 nostalgic-text">Innovation</h3>
-                <p className="text-gray-300">Cutting-edge research and development</p>
-                <div className="text-xs text-gray-600 mt-2 mystery-reveal transition-opacity duration-2000">
-                  <span className="hidden-morse">.-. ---.</span> Dept. Code: <span className="invisible-text">research789</span>
-                </div>
-              </div>
-              <div className="text-center group cursor-pointer card-hover" title="Quality Assurance">
-                <div className="text-4xl mb-4">❤️</div>
-                <h3 className="font-bold mb-2 nostalgic-text">Love</h3>
-                <p className="text-gray-300">Every toy is made with <span className="mystery-reveal text-red-400">care</span></p>
-                <div className="text-xs text-gray-600 mt-2 mystery-reveal transition-opacity duration-2000">
-                  Quality Control: <span className="backwards-text">654yrotcaf</span>
-                </div>
-              </div>
-              <div className="text-center group cursor-pointer card-hover" title="Security Division">
-                <div className="text-4xl mb-4">🎯</div>
-                <h3 className="font-bold mb-2 nostalgic-text">Excellence</h3>
-                <p className="text-gray-300">Quality that lasts <span className="invisible-text">until the end</span></p>
-                <div className="text-xs text-gray-600 mt-2 mystery-reveal transition-opacity duration-2000">
-                  Security Level: <span className="invisible-text">security123</span> • <span className="hidden-morse">... . -.-. ..- .-. .. - -.--</span>
-                </div>
-              </div>
+            
+            {/* Countdown timer */}
+            <div className="text-center mb-8 p-4 bg-red-900 bg-opacity-30 rounded border border-red-600">
+              <p className="text-yellow-400 font-bold nostalgic-text">
+                ⚠ MAJOR ANNOUNCEMENT COMING AUGUST 8TH ⚠
+              </p>
+              <p className="text-sm text-gray-400 mt-2">
+                Prepare for the most <span className="invisible-text">joyful</span> day in Playtime Co. history
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Facilities Section with route hints */}
-      <section className="bg-slate-800 bg-opacity-30 py-16 border-y border-red-700">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 subtle-glow nostalgic-text">Our Facilities</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
-              <CardContent className="p-6 text-center">
-                <div className="text-4xl mb-4">🏠</div>
-                <h3 className="font-bold mb-2 text-red-400 nostalgic-text">Playcare Center</h3>
-                <p className="text-gray-300">Educational programs for <span className="mystery-reveal text-yellow-400">special</span> children</p>
-                <div className="text-xs text-gray-600 mt-2 mystery-reveal transition-opacity duration-2000">
-                  <span className="invisible-text">They never leave</span> • Access: <span className="backwards-text">eganahpro/</span>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
-              <CardContent className="p-6 text-center">
-                <div className="text-4xl mb-4">🔬</div>
-                <h3 className="font-bold mb-2 text-red-400 nostalgic-text">Research Facility</h3>
-                <p className="text-gray-300">Advanced development <span className="mystery-reveal text-red-500">laboratories</span></p>
-                <div className="text-xs text-gray-600 mt-2 mystery-reveal transition-opacity duration-2000">
-                  <span className="hidden-morse">-.-. . .-.. .-.. ...</span> • Portal: <span className="invisible-text">/prison</span>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
@@ -323,35 +330,19 @@ const Index = () => {
         </div>
       )}
 
-      {/* Multi-layered puzzle hints */}
-      <div className="bg-slate-900 bg-opacity-20 border-l-4 border-yellow-600 p-4 mb-8 mx-4 opacity-75 static-noise">
-        <div className="flex">
-          <div className="ml-3">
-            <p className="text-sm text-yellow-300 nostalgic-text">
-              <strong>Visitor Notice:</strong> All facility tours require advance booking. 
-              Contact our <span className="cursor-pointer hover:text-green-400 mystery-reveal" title="Click logo with specific timing">guest services</span> department for scheduling.
-              <span className="text-xs opacity-50 ml-2 text-green-400 invisible-text">Sequences unlock secrets</span>
-            </p>
-            <p className="text-xs mt-2 opacity-30 hidden-morse">
-              <span className="backwards-text">ecneuqes roloc :ddeH</span> • <span className="invisible-text">Morse reveals paths</span>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer with additional hidden elements */}
+      {/* Footer with ominous warnings */}
       <footer className="bg-slate-950 text-white py-8 border-t border-red-700 static-noise">
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2024 Playtime Co. All rights reserved.</p>
-          <p className="text-sm mt-2 opacity-75 nostalgic-text">Making friends since 1950</p>
+          <p>&copy; 1995 Playtime Co. All rights reserved.</p>
+          <p className="text-sm mt-2 opacity-75 nostalgic-text">Making friends since 1950 • <span className="invisible-text">Ending August 8th, 1995</span></p>
           <div className="text-xs mt-1 opacity-30 text-gray-500 cursor-default">
-            <span className="hover:text-green-400 transition-colors mystery-reveal" title="System access points">System Status</span> | 
-            <span className="hover:text-green-400 transition-colors invisible-text"> Portal Access</span> | 
-            <span className="hover:text-green-400 transition-colors backwards-text"> seliF tnemtrapeD</span>
+            <span className="hover:text-green-400 transition-colors mystery-reveal" title="The toys are watching">System Status</span> | 
+            <span className="hover:text-green-400 transition-colors invisible-text"> The Prototype Knows</span> | 
+            <span className="hover:text-green-400 transition-colors backwards-text"> yoJ fo ruoH ehT</span>
           </div>
           <div className="mt-2 text-xs opacity-10 hidden-morse">
             <Star className="w-3 h-3 inline mr-1" />
-            <span className="invisible-text">We are always watching</span>
+            <span className="invisible-text">We are always watching. The children will understand soon.</span>
             <Star className="w-3 h-3 inline ml-1" />
           </div>
         </div>
