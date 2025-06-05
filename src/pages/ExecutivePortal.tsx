@@ -46,24 +46,24 @@ const ExecutivePortal = () => {
     general: [
       { id: '1', sender: 'Dr. Ludwig', message: 'The Bigger Bodies Initiative is showing excellent progress. Huggy Wuggy prototype exceeding expectations.', timestamp: '2024-08-15 09:30', department: 'Research', classification: 'normal' },
       { id: '2', sender: 'Director Stella', message: 'Has anyone noticed the toys acting unusual lately? Security reported some movement after hours.', timestamp: '2024-08-15 09:32', department: 'Management', classification: 'normal' },
-      { id: '3', sender: 'Dr. Ludwig', message: 'Completely normal. We\'ve designed them with limited nocturnal movement programming to prevent joint stiffness.', timestamp: '2024-08-15 09:35', department: 'Research', classification: 'normal' },
-      { id: '4', sender: 'Leith Pierre', message: 'I\'m getting unusual readings from the Prototype containment area. Might need to investigate.', timestamp: '2024-08-15 10:00', department: 'Special Projects', classification: 'urgent' },
+      { id: '3', sender: 'Dr. Ludwig', message: 'Completely normal. We have designed them with limited nocturnal movement programming to prevent joint stiffness.', timestamp: '2024-08-15 09:35', department: 'Research', classification: 'normal' },
+      { id: '4', sender: 'Leith Pierre', message: 'I am getting unusual readings from the Prototype containment area. Might need to investigate.', timestamp: '2024-08-15 10:00', department: 'Special Projects', classification: 'urgent' },
       { id: '5', sender: 'The Doctor', message: 'All security systems operating within normal parameters. No cause for concern.', timestamp: '2024-08-15 10:05', department: 'Security', classification: 'normal' },
     ],
     research: [
-      { id: '6', sender: 'Leith Pierre', message: 'Has anyone else noticed the power fluctuations in Sector 7? They\'re increasing in frequency.', timestamp: '2024-08-14 14:20', department: 'Special Projects', classification: 'classified' },
+      { id: '6', sender: 'Leith Pierre', message: 'Has anyone else noticed the power fluctuations in Sector 7? They are increasing in frequency.', timestamp: '2024-08-14 14:20', department: 'Special Projects', classification: 'classified' },
       { id: '7', sender: 'Dr. Ludwig', message: 'The red gas formula is stabilized. All test subjects are responding positively.', timestamp: '2024-08-14 14:25', department: 'Research', classification: 'classified' },
-      { id: '8', sender: 'Dr. Chen', message: 'Some children reported hearing the toys talking when no one\'s around. Recommending psychological evaluation.', timestamp: '2024-08-14 15:00', department: 'Medical', classification: 'classified' },
-      { id: '9', sender: 'Director Stella', message: 'Keep this quiet. We don\'t need rumors jeopardizing the new product launch.', timestamp: '2024-08-14 15:05', department: 'Management', classification: 'classified' },
-      { id: '10', sender: 'The Doctor', message: 'Security footage review shows nothing unusual. Children\'s imaginations are active.', timestamp: '2024-08-14 15:10', department: 'Security', classification: 'classified' },
+      { id: '8', sender: 'Dr. Chen', message: 'Some children reported hearing the toys talking when no one is around. Recommending psychological evaluation.', timestamp: '2024-08-14 15:00', department: 'Medical', classification: 'classified' },
+      { id: '9', sender: 'Director Stella', message: 'Keep this quiet. We do not need rumors jeopardizing the new product launch.', timestamp: '2024-08-14 15:05', department: 'Management', classification: 'classified' },
+      { id: '10', sender: 'The Doctor', message: 'Security footage review shows nothing unusual. Children imaginations are active.', timestamp: '2024-08-14 15:10', department: 'Security', classification: 'classified' },
     ],
     prototype: [
-      { id: '11', sender: 'Leith Pierre', message: 'I need clearance to increase Prototype containment field strength. It\'s showing unusual brain activity patterns.', timestamp: '2024-08-16 08:00', department: 'Special Projects', classification: 'classified' },
+      { id: '11', sender: 'Leith Pierre', message: 'I need clearance to increase Prototype containment field strength. It is showing unusual brain activity patterns.', timestamp: '2024-08-16 08:00', department: 'Special Projects', classification: 'classified' },
       { id: '12', sender: 'Director Stella', message: 'Granted. What kind of activity are we talking about?', timestamp: '2024-08-16 08:05', department: 'Management', classification: 'classified' },
-      { id: '13', sender: 'Leith Pierre', message: 'It\'s... communicating somehow. With the other toys. I\'ve seen it happen.', timestamp: '2024-08-16 08:10', department: 'Special Projects', classification: 'classified' },
-      { id: '14', sender: 'Dr. Ludwig', message: 'Impossible. The toys operate on isolated systems. There's no network connecting them.', timestamp: '2024-08-16 08:15', department: 'Research', classification: 'classified' },
+      { id: '13', sender: 'Leith Pierre', message: 'It is communicating somehow. With the other toys. I have seen it happen.', timestamp: '2024-08-16 08:10', department: 'Special Projects', classification: 'classified' },
+      { id: '14', sender: 'Dr. Ludwig', message: 'Impossible. The toys operate on isolated systems. There is no network connecting them.', timestamp: '2024-08-16 08:15', department: 'Research', classification: 'classified' },
       { id: '15', sender: 'The Doctor', message: 'All systems showing normal operation. Perhaps we need to evaluate researcher stress levels.', timestamp: '2024-08-16 08:20', department: 'Security', classification: 'classified' },
-      { id: '16', sender: 'Director Stella', message: 'I want 24/7 observation on the Prototype. Something doesn\'t feel right.', timestamp: '2024-08-16 08:25', department: 'Management', classification: 'classified' },
+      { id: '16', sender: 'Director Stella', message: 'I want 24/7 observation on the Prototype. Something does not feel right.', timestamp: '2024-08-16 08:25', department: 'Management', classification: 'classified' },
     ]
   };
 
