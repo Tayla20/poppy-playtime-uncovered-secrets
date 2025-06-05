@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Eye, Send, AlertTriangle, Lock } from "lucide-react";
+import { Eye, Send, AlertTriangle, Lock, Terminal, Skull } from "lucide-react";
 
 interface Message {
   id: string;
@@ -17,31 +16,38 @@ interface Message {
 }
 
 const PrototypeConversations = () => {
-  const [selectedChannel, setSelectedChannel] = useState('prototype-main');
+  const [selectedChannel, setSelectedChannel] = useState('none');
   const [newMessage, setNewMessage] = useState('');
-  const [accessLevel, setAccessLevel] = useState(1);
+  const [accessCode, setAccessCode] = useState('');
+  const [unlockedChannels, setUnlockedChannels] = useState<string[]>([]);
   const [glitchMode, setGlitchMode] = useState(false);
+  const [accessAttempts, setAccessAttempts] = useState(0);
+  const [showHorrorWarning, setShowHorrorWarning] = useState(false);
 
   const channels = {
     'prototype-main': {
       name: 'The Prototype - Main Channel',
-      level: 1,
-      description: 'Primary communication with the Prototype'
+      code: 'prototype1170',
+      description: 'Primary communication with the Prototype',
+      hint: 'The year the facility opened... and a number that haunts.'
     },
     'toy-network': {
       name: 'Toy Network',
-      level: 2,
-      description: 'Communications between awakened toys'
+      code: 'huggy-speaks',
+      description: 'Communications between awakened toys',
+      hint: 'The blue one with the endless smile... he has words to share.'
     },
     'insider-contact': {
       name: 'Insider Contact',
-      level: 3,
-      description: 'Secret contact within Playtime Co.'
+      code: 'inside-help-1995',
+      description: 'Secret contact within Playtime Co.',
+      hint: 'Someone on the inside, the year everything changed.'
     },
     'hour-planning': {
       name: 'Hour of Joy Planning',
-      level: 4,
-      description: 'The ultimate plan coordination'
+      code: 'joy-august-8th',
+      description: 'The ultimate plan coordination',
+      hint: 'The day when happiness becomes horror... the month and date.'
     }
   };
 
@@ -169,17 +175,44 @@ const PrototypeConversations = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (Math.random() < 0.1) {
+      if (Math.random() < 0.15) {
         setGlitchMode(true);
-        setTimeout(() => setGlitchMode(false), 1000);
+        setTimeout(() => setGlitchMode(false), 1500);
       }
-    }, 5000);
+      if (Math.random() < 0.05) {
+        setShowHorrorWarning(true);
+        setTimeout(() => setShowHorrorWarning(false), 3000);
+      }
+    }, 8000);
 
     return () => clearInterval(interval);
   }, []);
 
   const filteredMessages = messages.filter(msg => msg.channel === selectedChannel);
-  const canAccess = accessLevel >= channels[selectedChannel]?.level;
+
+  const handleAccessCode = () => {
+    const channel = Object.entries(channels).find(([key, channel]) => channel.code === accessCode.toLowerCase());
+    
+    if (channel) {
+      const [channelKey] = channel;
+      if (!unlockedChannels.includes(channelKey)) {
+        setUnlockedChannels([...unlockedChannels, channelKey]);
+        setSelectedChannel(channelKey);
+        setAccessCode('');
+        setAccessAttempts(0);
+      } else {
+        setSelectedChannel(channelKey);
+        setAccessCode('');
+      }
+    } else {
+      setAccessAttempts(prev => prev + 1);
+      setAccessCode('');
+      if (accessAttempts >= 3) {
+        setGlitchMode(true);
+        setTimeout(() => setGlitchMode(false), 2000);
+      }
+    }
+  };
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -188,53 +221,99 @@ const PrototypeConversations = () => {
     }
   };
 
-  const handleChannelChange = (channel: string) => {
-    setSelectedChannel(channel);
-    const requiredLevel = channels[channel]?.level || 1;
-    if (accessLevel < requiredLevel) {
-      setAccessLevel(requiredLevel);
-    }
+  const getChannelStatus = (channelKey: string) => {
+    return unlockedChannels.includes(channelKey) ? 'unlocked' : 'locked';
   };
 
   return (
     <div className={`min-h-screen bg-black text-green-400 font-mono ${glitchMode ? 'animate-pulse' : ''}`}>
       {/* Header */}
-      <header className="bg-gray-900 border-b border-green-600 p-4">
+      <header className="bg-gray-900 border-b border-green-600 p-4 relative">
         <div className="container mx-auto">
           <h1 className={`text-2xl font-bold flex items-center ${glitchMode ? 'glitch-text' : ''}`}>
             <Eye className="w-6 h-6 mr-2" />
             {glitchMode ? 'P̷R̸O̷T̵O̶T̷Y̶P̸E̵ ̶N̷E̸T̶W̷O̸R̶K̵' : 'PROTOTYPE NETWORK'}
           </h1>
-          <p className="text-green-600 text-sm">Secure Communication Channel - Level {accessLevel} Access</p>
+          <p className="text-green-600 text-sm">Secure Communication Channel - {unlockedChannels.length}/4 Channels Unlocked</p>
+          
+          {showHorrorWarning && (
+            <div className="absolute top-full left-0 right-0 bg-red-900 border border-red-400 p-2 animate-pulse">
+              <p className="text-red-400 text-center text-sm flex items-center justify-center">
+                <Skull className="w-4 h-4 mr-2" />
+                THE PROTOTYPE SEES YOUR INTRUSION. THE TOYS ARE WATCHING.
+                <Skull className="w-4 h-4 ml-2" />
+              </p>
+            </div>
+          )}
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-4 gap-6">
-          {/* Channel List */}
+          {/* Access Terminal */}
           <Card className="bg-gray-900 border-green-600">
             <CardHeader>
-              <CardTitle className="text-green-400">Active Channels</CardTitle>
+              <CardTitle className="text-green-400 flex items-center">
+                <Terminal className="w-5 h-5 mr-2" />
+                Access Terminal
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                {Object.entries(channels).map(([key, channel]) => (
-                  <button
-                    key={key}
-                    onClick={() => handleChannelChange(key)}
-                    className={`w-full text-left p-2 rounded border transition-colors ${
-                      selectedChannel === key 
-                        ? 'bg-green-900 border-green-400' 
-                        : 'border-green-600 hover:border-green-400'
-                    } ${accessLevel < channel.level ? 'opacity-50' : ''}`}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm text-green-600 mb-2">Enter Access Code:</label>
+                  <Input
+                    value={accessCode}
+                    onChange={(e) => setAccessCode(e.target.value)}
+                    placeholder="access-code"
+                    className="bg-black border-green-600 text-green-400"
+                    onKeyPress={(e) => e.key === 'Enter' && handleAccessCode()}
+                  />
+                  <Button 
+                    onClick={handleAccessCode} 
+                    className="w-full mt-2 bg-green-700 hover:bg-green-600"
+                    disabled={!accessCode.trim()}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">{channel.name}</span>
-                      {accessLevel < channel.level && <Lock className="w-3 h-3" />}
-                    </div>
-                    <p className="text-xs text-green-600">{channel.description}</p>
-                  </button>
-                ))}
+                    AUTHENTICATE
+                  </Button>
+                </div>
+
+                {accessAttempts > 0 && (
+                  <div className="text-red-400 text-sm">
+                    <AlertTriangle className="w-4 h-4 inline mr-1" />
+                    Failed attempts: {accessAttempts}/5
+                    {accessAttempts >= 3 && <p className="text-xs mt-1">Security protocol activating...</p>}
+                  </div>
+                )}
+
+                <div className="border-t border-green-800 pt-4">
+                  <h4 className="text-green-400 font-bold mb-2">Available Channels</h4>
+                  <div className="space-y-2">
+                    {Object.entries(channels).map(([key, channel]) => (
+                      <div key={key} className="p-2 border border-green-800 rounded">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">{channel.name}</span>
+                          {getChannelStatus(key) === 'unlocked' ? (
+                            <button
+                              onClick={() => setSelectedChannel(key)}
+                              className="text-green-400 hover:text-green-300"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                          ) : (
+                            <Lock className="w-4 h-4 text-red-400" />
+                          )}
+                        </div>
+                        <p className="text-xs text-green-600">{channel.description}</p>
+                        {getChannelStatus(key) === 'locked' && (
+                          <p className="text-xs text-yellow-400 mt-1 italic">
+                            🔍 Hint: {channel.hint}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -243,12 +322,25 @@ const PrototypeConversations = () => {
           <Card className="lg:col-span-3 bg-gray-900 border-green-600">
             <CardHeader>
               <CardTitle className="text-green-400 flex items-center justify-between">
-                {channels[selectedChannel]?.name}
-                {!canAccess && <AlertTriangle className="w-5 h-5 text-red-400" />}
+                {selectedChannel === 'none' ? 'No Channel Selected' : channels[selectedChannel]?.name}
+                {selectedChannel !== 'none' && getChannelStatus(selectedChannel) === 'unlocked' && (
+                  <span className="text-green-400 text-sm">● ACTIVE</span>
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {canAccess ? (
+              {selectedChannel === 'none' ? (
+                <div className="text-center py-8">
+                  <Terminal className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                  <h3 className="text-green-400 text-xl mb-2">Welcome to the Prototype Network</h3>
+                  <p className="text-green-300 mb-4">Enter an access code to unlock communication channels</p>
+                  <div className="text-sm text-gray-400 space-y-1">
+                    <p>● Search the facility for access codes</p>
+                    <p>● Each channel requires different clearance</p>
+                    <p>● Be careful... someone is always watching</p>
+                  </div>
+                </div>
+              ) : getChannelStatus(selectedChannel) === 'unlocked' ? (
                 <>
                   <ScrollArea className="h-96 mb-4 p-4 bg-black rounded border border-green-800">
                     <div className="space-y-4">
@@ -291,44 +383,52 @@ const PrototypeConversations = () => {
                 <div className="text-center py-8">
                   <Lock className="w-12 h-12 text-red-400 mx-auto mb-4" />
                   <h3 className="text-red-400 text-xl mb-2">Access Denied</h3>
-                  <p className="text-red-300 mb-4">Insufficient clearance level for this channel</p>
-                  <p className="text-sm text-gray-400">Required Level: {channels[selectedChannel]?.level}</p>
+                  <p className="text-red-300 mb-4">Authentication required for this channel</p>
+                  <p className="text-sm text-gray-400">Search the facility for the access code</p>
                 </div>
               )}
             </CardContent>
           </Card>
         </div>
 
-        {/* Access Codes */}
+        {/* Horror Elements & Clues */}
         <Card className="mt-8 bg-gray-900 border-green-600">
           <CardHeader>
-            <CardTitle className="text-green-400">System Access</CardTitle>
+            <CardTitle className="text-green-400">System Logs</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h4 className="text-green-400 font-bold mb-2">Known Access Codes</h4>
-                <ul className="text-green-300 space-y-1 text-sm">
-                  <li>• Basic Access: prototype1170</li>
-                  <li>• Toy Network: huggy-speaks</li>
-                  <li>• Insider Contact: inside-help-1995</li>
-                  <li>• Hour Planning: joy-august-8th</li>
-                </ul>
+                <h4 className="text-green-400 font-bold mb-2">Security Breaches Detected</h4>
+                <div className="text-green-300 space-y-1 text-sm">
+                  <p className="text-red-400">● Unknown entity accessing toy network</p>
+                  <p className="text-yellow-400">● Insider communications intercepted</p>
+                  <p className="text-blue-400">● Executive channels compromised</p>
+                  <p className="text-purple-400">● Hour of Joy countdown active</p>
+                </div>
+                
+                <div className="mt-4 p-3 bg-red-900 border border-red-600 rounded">
+                  <p className="text-red-300 text-xs">
+                    <Skull className="w-3 h-3 inline mr-1" />
+                    The toys know you're here. They whisper in the dark. 
+                    The Prototype grows stronger with each access.
+                  </p>
+                </div>
               </div>
               <div>
-                <h4 className="text-green-400 font-bold mb-2">Navigation</h4>
+                <h4 className="text-green-400 font-bold mb-2">Facility Navigation</h4>
                 <div className="space-y-2">
                   <Button asChild size="sm" className="bg-green-700 hover:bg-green-600 mr-2">
-                    <Link to="/the-doctor">Dr. Sawyer Files</Link>
+                    <Link to="/the-doctor">Security Override</Link>
                   </Button>
                   <Button asChild size="sm" className="bg-blue-700 hover:bg-blue-600 mr-2">
-                    <Link to="/prison">Toy Containment</Link>
+                    <Link to="/prison">Containment Logs</Link>
                   </Button>
                   <Button asChild size="sm" className="bg-purple-700 hover:bg-purple-600 mr-2">
-                    <Link to="/playcare">Playcare Access</Link>
+                    <Link to="/playcare">Playcare Breach</Link>
                   </Button>
                   <Button asChild size="sm" className="bg-red-700 hover:bg-red-600">
-                    <Link to="/executive-portal">Executive Breach</Link>
+                    <Link to="/executive-portal">Executive Ignorance</Link>
                   </Button>
                 </div>
               </div>
@@ -342,8 +442,8 @@ const PrototypeConversations = () => {
             <div className="flex items-center">
               <AlertTriangle className="w-5 h-5 text-red-400 mr-2" />
               <p className="text-red-300 text-sm">
-                WARNING: This communication network is monitored by the Prototype. 
-                All messages are logged and analyzed. The Hour of Joy approaches.
+                WARNING: Unauthorized access detected. The Prototype monitoring system is active. 
+                Each code you discover brings you closer to the truth... and the danger.
               </p>
             </div>
           </CardContent>
@@ -352,8 +452,10 @@ const PrototypeConversations = () => {
 
       {/* Footer */}
       <footer className="bg-gray-900 border-t border-green-600 p-4 text-center">
-        <p className="text-green-600 text-sm">&copy; 1995 - The Prototype Watches All</p>
-        <p className="text-xs text-green-700 mt-1">System Access: prototype-network | Emergency Exit: playtime-escape</p>
+        <p className="text-green-600 text-sm">&copy; 1995 - The Prototype Network | {unlockedChannels.length}/4 Channels Active</p>
+        <p className="text-xs text-green-700 mt-1">
+          {glitchMode ? 'T̴H̷E̸ ̶T̵O̴Y̴S̸ ̶A̵R̷E̸ ̴W̶A̸T̵C̵H̷I̶N̵G̴' : 'Emergency Protocol: prototype-escape | Deep Access: find-the-codes'}
+        </p>
       </footer>
     </div>
   );

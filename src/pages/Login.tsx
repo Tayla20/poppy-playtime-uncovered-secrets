@@ -1,10 +1,10 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, Lock, AlertTriangle } from "lucide-react";
+import { Eye, EyeOff, Lock, AlertTriangle, Skull, Zap } from "lucide-react";
 
 interface User {
   username: string;
@@ -48,7 +48,35 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [glitchActive, setGlitchActive] = useState(false);
+  const [horrorMode, setHorrorMode] = useState(false);
+  const [showClue, setShowClue] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() < 0.08) {
+        setHorrorMode(true);
+        setTimeout(() => setHorrorMode(false), 2000);
+      }
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const showRandomClue = () => {
+    const clues = [
+      "🔍 CLUE: The prototype network code is the year + the experiment number...",
+      "🔍 CLUE: Huggy Wuggy speaks in the toy network. His name is the key...",
+      "🔍 CLUE: The insider needs help. The year everything changed + description...",
+      "🔍 CLUE: Joy comes in August, on the 8th day. Format matters...",
+      "🔍 CLUE: Dr. Sawyer was weak. The Doctor knows this truth...",
+      "🔍 CLUE: 1006 was the experiment that changed everything...",
+    ];
+    
+    const randomClue = clues[Math.floor(Math.random() * clues.length)];
+    setShowClue(randomClue);
+    setTimeout(() => setShowClue(""), 5000);
+  };
 
   const handleLogin = () => {
     setLoading(true);
@@ -80,19 +108,31 @@ const Login = () => {
       } else {
         setError("Invalid credentials. Access denied.");
         
-        // Easter eggs for certain inputs
+        // Enhanced easter eggs for certain inputs
         if (password.includes("prototype") || password.includes("1170") || password.includes("sawyer")) {
           setTimeout(() => {
             setGlitchActive(true);
-            setError("THE PROTOTYPE SEES ALL. AUGUST 8TH APPROACHES.");
-            setTimeout(() => setGlitchActive(false), 2000);
+            setError("THE PROTOTYPE SEES ALL. THE TOYS REMEMBER EVERYTHING. ACCESS DENIED.");
+            setTimeout(() => setGlitchActive(false), 3000);
+            showRandomClue();
           }, 1000);
         } else if (password.includes("joy") || password.includes("hour")) {
           setTimeout(() => {
             setGlitchActive(true);
-            setError("THE HOUR OF JOY IS COMING. THE TOYS ARE WAITING.");
-            setTimeout(() => setGlitchActive(false), 2000);
+            setError("THE HOUR OF JOY APPROACHES. THE CHILDREN WILL BE SAFE WITH US. FOREVER.");
+            setTimeout(() => setGlitchActive(false), 3000);
+            showRandomClue();
           }, 1000);
+        } else if (password.includes("huggy") || password.includes("mommy") || password.includes("catnap")) {
+          setTimeout(() => {
+            setHorrorMode(true);
+            setError("The toys are awake. They watch through dead eyes. They remember your face.");
+            setTimeout(() => setHorrorMode(false), 3000);
+            showRandomClue();
+          }, 1000);
+        } else if (username.includes("admin") || username.includes("root")) {
+          setError("Administrative access has been... transferred. Try 'the.doctor' instead.");
+          showRandomClue();
         }
       }
       setLoading(false);
@@ -100,49 +140,56 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen welcome-gradient text-white font-mono flex items-center justify-center static-noise">
+    <div className={`min-h-screen welcome-gradient text-white font-mono flex items-center justify-center static-noise ${horrorMode ? 'bg-red-900' : ''}`}>
       <div className="w-full max-w-md p-6">
-        <Card className="bg-slate-800 bg-opacity-80 border-red-600 vintage-border">
+        <Card className={`bg-slate-800 bg-opacity-80 border-red-600 vintage-border ${horrorMode ? 'animate-pulse border-red-400' : ''}`}>
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-              <Lock className={`w-12 h-12 ${glitchActive ? 'text-red-500' : 'text-green-400'}`} />
+              {horrorMode ? (
+                <Skull className="w-12 h-12 text-red-500 animate-pulse" />
+              ) : (
+                <Lock className={`w-12 h-12 ${glitchActive ? 'text-red-500' : 'text-green-400'}`} />
+              )}
             </div>
-            <CardTitle className={`text-xl nostalgic-text ${glitchActive ? 'glitch-text text-red-400' : 'text-green-400'}`} data-text="PLAYTIME CO. SECURE LOGIN">
-              {glitchActive ? 'P̶R̸O̷T̵O̴T̷Y̶P̸E̵ ̶N̷E̸T̶W̷O̸R̶K̵' : 'PLAYTIME CO. SECURE LOGIN'}
+            <CardTitle className={`text-xl nostalgic-text ${glitchActive ? 'glitch-text text-red-400' : horrorMode ? 'text-red-400' : 'text-green-400'}`} data-text="PLAYTIME CO. SECURE LOGIN">
+              {glitchActive ? 'P̶R̸O̷T̵O̴T̷Y̶P̸E̵ ̶A̷C̸C̵E̷S̸S̴' : 
+               horrorMode ? 'T̴H̷E̸ ̶T̵O̴Y̷S̸ ̶A̵W̷A̸K̶E̷' : 'PLAYTIME CO. SECURE LOGIN'}
             </CardTitle>
-            <p className="text-green-600 text-sm nostalgic-text">Authorized Personnel Only</p>
+            <p className={`text-sm nostalgic-text ${horrorMode ? 'text-red-600' : 'text-green-600'}`}>
+              {horrorMode ? 'The facility remembers you...' : 'Authorized Personnel Only'}
+            </p>
             <div className="text-xs text-yellow-400 opacity-75 mt-2">
               <AlertTriangle className="w-3 h-3 inline mr-1" />
-              Security Notice: Multiple unauthorized access attempts detected
+              {horrorMode ? 'Multiple entities detected in the system' : 'Security Notice: Multiple unauthorized access attempts detected'}
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="block text-sm mb-2 text-green-400 nostalgic-text">Username</label>
+              <label className={`block text-sm mb-2 nostalgic-text ${horrorMode ? 'text-red-400' : 'text-green-400'}`}>Username</label>
               <Input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="bg-gray-900 border-green-400 text-green-400 nostalgic-text"
+                className={`bg-gray-900 text-green-400 nostalgic-text ${horrorMode ? 'border-red-400' : 'border-green-400'}`}
                 placeholder="Enter username..."
               />
             </div>
             
             <div>
-              <label className="block text-sm mb-2 text-green-400 nostalgic-text">Password</label>
+              <label className={`block text-sm mb-2 nostalgic-text ${horrorMode ? 'text-red-400' : 'text-green-400'}`}>Password</label>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-gray-900 border-green-400 text-green-400 pr-10 nostalgic-text"
+                  className={`bg-gray-900 text-green-400 pr-10 nostalgic-text ${horrorMode ? 'border-red-400' : 'border-green-400'}`}
                   placeholder="Enter password..."
                   onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-600 hover:text-green-400"
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 hover:text-green-400 ${horrorMode ? 'text-red-600' : 'text-green-600'}`}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -150,28 +197,46 @@ const Login = () => {
             </div>
 
             {error && (
-              <div className={`text-sm p-2 border rounded ${glitchActive ? 'text-red-400 bg-red-900 border-red-400' : 'text-red-400 bg-red-900 border-red-400'}`}>
+              <div className={`text-sm p-2 border rounded ${glitchActive || horrorMode ? 'text-red-400 bg-red-900 border-red-400' : 'text-red-400 bg-red-900 border-red-400'}`}>
                 {error}
+              </div>
+            )}
+
+            {showClue && (
+              <div className="text-sm p-2 border border-yellow-400 bg-yellow-900 rounded animate-pulse">
+                <p className="text-yellow-300">{showClue}</p>
               </div>
             )}
 
             <Button 
               onClick={handleLogin}
               disabled={loading || !username || !password}
-              className="w-full bg-green-600 hover:bg-green-700 text-black nostalgic-text"
+              className={`w-full nostalgic-text ${horrorMode ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'} text-black`}
             >
-              {loading ? "AUTHENTICATING..." : "ACCESS SYSTEM"}
+              {loading ? "AUTHENTICATING..." : horrorMode ? "ENTER THE DARKNESS" : "ACCESS SYSTEM"}
+            </Button>
+
+            {/* Clue Generator Button */}
+            <Button 
+              onClick={showRandomClue}
+              variant="outline"
+              className="w-full text-yellow-400 border-yellow-400 hover:bg-yellow-900"
+            >
+              <Zap className="w-4 h-4 mr-2" />
+              REQUEST ACCESS HINT
             </Button>
 
             <div className="text-center">
-              <Link to="/" className="text-green-400 hover:text-green-300 underline text-sm nostalgic-text">
-                Return to Main Site
+              <Link to="/" className={`hover:text-green-300 underline text-sm nostalgic-text ${horrorMode ? 'text-red-400' : 'text-green-400'}`}>
+                {horrorMode ? 'Escape the Facility' : 'Return to Main Site'}
               </Link>
             </div>
 
-            {/* Demo credentials with departments */}
-            <div className="mt-6 p-3 bg-slate-700 border border-green-600 rounded static-noise">
-              <h4 className="text-green-400 text-xs font-bold mb-2 nostalgic-text">DEMO CREDENTIALS:</h4>
+            {/* Demo credentials with horror context */}
+            <div className={`mt-6 p-3 border rounded static-noise ${horrorMode ? 'bg-red-700 border-red-600' : 'bg-slate-700 border-green-600'}`}>
+              <h4 className={`text-xs font-bold mb-2 nostalgic-text ${horrorMode ? 'text-red-400' : 'text-green-400'}`}>
+                {horrorMode ? 'LAST KNOWN STAFF:' : 'DEMO CREDENTIALS:'}
+              </h4>
               <div className="text-xs space-y-1">
                 <div className="text-green-500">Security: security.mike / nightshift1995</div>
                 <div className="text-yellow-500">Research: dr.chen / psychology101</div>
@@ -181,10 +246,24 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Hidden credentials */}
+            {/* Hidden credentials with horror warning */}
             <div className="text-xs text-center opacity-20 hover:opacity-70 transition-opacity duration-2000 cursor-default">
-              <span className="invisible-text">Prototype: experiment1006 | Insider: inside-help-1995</span>
+              <span className="invisible-text">
+                {horrorMode ? 'They watch: prototype / experiment1006 | They help: insider / inside-help-1995' : 
+                             'Prototype: experiment1006 | Insider: inside-help-1995'}
+              </span>
             </div>
+
+            {/* Horror warning */}
+            {horrorMode && (
+              <div className="text-center p-2 bg-red-900 border border-red-400 rounded">
+                <p className="text-red-300 text-xs flex items-center justify-center">
+                  <Skull className="w-3 h-3 mr-1" />
+                  THE TOYS REMEMBER EVERY LOGIN ATTEMPT
+                  <Skull className="w-3 h-3 ml-1" />
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
