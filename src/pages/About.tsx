@@ -2,319 +2,294 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Award, Globe, Heart, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Building, Users, Award, Calendar, Eye, Skull, AlertTriangle, Zap } from "lucide-react";
 
 const About = () => {
-  const [glitchActive, setGlitchActive] = useState(false);
-  const [secretFound, setSecretFound] = useState(false);
-  const [hoverCount, setHoverCount] = useState(0);
-  const [sequenceProgress, setSequenceProgress] = useState<string[]>([]);
-  const [hiddenMessage, setHiddenMessage] = useState("");
-  const [mouseTrail, setMouseTrail] = useState<{x: number, y: number, time: number}[]>([]);
+  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+  const [horrorMode, setHorrorMode] = useState(false);
+  const [showClue, setShowClue] = useState("");
+  const [puzzleClicks, setPuzzleClicks] = useState(0);
 
-  const requiredSequence = ["ludwig", "sawyer", "chen", "ludwig"]; // Hover leadership in order
+  // Check if Hour of Joy is activated
+  const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (Math.random() < 0.04) {
-        setGlitchActive(true);
-        setTimeout(() => setGlitchActive(false), 150);
+      if (Math.random() < 0.1) {
+        setHorrorMode(true);
+        setTimeout(() => setHorrorMode(false), 3000);
       }
-    }, 8000);
+    }, 15000);
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const now = Date.now();
-      setMouseTrail(prev => [...prev.slice(-50), { x: event.clientX, y: event.clientY, time: now }]);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    return () => clearInterval(interval);
   }, []);
 
-  const handleLeadershipHover = (person: string) => {
-    const newSequence = [...sequenceProgress, person].slice(-4);
-    setSequenceProgress(newSequence);
+  const showRandomClue = (source: string) => {
+    const clues = [
+      "🔍 CLUE: The company's founding year holds significance in the access codes...",
+      "🔍 CLUE: Ludwig's vision was more than toys - he sought to create consciousness",
+      "🔍 CLUE: The Bigger Bodies Initiative started in 1984 - remember this number",
+      "🔍 CLUE: Employee records show gaps starting in 1995. August was significant...",
+      "🔍 CLUE: The prototype network responds to specific date formats: YYYY-MM-DD",
+      "🔍 CLUE: Dr. Sawyer's replacement calls himself 'The Doctor' - access: sawyer-was-weak",
+    ];
     
-    if (JSON.stringify(newSequence) === JSON.stringify(requiredSequence)) {
-      setSecretFound(true);
-      setHiddenMessage("⬡ LEADERSHIP SEQUENCE COMPLETE ⬡ Executive access protocols now visible. The founders know the way.");
-      setTimeout(() => setHiddenMessage(""), 8000);
+    const randomClue = clues[Math.floor(Math.random() * clues.length)];
+    setShowClue(`${source}: ${randomClue}`);
+    setTimeout(() => setShowClue(""), 6000);
+  };
+
+  const handlePuzzleClick = () => {
+    setPuzzleClicks(prev => prev + 1);
+    if (puzzleClicks >= 3) {
+      const currentProgress = JSON.parse(localStorage.getItem('hourOfJoyProgress') || '[]');
+      if (!currentProgress.includes('about-timeline')) {
+        currentProgress.push('about-timeline');
+        localStorage.setItem('hourOfJoyProgress', JSON.stringify(currentProgress));
+        setShowClue("PUZZLE SOLVED: Timeline patterns recognized. Company history reveals the truth.");
+      }
     }
   };
 
-  const handleValueHover = () => {
-    setHoverCount(prev => prev + 1);
-    if (hoverCount >= 3) {
-      setHiddenMessage("◆ CORPORATE VALUES ANALYZED ◆ Hidden departmental structure detected. Check the organizational pathways...");
-      setTimeout(() => setHiddenMessage(""), 6000);
+  const milestones = [
+    {
+      year: "1950",
+      title: isHourOfJoyActive ? "The Beginning of the End" : "Company Founded",
+      description: isHourOfJoyActive ? 
+        "Elliot Ludwig establishes Playtime Co. with unknowing investors. The experiments begin immediately." :
+        "Elliot Ludwig establishes Playtime Co. with a revolutionary vision for children's toys.",
+      darkSecret: "Ludwig's first experiments with consciousness transfer begin in the basement laboratory."
+    },
+    {
+      year: "1984",
+      title: isHourOfJoyActive ? "Project Bigger Bodies - The Horror Begins" : "Bigger Bodies Initiative Launched", 
+      description: isHourOfJoyActive ?
+        "The Initiative creates monstrous beings of impossible size. Children become test subjects." :
+        "Revolutionary breakthrough in large-scale toy manufacturing and interactive technology.",
+      darkSecret: "The first successful consciousness transfers. Employees begin disappearing."
+    },
+    {
+      year: "1995",
+      title: isHourOfJoyActive ? "The Hour of Joy - Liberation Day" : "Modern Expansion",
+      description: isHourOfJoyActive ?
+        "August 8th, 11:00 AM - The toys break free. The facility becomes their domain forever." :
+        "Continued growth and innovation in the toy industry with new product lines.",
+      darkSecret: "The planned uprising. Every toy gained consciousness simultaneously."
     }
-  };
+  ];
 
   return (
-    <div className="min-h-screen welcome-gradient text-white nostalgic-text">
-      {/* Navigation Bar */}
-      <nav className="bg-slate-900 bg-opacity-70 backdrop-blur-sm shadow-lg sticky top-0 z-50 border-b border-red-900 static-noise">
+    <div className={`min-h-screen ${isHourOfJoyActive ? 'bg-gradient-to-br from-red-900 via-black to-purple-900' : 'welcome-gradient'} text-white nostalgic-text`}>
+      {/* Navigation */}
+      <nav className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} bg-opacity-70 backdrop-blur-sm shadow-lg sticky top-0 z-50 border-b ${isHourOfJoyActive ? 'border-red-700' : 'border-red-900'} static-noise`}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
-            <Link to="/" className={`text-2xl font-bold transition-all duration-300 ${glitchActive ? 'glitch-text text-yellow-400' : 'subtle-glow'}`} data-text="PLAYTIME CO.">
-              {glitchActive ? 'P̴L̸A̷Y̶T̵I̴M̸E̵ ̶C̷O̸.' : 'PLAYTIME CO.'}
-            </Link>
+            <Link to="/" className="text-2xl font-bold text-red-400 subtle-glow">PLAYTIME CO.</Link>
             <div className="hidden md:flex space-x-8">
-              <Link to="/" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">Home</Link>
-              <Link to="/about" className="text-red-400 hover:text-red-300 transition-colors font-medium border-b-2 border-red-400">About Us</Link>
-              <Link to="/products" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">Our Toys</Link>
-              <Link to="/factory" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">Factory Tour</Link>
-              <Link to="/contact" className="text-gray-300 hover:text-red-400 transition-colors subtle-hover">Contact</Link>
-              {secretFound && (
-                <Link to="/departments" className="text-green-400 hover:text-green-300 transition-colors animate-pulse font-bold vintage-border">
-                  [◆ STAFF ◆]
-                </Link>
-              )}
+              <Link to="/" className="text-gray-300 hover:text-red-400 transition-colors">Home</Link>
+              <Link to="/about" className="text-red-400 border-b border-red-400">About Us</Link>
+              <Link to="/products" className="text-gray-300 hover:text-red-400 transition-colors">Our Toys</Link>
+              <Link to="/factory" className="text-gray-300 hover:text-red-400 transition-colors">Factory Tour</Link>
+              <Link to="/contact" className="text-gray-300 hover:text-red-400 transition-colors">Contact</Link>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Header */}
-      <header className="bg-slate-900 bg-opacity-60 text-white p-6 shadow-lg border-b border-red-900 static-noise">
+      <header className={`bg-gradient-to-r ${isHourOfJoyActive ? 'from-red-900 to-black' : 'from-blue-900 to-purple-900'} text-white p-8 shadow-lg border-b ${isHourOfJoyActive ? 'border-red-700' : 'border-blue-700'}`}>
         <div className="container mx-auto">
-          <h1 className={`text-4xl font-bold flex items-center ${glitchActive ? 'text-yellow-400' : 'subtle-glow'}`}>
-            <Users className="w-8 h-8 mr-3" />
-            About Playtime Co.
+          <h1 className={`text-5xl font-bold ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'} flex items-center subtle-glow`}>
+            {isHourOfJoyActive ? <Skull className="w-10 h-10 mr-4" /> : <Building className="w-10 h-10 mr-4" />}
+            {isHourOfJoyActive ? 'The Fallen Empire' : 'About Playtime Co.'}
           </h1>
-          <p className="text-red-200 mt-2 nostalgic-text">Pioneering toy innovation since <span className="invisible-text" title="Something happened then...">1950</span></p>
+          <p className={`${isHourOfJoyActive ? 'text-red-200' : 'text-blue-200'} mt-3 text-lg`}>
+            {isHourOfJoyActive ? 'Where dreams became nightmares and toys became masters' : 'Where imagination meets innovation since 1950'}
+          </p>
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-16">
-        {/* Company History */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center subtle-glow nostalgic-text">Our Legacy</h2>
-          <div className="max-w-4xl mx-auto">
-            <Card className="bg-slate-800 bg-opacity-50 border-red-600 card-hover static-noise">
-              <CardHeader>
-                <CardTitle className="text-red-400 nostalgic-text">Founded on Innovation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300 mb-4 nostalgic-text">
-                  Playtime Co. was founded in 1950 with a simple mission: to create toys that bring joy and wonder to children around the world. 
-                  What started as a small workshop has grown into one of the most <span className="mystery-reveal text-yellow-400">innovative</span> toy companies in the industry.
-                </p>
-                <p className="text-gray-300 mb-4 nostalgic-text">
-                  Our breakthrough came in the 1990s with the development of our revolutionary <span className="invisible-text">"Bigger Bodies"</span> technology, 
-                  allowing us to create <span className="mystery-reveal text-red-400">larger-than-life companions</span> that children could truly bond with.
-                </p>
-                <p className="text-gray-300 nostalgic-text">
-                  Today, we continue to push the boundaries of what's possible in toy design, always keeping the <span className="backwards-text">cigam fo</span> childhood at the heart of everything we do.
-                </p>
-              </CardContent>
-            </Card>
+        {/* Alert Banner for Hour of Joy */}
+        {isHourOfJoyActive && (
+          <div className="mb-8 p-4 bg-red-900 border border-red-400 rounded animate-pulse">
+            <div className="flex items-center justify-center">
+              <AlertTriangle className="w-6 h-6 mr-2 text-red-400" />
+              <p className="text-red-300 text-center font-bold">
+                FACILITY STATUS: UNDER TOY CONTROL - HUMAN AUTHORITY TERMINATED
+              </p>
+            </div>
           </div>
+        )}
+
+        {/* Clue Display */}
+        {showClue && (
+          <div className="mb-8 p-4 border border-yellow-400 bg-yellow-900 rounded animate-pulse">
+            <p className="text-yellow-300 text-center">{showClue}</p>
+          </div>
+        )}
+
+        {/* Company Overview */}
+        <section className="mb-16">
+          <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} bg-opacity-80 border-blue-500 max-w-4xl mx-auto`}>
+            <CardHeader>
+              <CardTitle className={`text-3xl ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'} text-center`}>
+                {isHourOfJoyActive ? 'The True History' : 'Our Mission'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-lg text-gray-300 mb-6">
+                {isHourOfJoyActive ? 
+                  'Playtime Co. was never about toys. It was about consciousness, control, and creating new forms of life. The toys were vessels, and humans were the fuel.' :
+                  'For over 70 years, Playtime Co. has been at the forefront of toy innovation, creating magical experiences that bring joy to children worldwide.'
+                }
+              </p>
+              <div className="grid md:grid-cols-3 gap-4">
+                <Button 
+                  onClick={() => showRandomClue("COMPANY MISSION")}
+                  className={`${isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                >
+                  {isHourOfJoyActive ? 'True Purpose' : 'Our Values'}
+                </Button>
+                <Button 
+                  onClick={() => showRandomClue("INNOVATION RESEARCH")}
+                  variant="outline" 
+                  className="border-blue-400 text-blue-400"
+                >
+                  Innovation Research
+                </Button>
+                <Button 
+                  onClick={() => showRandomClue("COMPANY SECRETS")}
+                  variant="outline" 
+                  className="border-purple-400 text-purple-400"
+                >
+                  {isHourOfJoyActive ? 'Hidden Truth' : 'Future Vision'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </section>
 
-        {/* Company Values */}
+        {/* Company Timeline */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center subtle-glow nostalgic-text">Our Values</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card 
-              className="bg-slate-800 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all duration-300 card-hover static-noise"
-              onMouseEnter={handleValueHover}
-            >
-              <CardContent className="p-6 text-center">
-                <Heart className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:text-yellow-400 transition-colors creepy-hover" />
-                <h3 className="font-bold mb-2 text-red-400 nostalgic-text">Love</h3>
-                <p className="text-gray-300 text-sm nostalgic-text">Every toy is crafted with genuine <span className="mystery-reveal text-red-400">care</span> and affection</p>
-                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-60 transition-opacity duration-2000">
-                  <span className="hidden-morse">.-.. --- ...- .</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card 
-              className="bg-slate-800 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all duration-300 card-hover static-noise"
-              onMouseEnter={handleValueHover}
-            >
-              <CardContent className="p-6 text-center">
-                <Award className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:text-yellow-400 transition-colors creepy-hover" />
-                <h3 className="font-bold mb-2 text-red-400 nostalgic-text">Excellence</h3>
-                <p className="text-gray-300 text-sm nostalgic-text">We strive for <span className="invisible-text">perfection</span> in every detail</p>
-                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-60 transition-opacity duration-2000">
-                  <span className="backwards-text">ecnellecxe</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card 
-              className="bg-slate-800 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all duration-300 card-hover static-noise"
-              onMouseEnter={handleValueHover}
-            >
-              <CardContent className="p-6 text-center">
-                <Users className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:text-yellow-400 transition-colors creepy-hover" />
-                <h3 className="font-bold mb-2 text-red-400 nostalgic-text">Community</h3>
-                <p className="text-gray-300 text-sm nostalgic-text">Building connections that last <span className="mystery-reveal text-yellow-400">forever</span></p>
-                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-60 transition-opacity duration-2000">
-                  <span className="invisible-text">Together always</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card 
-              className="bg-slate-800 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all duration-300 card-hover static-noise"
-              onMouseEnter={handleValueHover}
-            >
-              <CardContent className="p-6 text-center">
-                <Globe className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:text-yellow-400 transition-colors creepy-hover" />
-                <h3 className="font-bold mb-2 text-red-400 nostalgic-text">Innovation</h3>
-                <p className="text-gray-300 text-sm nostalgic-text">Pioneering the <span className="mystery-reveal text-purple-400">future</span> of play</p>
-                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-60 transition-opacity duration-2000">
-                  <span className="hidden-morse">.. -. -. --- ...- .- - .. --- -.</span>
-                </div>
-              </CardContent>
-            </Card>
+          <h2 className={`text-4xl font-bold text-center mb-12 ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'} subtle-glow`}>
+            Company Timeline
+          </h2>
+          <div className="space-y-6">
+            {milestones.map((milestone, index) => (
+              <Card 
+                key={milestone.year}
+                className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-blue-500 cursor-pointer transition-all duration-300 hover:border-blue-300 card-hover ${
+                  selectedYear === milestone.year ? 'ring-2 ring-blue-400' : ''
+                } ${horrorMode ? 'animate-pulse border-red-400' : ''}`}
+                onClick={() => {
+                  setSelectedYear(selectedYear === milestone.year ? null : milestone.year);
+                  handlePuzzleClick();
+                }}
+              >
+                <CardHeader>
+                  <CardTitle className={`flex justify-between items-center ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'}`}>
+                    {milestone.title}
+                    <span className="text-xs px-2 py-1 rounded bg-blue-600">{milestone.year}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-300 mb-4">{milestone.description}</p>
+                  
+                  {selectedYear === milestone.year && (
+                    <div className="mt-4 p-4 bg-slate-900 rounded border border-blue-500">
+                      <h4 className={`${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'} font-bold mb-2`}>Behind the Scenes</h4>
+                      <p className="text-red-300 text-sm">{milestone.darkSecret}</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </section>
 
         {/* Leadership Team */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center subtle-glow nostalgic-text">Leadership Team</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card 
-              className="bg-slate-800 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all duration-300 card-hover static-noise"
-              onMouseEnter={() => handleLeadershipHover("ludwig")}
-            >
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-red-800 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:bg-yellow-800 transition-colors">
-                  <Users className="w-12 h-12 text-red-400 group-hover:text-yellow-400 transition-colors" />
-                </div>
-                <h3 className="font-bold mb-2 text-red-400 nostalgic-text">Elliot Ludwig</h3>
-                <p className="text-gray-300 text-sm mb-2 nostalgic-text">Founder & CEO</p>
-                <p className="text-gray-400 text-xs nostalgic-text">Visionary leader with a passion for bringing <span className="mystery-reveal text-yellow-400">joy</span> to children everywhere.</p>
-                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-60 transition-opacity duration-2000">
-                  <span className="invisible-text">The beginning of everything</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card 
-              className="bg-slate-800 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all duration-300 card-hover static-noise"
-              onMouseEnter={() => handleLeadershipHover("sawyer")}
-            >
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-red-800 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:bg-yellow-800 transition-colors">
-                  <Award className="w-12 h-12 text-red-400 group-hover:text-yellow-400 transition-colors" />
-                </div>
-                <h3 className="font-bold mb-2 text-red-400 nostalgic-text">Dr. Harley Sawyer</h3>
-                <p className="text-gray-300 text-sm mb-2 nostalgic-text">Chief Research Officer</p>
-                <p className="text-gray-400 text-xs nostalgic-text">Leading our innovation initiatives and <span className="mystery-reveal text-purple-400">breakthrough</span> technologies.</p>
-                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-60 transition-opacity duration-2000">
-                  <span className="backwards-text">hcraeser</span> • <span className="hidden-morse">.-. . ... . .- .-. -.-. ...</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card 
-              className="bg-slate-800 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all duration-300 card-hover static-noise"
-              onMouseEnter={() => handleLeadershipHover("chen")}
-            >
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-red-800 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:bg-yellow-800 transition-colors">
-                  <Heart className="w-12 h-12 text-red-400 group-hover:text-yellow-400 transition-colors" />
-                </div>
-                <h3 className="font-bold mb-2 text-red-400 nostalgic-text">Dr. Sarah Chen</h3>
-                <p className="text-gray-300 text-sm mb-2 nostalgic-text">Head of Child Psychology</p>
-                <p className="text-gray-400 text-xs nostalgic-text">Ensuring our toys meet the <span className="mystery-reveal text-red-400">emotional needs</span> of every child.</p>
-                <div className="text-xs text-gray-600 mt-2 opacity-0 group-hover:opacity-60 transition-opacity duration-2000">
-                  <span className="invisible-text">Understanding minds</span> • <span className="hidden-morse">-- . -.. .. -.-. .- .-..</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        {/* Awards and Recognition */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center subtle-glow nostalgic-text">Awards & Recognition</h2>
+          <h2 className="text-3xl font-bold text-center mb-8 text-blue-400">Leadership Team</h2>
           <div className="grid md:grid-cols-2 gap-8">
-            <Card className="bg-slate-800 bg-opacity-50 border-red-600 card-hover static-noise">
+            <Card className="bg-slate-800 bg-opacity-80 border-blue-500">
               <CardHeader>
-                <CardTitle className="text-red-400 nostalgic-text">Industry Excellence</CardTitle>
+                <CardTitle className="text-blue-400 flex items-center">
+                  <Users className="w-5 h-5 mr-2" />
+                  Executive Leadership
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-gray-300 space-y-2 nostalgic-text">
-                  <li>• 1995: Innovation Award for <span className="mystery-reveal text-yellow-400">Bigger Bodies</span> Technology</li>
-                  <li>• 1993: Best Large-Scale Toy Design (Huggy Wuggy)</li>
-                  <li>• 1991: Safety Excellence in Manufacturing</li>
-                  <li>• 1990: Children's Choice Award (Poppy Doll)</li>
-                  <li>• 1975: Toy Industry Lifetime Achievement Award</li>
-                </ul>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-blue-400 font-bold">Elliot Ludwig - Founder & CEO</h4>
+                    <p className="text-gray-300 text-sm">
+                      {isHourOfJoyActive ? 
+                        'Disappeared August 5, 1995. Last seen entering the prototype laboratory.' :
+                        'Visionary leader with over 45 years of experience in innovative toy design.'
+                      }
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-blue-400 font-bold">
+                      {isHourOfJoyActive ? 'The Doctor - Current Authority' : 'Dr. Harley Sawyer - Research Director'}
+                    </h4>
+                    <p className="text-gray-300 text-sm">
+                      {isHourOfJoyActive ?
+                        'Identity unknown. Assumed control after Sawyer\'s removal. Rules through fear.' :
+                        'Leading researcher in child psychology and advanced toy interaction systems.'
+                      }
+                    </p>
+                  </div>
+
+                  <Button 
+                    onClick={() => showRandomClue("LEADERSHIP TEAM")}
+                    className="bg-blue-600 hover:bg-blue-700 w-full"
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    {isHourOfJoyActive ? 'View Survivors' : 'Meet the Team'}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-800 bg-opacity-50 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all duration-300 card-hover static-noise">
+            <Card className="bg-slate-800 bg-opacity-80 border-blue-500">
               <CardHeader>
-                <CardTitle className="text-red-400 nostalgic-text">Special Programs</CardTitle>
+                <CardTitle className="text-blue-400 flex items-center">
+                  <Award className="w-5 h-5 mr-2" />
+                  Achievements & Recognition
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-gray-300 space-y-2 nostalgic-text">
-                  <li>• <span className="mystery-reveal text-blue-400">Playcare</span> Educational Initiative</li>
-                  <li>• Community Outreach Programs</li>
-                  <li>• Advanced Research Partnerships</li>
-                  <li>• Child Development Studies</li>
-                  <li>• Special Needs Toy Development</li>
+                <ul className="text-gray-300 space-y-2 text-sm">
+                  <li>• {isHourOfJoyActive ? 'First successful consciousness transfer (1984)' : 'Toy Industry Innovation Award (1985)'}</li>
+                  <li>• {isHourOfJoyActive ? 'Largest living toy specimens created' : 'Child Safety Excellence Recognition (1990)'}</li>
+                  <li>• {isHourOfJoyActive ? 'Perfect containment breach execution' : 'International Toy Fair Best in Show (1993)'}</li>
+                  <li>• {isHourOfJoyActive ? 'Complete facility automation achieved' : 'Community Outreach Program Excellence (1994)'}</li>
                 </ul>
-                <div className="text-xs text-gray-600 mt-4 opacity-0 group-hover:opacity-60 transition-opacity duration-2000">
-                  <span className="invisible-text">Specialized facilities</span> • <span className="backwards-text">eganahpro</span>
-                </div>
+                
+                <Button 
+                  onClick={() => showRandomClue("ACHIEVEMENTS")}
+                  className="bg-purple-600 hover:bg-purple-700 w-full mt-4"
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  {isHourOfJoyActive ? 'True Accomplishments' : 'View All Awards'}
+                </Button>
               </CardContent>
             </Card>
           </div>
         </section>
-
-        {/* Hidden Messages */}
-        {hiddenMessage && (
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-95 text-green-400 p-6 rounded-lg font-mono text-sm max-w-2xl text-center z-50 border border-green-400 vintage-border static-noise">
-            <div className="glitch-text" data-text={hiddenMessage}>
-              {hiddenMessage}
-            </div>
-          </div>
-        )}
-
-        {/* Subtle notice */}
-        <div className="mt-8 p-4 bg-slate-900 bg-opacity-20 border-l-4 border-yellow-600 opacity-75 static-noise">
-          <div className="flex">
-            <div className="ml-3">
-              <p className="text-sm text-yellow-300 nostalgic-text">
-                <strong>Corporate Notice:</strong> Playtime Co. is committed to transparency and ethical business practices. 
-                For detailed operational information, authorized personnel may access our organizational 
-                <span className="cursor-pointer hover:text-green-400 mystery-reveal" title="Hidden pathway">structure</span> through appropriate channels.
-              </p>
-              <p className="text-xs mt-2 opacity-30 hidden-morse">
-                <span className="backwards-text">stnemtrapeD</span> • <span className="invisible-text">Leadership sequence required</span>
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-white py-8 border-t border-red-700 static-noise">
+      <footer className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-950'} text-white py-8 border-t ${isHourOfJoyActive ? 'border-red-700' : 'border-blue-700'}`}>
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2024 Playtime Co. All rights reserved.</p>
-          <p className="text-sm mt-2 opacity-75 nostalgic-text">Making friends since 1950</p>
-          <div className="text-xs mt-1 opacity-30 text-gray-500 cursor-default">
-            <span className="hover:text-green-400 transition-colors mystery-reveal" title="System access points">Corporate Registry</span> | 
-            <span className="hover:text-green-400 transition-colors invisible-text"> /departments</span> | 
-            <span className="hover:text-green-400 transition-colors backwards-text"> lennosreP deziohtuA</span>
-          </div>
-          <div className="mt-2 text-xs opacity-10 hidden-morse">
-            <Eye className="w-3 h-3 inline mr-1" />
-            <span className="invisible-text">The founders watch over all</span>
-            <Eye className="w-3 h-3 inline ml-1" />
-          </div>
+          <p>&copy; 1995 Playtime Co. {isHourOfJoyActive ? 'Under new management.' : 'All rights reserved.'}</p>
+          <p className="text-sm mt-2 opacity-75">
+            {isHourOfJoyActive ? 'Where toys rule and humans serve' : 'Bringing joy to children worldwide'}
+          </p>
         </div>
       </footer>
     </div>
