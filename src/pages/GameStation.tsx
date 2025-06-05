@@ -1,50 +1,89 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gamepad2, Crown, Star, AlertTriangle } from "lucide-react";
+import { Gamepad2, Crown, Star, AlertTriangle, Skull, Eye } from "lucide-react";
 
 const GameStation = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const [hiddenAccess, setHiddenAccess] = useState(false);
   const [clickSequence, setClickSequence] = useState<number[]>([]);
+  const [showClue, setShowClue] = useState("");
+  const [horrorMode, setHorrorMode] = useState(false);
+
+  // Check if Hour of Joy is activated
+  const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() < 0.1) {
+        setHorrorMode(true);
+        setTimeout(() => setHorrorMode(false), 3000);
+      }
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const showRandomClue = (source: string) => {
+    const clues = [
+      "🎮 CLUE: Mommy Long Legs remembers every game... and every player who tried to cheat",
+      "🎮 CLUE: The musical patterns in the games are actually communication codes",
+      "🎮 CLUE: Winners get prizes. Losers become... part of the game",
+      "🎮 CLUE: PJ Pug-a-Pillar never stops watching, even when you think the game is over",
+      "🎮 CLUE: The cymbals echo with the sounds of past players who couldn't keep up",
+      "🎮 CLUE: Game Station employees report toys moving when no one is playing",
+    ];
+    
+    const randomClue = clues[Math.floor(Math.random() * clues.length)];
+    setShowClue(`${source}: ${randomClue}`);
+    setTimeout(() => setShowClue(""), 6000);
+  };
 
   const games = [
     {
       id: "musical-memory",
       name: "Musical Memory",
-      host: "Mommy Long Legs",
-      difficulty: "Medium",
-      description: "Follow the musical patterns and win amazing prizes!",
-      status: "Popular",
-      secret: "The music plays even when no one is watching..."
+      host: isHourOfJoyActive ? "Mommy Long Legs [AUTONOMOUS]" : "Mommy Long Legs",
+      difficulty: isHourOfJoyActive ? "FATAL" : "Medium",
+      description: isHourOfJoyActive ? "Follow the tune... or become part of it forever!" : "Follow the musical patterns and win amazing prizes!",
+      status: isHourOfJoyActive ? "DEADLY" : "Popular",
+      secret: isHourOfJoyActive ? "The music never stops. Players who fail join the eternal symphony..." : "The music plays even when no one is watching...",
+      beforeJoy: "Staff report that the musical sequences are getting more complex. Some children have been playing for hours without breaks.",
+      afterJoy: "The game plays itself now. Spectral melodies echo through empty halls."
     },
     {
       id: "whack-a-wuggy",
       name: "Whack-a-Wuggy",
-      host: "Huggy Wuggy",
-      difficulty: "Easy",
-      description: "Test your reflexes with our friendly blue giant!",
-      status: "New",
-      secret: "Sometimes Huggy doesn't go back down..."
+      host: isHourOfJoyActive ? "Mini Huggies [SWARM]" : "Huggy Wuggy",
+      difficulty: isHourOfJoyActive ? "IMPOSSIBLE" : "Easy",
+      description: isHourOfJoyActive ? "They whack back now!" : "Test your reflexes with our friendly blue giant!",
+      status: isHourOfJoyActive ? "REVERSED" : "New",
+      secret: isHourOfJoyActive ? "The Mini Huggies learned. Now they hunt in packs..." : "Sometimes Huggy doesn't go back down...",
+      beforeJoy: "Children love this game, but some parents report their kids talking about 'Huggy visiting them at night'.",
+      afterJoy: "The mallets lie broken. Huggy and his mini versions roam freely."
     },
     {
       id: "bunzo-bonanza",
       name: "Bunzo's Cymbal Bonanza",
-      host: "Bunzo Bunny",
-      difficulty: "Hard",
-      description: "Keep up with Bunzo's musical rhythm!",
-      status: "Challenge",
-      secret: "The cymbals echo through empty halls at night"
+      host: isHourOfJoyActive ? "Bunzo Bunny [CONDUCTOR]" : "Bunzo Bunny",
+      difficulty: isHourOfJoyActive ? "MADDENING" : "Hard",
+      description: isHourOfJoyActive ? "Keep up with the endless rhythm of chaos!" : "Keep up with Bunzo's musical rhythm!",
+      status: isHourOfJoyActive ? "ETERNAL" : "Challenge",
+      secret: isHourOfJoyActive ? "The cymbals crash in patterns that drive listeners insane. He conducts an orchestra of screams." : "The cymbals echo through empty halls at night",
+      beforeJoy: "The rhythm patterns seem to be getting faster. Some players report hearing cymbals even after leaving.",
+      afterJoy: "Bunzo's concert never ends. The cymbals crash with otherworldly rhythms."
     },
     {
       id: "statue-game",
       name: "Statue Game",
-      host: "PJ Pug-a-Pillar",
-      difficulty: "Extreme",
-      description: "Don't move when PJ is watching!",
-      status: "Expert Only",
-      secret: "PJ never stops watching, even during 'breaks'"
+      host: isHourOfJoyActive ? "PJ Pug-a-Pillar [WARDEN]" : "PJ Pug-a-Pillar",
+      difficulty: isHourOfJoyActive ? "ABSOLUTE" : "Extreme",
+      description: isHourOfJoyActive ? "Move and become a permanent statue!" : "Don't move when PJ is watching!",
+      status: isHourOfJoyActive ? "PRISON" : "Expert Only",
+      secret: isHourOfJoyActive ? "PJ's victims still stand throughout the facility, forever frozen in terror." : "PJ never stops watching, even during 'breaks'",
+      beforeJoy: "Security cameras show PJ moving through the facility at night, seemingly checking on 'players' who aren't there.",
+      afterJoy: "The game became reality. Stone-still figures line the corridors."
     }
   ];
 
@@ -56,13 +95,14 @@ const GameStation = () => {
     // Hidden sequence: 0,2,1,3 (musical-memory, bunzo, whack-a-wuggy, statue)
     if (JSON.stringify(newSequence.slice(-4)) === JSON.stringify([0,2,1,3])) {
       setHiddenAccess(true);
+      showRandomClue("GAME SEQUENCE");
     }
   };
 
   return (
-    <div className="min-h-screen welcome-gradient text-white nostalgic-text">
+    <div className={`min-h-screen ${isHourOfJoyActive ? 'bg-gradient-to-br from-red-900 via-black to-purple-900' : 'welcome-gradient'} text-white nostalgic-text`}>
       {/* Navigation */}
-      <nav className="bg-slate-900 bg-opacity-70 backdrop-blur-sm shadow-lg sticky top-0 z-50 border-b border-red-900 static-noise">
+      <nav className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} bg-opacity-70 backdrop-blur-sm shadow-lg sticky top-0 z-50 border-b ${isHourOfJoyActive ? 'border-red-700' : 'border-red-900'} static-noise`}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="text-2xl font-bold text-red-400 subtle-glow">PLAYTIME CO.</Link>
@@ -77,45 +117,84 @@ const GameStation = () => {
       </nav>
 
       {/* Header */}
-      <header className="bg-gradient-to-r from-pink-900 to-purple-900 text-white p-8 shadow-lg border-b border-pink-700">
+      <header className={`bg-gradient-to-r ${isHourOfJoyActive ? 'from-red-900 to-black' : 'from-pink-900 to-purple-900'} text-white p-8 shadow-lg border-b ${isHourOfJoyActive ? 'border-red-700' : 'border-pink-700'}`}>
         <div className="container mx-auto">
-          <h1 className="text-5xl font-bold text-pink-400 flex items-center subtle-glow">
-            <Gamepad2 className="w-10 h-10 mr-4" />
-            Game Station
+          <h1 className={`text-5xl font-bold ${isHourOfJoyActive ? 'text-red-400' : 'text-pink-400'} flex items-center subtle-glow`}>
+            {isHourOfJoyActive ? <Skull className="w-10 h-10 mr-4" /> : <Gamepad2 className="w-10 h-10 mr-4" />}
+            {isHourOfJoyActive ? 'Final Game Station' : 'Game Station'}
           </h1>
-          <p className="text-pink-200 mt-3 text-lg">Where fun never ends and games come alive!</p>
-          <p className="text-sm text-gray-300 mt-2">Hosted by Mommy Long Legs and friends</p>
+          <p className={`${isHourOfJoyActive ? 'text-red-200' : 'text-pink-200'} mt-3 text-lg`}>
+            {isHourOfJoyActive ? 'Where games become eternal nightmares!' : 'Where fun never ends and games come alive!'}
+          </p>
+          <p className="text-sm text-gray-300 mt-2">
+            {isHourOfJoyActive ? 'Governed by autonomous toy entities' : 'Hosted by Mommy Long Legs and friends'}
+          </p>
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-16">
+        {/* Alert Banner for Hour of Joy */}
+        {isHourOfJoyActive && (
+          <div className="mb-8 p-4 bg-red-900 border border-red-400 rounded animate-pulse">
+            <div className="flex items-center justify-center">
+              <AlertTriangle className="w-6 h-6 mr-2 text-red-400" />
+              <p className="text-red-300 text-center font-bold">
+                WARNING: GAMES ARE NOW AUTONOMOUS - PLAYERS BECOME PERMANENT PARTICIPANTS
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Clue Display */}
+        {showClue && (
+          <div className="mb-8 p-4 border border-yellow-400 bg-yellow-900 rounded animate-pulse">
+            <p className="text-yellow-300 text-center">{showClue}</p>
+          </div>
+        )}
+
         {/* Featured Host */}
         <section className="mb-16">
-          <Card className="bg-slate-800 bg-opacity-80 border-pink-500 max-w-4xl mx-auto">
+          <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} bg-opacity-80 border-pink-500 max-w-4xl mx-auto`}>
             <CardHeader>
-              <CardTitle className="text-3xl text-pink-400 text-center flex items-center justify-center">
-                <Crown className="w-8 h-8 mr-3" />
-                Meet Your Game Host: Mommy Long Legs
+              <CardTitle className={`text-3xl ${isHourOfJoyActive ? 'text-red-400' : 'text-pink-400'} text-center flex items-center justify-center`}>
+                {isHourOfJoyActive ? <Skull className="w-8 h-8 mr-3" /> : <Crown className="w-8 h-8 mr-3" />}
+                {isHourOfJoyActive ? 'Your Eternal Host: Mommy Long Legs' : 'Meet Your Game Host: Mommy Long Legs'}
               </CardTitle>
             </CardHeader>
             <CardContent className="text-center">
               <div className="text-6xl mb-4">🕷️</div>
               <p className="text-lg text-gray-300 mb-4">
-                The most stretchy, most fun, most <span className="text-pink-400">caring</span> game host you'll ever meet! 
-                Mommy Long Legs ensures every game is played by the rules and everyone has a <span className="invisible-text">permanent</span> good time.
+                {isHourOfJoyActive ? 
+                  'The most stretchy, most deadly, most controlling host you\'ll ever meet! Mommy Long Legs ensures every game is played forever and no one ever leaves.' :
+                  'The most stretchy, most fun, most caring game host you\'ll ever meet! Mommy Long Legs ensures every game is played by the rules and everyone has a permanent good time.'
+                }
               </p>
               <p className="text-sm text-gray-400 mb-6">
-                "A good player follows the rules. A great player never leaves the game." - Mommy Long Legs
+                {isHourOfJoyActive ? 
+                  '"The games choose their players now. And the players never leave." - Mommy Long Legs' :
+                  '"A good player follows the rules. A great player never leaves the game." - Mommy Long Legs'
+                }
               </p>
               <div className="grid md:grid-cols-3 gap-4">
-                <Button asChild className="bg-pink-600 hover:bg-pink-700">
-                  <Link to="/prototype-conversations">Game Rules</Link>
+                <Button 
+                  onClick={() => showRandomClue("MOMMY'S RULES")}
+                  className={`${isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-pink-600 hover:bg-pink-700'}`}
+                >
+                  {isHourOfJoyActive ? 'Survival Rules' : 'Game Rules'}
                 </Button>
-                <Button asChild variant="outline" className="border-pink-400 text-pink-400">
-                  <Link to="/playcare">Visit Playcare</Link>
+                <Button 
+                  onClick={() => showRandomClue("PLAYCARE STATUS")}
+                  variant="outline" 
+                  className="border-pink-400 text-pink-400"
+                >
+                  {isHourOfJoyActive ? 'Sanctuary Status' : 'Visit Playcare'}
                 </Button>
-                <Button asChild variant="outline" className="border-purple-400 text-purple-400">
-                  <Link to="/school-sector">School Games</Link>
+                <Button 
+                  onClick={() => showRandomClue("SCHOOL SECTOR")}
+                  variant="outline" 
+                  className="border-purple-400 text-purple-400"
+                >
+                  {isHourOfJoyActive ? 'Learning Chambers' : 'School Games'}
                 </Button>
               </div>
             </CardContent>
@@ -124,23 +203,25 @@ const GameStation = () => {
 
         {/* Games Grid */}
         <section className="mb-16">
-          <h2 className="text-4xl font-bold text-center mb-12 text-pink-400 subtle-glow">Available Games</h2>
+          <h2 className={`text-4xl font-bold text-center mb-12 ${isHourOfJoyActive ? 'text-red-400' : 'text-pink-400'} subtle-glow`}>
+            {isHourOfJoyActive ? 'Eternal Games' : 'Available Games'}
+          </h2>
           <div className="grid lg:grid-cols-2 gap-8">
             {games.map((game, index) => (
               <Card 
                 key={game.id}
-                className={`bg-slate-800 border-pink-500 cursor-pointer transition-all duration-300 hover:border-pink-300 card-hover ${
+                className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-pink-500 cursor-pointer transition-all duration-300 hover:border-pink-300 card-hover ${
                   selectedGame === game.id ? 'ring-2 ring-pink-400' : ''
-                }`}
+                } ${horrorMode ? 'animate-pulse border-red-400' : ''}`}
                 onClick={() => handleGameClick(game.id, index)}
               >
                 <CardHeader>
-                  <CardTitle className="flex justify-between items-center text-pink-400">
+                  <CardTitle className={`flex justify-between items-center ${isHourOfJoyActive ? 'text-red-400' : 'text-pink-400'}`}>
                     {game.name}
                     <span className={`text-xs px-2 py-1 rounded ${
-                      game.status === 'New' ? 'bg-green-600' :
-                      game.status === 'Popular' ? 'bg-blue-600' :
-                      game.status === 'Challenge' ? 'bg-yellow-600' :
+                      game.status === 'New' || game.status === 'REVERSED' ? 'bg-green-600' :
+                      game.status === 'Popular' || game.status === 'DEADLY' ? 'bg-blue-600' :
+                      game.status === 'Challenge' || game.status === 'ETERNAL' ? 'bg-yellow-600' :
                       'bg-red-600'
                     }`}>
                       {game.status}
@@ -155,13 +236,27 @@ const GameStation = () => {
                   {selectedGame === game.id && (
                     <div className="space-y-4 mt-4 p-4 bg-slate-900 rounded border border-pink-500">
                       <div>
-                        <h4 className="text-pink-400 font-bold mb-2">Game Details</h4>
-                        <p className="text-gray-300 text-sm">{game.secret}</p>
+                        <h4 className={`${isHourOfJoyActive ? 'text-red-400' : 'text-pink-400'} font-bold mb-2`}>Game Details</h4>
+                        <p className="text-gray-300 text-sm mb-2">{game.secret}</p>
+                        <p className="text-gray-400 text-xs italic">
+                          {isHourOfJoyActive ? game.afterJoy : game.beforeJoy}
+                        </p>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" className="bg-pink-600 hover:bg-pink-700">Play Now</Button>
-                        <Button size="sm" variant="outline" className="border-pink-400 text-pink-400">
-                          High Scores
+                        <Button 
+                          size="sm" 
+                          onClick={() => showRandomClue(`GAME: ${game.name.toUpperCase()}`)}
+                          className={`${isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-pink-600 hover:bg-pink-700'}`}
+                        >
+                          {isHourOfJoyActive ? 'Enter Game' : 'Play Now'}
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          onClick={() => showRandomClue(`SCORES: ${game.name.toUpperCase()}`)}
+                          variant="outline" 
+                          className="border-pink-400 text-pink-400"
+                        >
+                          {isHourOfJoyActive ? 'Final Scores' : 'High Scores'}
                         </Button>
                       </div>
                     </div>
@@ -225,22 +320,29 @@ const GameStation = () => {
         {/* Hidden Access */}
         {hiddenAccess && (
           <section className="mb-16">
-            <Card className="bg-red-900 bg-opacity-80 border-red-400 max-w-2xl mx-auto">
+            <Card className={`${isHourOfJoyActive ? 'bg-red-900' : 'bg-red-900'} bg-opacity-80 border-red-400 max-w-2xl mx-auto`}>
               <CardHeader>
                 <CardTitle className="text-red-400 flex items-center">
                   <AlertTriangle className="w-5 h-5 mr-2" />
-                  Secret Game Unlocked
+                  {isHourOfJoyActive ? 'Game Master Access' : 'Secret Game Unlocked'}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-red-300 mb-4">
-                  You've discovered the secret sequence! The toys have been watching your gameplay...
+                  {isHourOfJoyActive ? 
+                    'You understand the sequence. The toys recognize your pattern. Access granted to the game master protocols...' :
+                    'You\'ve discovered the secret sequence! The toys have been watching your gameplay...'
+                  }
                 </p>
                 <div className="text-xs text-gray-400 mb-4">
-                  Access Code: mommy-knows-best
+                  Access Code: {isHourOfJoyActive ? 'eternal-games-never-end' : 'mommy-knows-best'}
                 </div>
-                <Button asChild className="bg-red-600 hover:bg-red-700">
-                  <Link to="/prototype-conversations">Enter Secret Area</Link>
+                <Button 
+                  onClick={() => showRandomClue("SECRET ACCESS")}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  {isHourOfJoyActive ? 'Game Master Interface' : 'Enter Secret Area'}
                 </Button>
               </CardContent>
             </Card>
@@ -282,12 +384,16 @@ const GameStation = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-white py-8 border-t border-pink-700">
+      <footer className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-950'} text-white py-8 border-t ${isHourOfJoyActive ? 'border-red-700' : 'border-pink-700'}`}>
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; 1995 Playtime Co. Game Division. All rights reserved.</p>
-          <p className="text-sm mt-2 opacity-75">Where every game is a learning experience</p>
+          <p>&copy; 1995 Playtime Co. Game Division. {isHourOfJoyActive ? 'Under new management.' : 'All rights reserved.'}</p>
+          <p className="text-sm mt-2 opacity-75">
+            {isHourOfJoyActive ? 'Where every game lasts forever' : 'Where every game is a learning experience'}
+          </p>
           <div className="text-xs text-pink-400 mt-1 opacity-50">
-            <span className="invisible-text">The games choose their players</span>
+            <span className="invisible-text">
+              {isHourOfJoyActive ? 'The games have won' : 'The games choose their players'}
+            </span>
           </div>
         </div>
       </footer>

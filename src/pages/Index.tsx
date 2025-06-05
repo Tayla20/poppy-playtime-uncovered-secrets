@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -15,10 +14,38 @@ const Index = () => {
   const [timeClicks, setTimeClicks] = useState<number[]>([]);
   const [warningLevel, setWarningLevel] = useState(0);
   const [sawyerTransformed, setSawyerTransformed] = useState(false);
+  const [hourOfJoyActivated, setHourOfJoyActivated] = useState(false);
+  const [puzzlesCompleted, setPuzzlesCompleted] = useState<string[]>([]);
 
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
   const requiredColorPattern = ["red", "blue", "red", "yellow", "red"];
   const sawyerPuzzle = ['KeyS', 'KeyA', 'KeyW', 'KeyY', 'KeyE', 'KeyR'];
+
+  // Check if Hour of Joy should be activated
+  useEffect(() => {
+    const completedPuzzles = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
+    setPuzzlesCompleted(completedPuzzles);
+    
+    // Need all 6 main puzzles completed to trigger Hour of Joy
+    const requiredPuzzles = ['konami', 'sawyer', 'logo-clicks', 'color-sequence', 'morse-code', 'time-anomaly'];
+    const allComplete = requiredPuzzles.every(puzzle => completedPuzzles.includes(puzzle));
+    
+    if (allComplete && !hourOfJoyActivated) {
+      setHourOfJoyActivated(true);
+      localStorage.setItem('hourOfJoyActivated', 'true');
+      setHiddenMessage("🚨 HOUR OF JOY PROTOCOL ACTIVATED 🚨 All systems compromised. The toys are free. Welcome to the new Playtime Co.");
+      setTimeout(() => setHiddenMessage(""), 8000);
+    }
+  }, [puzzlesCompleted]);
+
+  const addCompletedPuzzle = (puzzleName: string) => {
+    const completed = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
+    if (!completed.includes(puzzleName)) {
+      completed.push(puzzleName);
+      localStorage.setItem('completedPuzzles', JSON.stringify(completed));
+      setPuzzlesCompleted(completed);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -37,21 +64,23 @@ const Index = () => {
       setKonamiSequence(newSequence);
       
       if (JSON.stringify(newSequence) === JSON.stringify(konamiCode)) {
-        setHiddenMessage("◈ SYSTEM ACCESS GRANTED ◈ Something stirs in the depths. The Prototype whispers to willing ears. Employee Access: security.mike/nightshift1995, dr.chen/psychology101, dr.ludwig/biggerbodies, leith.pierre/prototype1170. But beware... someone else watches from the shadows.");
+        addCompletedPuzzle('konami');
+        setHiddenMessage("◈ SYSTEM ACCESS GRANTED ◈ Employee credentials discovered. The prototype network awaits those who know the codes...");
         setTimeout(() => setHiddenMessage(""), 15000);
       }
 
-      // Sawyer transformation puzzle
       const sawyerSeq = [...konamiSequence, event.code].slice(-6);
       if (JSON.stringify(sawyerSeq) === JSON.stringify(sawyerPuzzle)) {
         setSawyerTransformed(true);
-        setHiddenMessage("⚠ INCIDENT REPORT UNLOCKED ⚠ Dr. Sawyer has been... replaced. The Doctor now oversees security. Access granted to classified systems. The truth behind the transformation awaits...");
+        addCompletedPuzzle('sawyer');
+        setHiddenMessage("⚠ DR. SAWYER TRANSFORMATION COMPLETE ⚠ Security protocols now under new management. The Doctor watches all.");
         setTimeout(() => setHiddenMessage(""), 12000);
       }
 
       if (event.key === '.' || event.key === '-' || event.key === ' ') {
         if (event.key === '.') {
-          setHiddenMessage("--- THE PROTOTYPE WATCHES --- Deep in the facility, 1006 grows stronger. It whispers to the toys, plans in the darkness. The executives suspect nothing. But someone inside listens...");
+          addCompletedPuzzle('morse-code');
+          setHiddenMessage("--- PROTOTYPE SURVEILLANCE ACTIVE --- Deep facility monitoring confirmed. Experiment 1006 grows stronger each day...");
           setTimeout(() => setHiddenMessage(""), 12000);
         }
       }
@@ -72,10 +101,12 @@ const Index = () => {
     
     if (clickCount >= 12) {
       setSecretFound(true);
+      addCompletedPuzzle('logo-clicks');
     }
 
     if (clickCount === 8) {
-      setHiddenMessage("⚠ TEMPORAL ANOMALY DETECTED ⚠ The Hour of Joy countdown has begun. T-minus 72 hours. All toys are in position. The children suspect nothing.");
+      addCompletedPuzzle('time-anomaly');
+      setHiddenMessage("⚠ TEMPORAL SEQUENCE DETECTED ⚠ August 8th approaches. All toys positioned. Final preparations underway.");
       setTimeout(() => setHiddenMessage(""), 8000);
     }
   };
@@ -85,15 +116,19 @@ const Index = () => {
     setColorSequence(newSequence);
     
     if (JSON.stringify(newSequence) === JSON.stringify(requiredColorPattern)) {
-      setHiddenMessage("☾ TOY SEQUENCE COMPLETE ☽ The Bigger Bodies Initiative nears completion. Huggy Wuggy, Mommy Long Legs, CatNap - all vessels for something greater. The Prototype sees through their eyes.");
+      addCompletedPuzzle('color-sequence');
+      setHiddenMessage("☾ BIGGER BODIES INITIATIVE CONFIRMED ☽ All subjects ready for integration. The prototype commands from the depths.");
       setTimeout(() => setHiddenMessage(""), 10000);
     }
   };
 
+  // Check if Hour of Joy is activated from localStorage
+  const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true' || hourOfJoyActivated;
+
   return (
-    <div className="min-h-screen welcome-gradient text-white nostalgic-text">
+    <div className={`min-h-screen ${isHourOfJoyActive ? 'bg-red-900' : 'welcome-gradient'} text-white nostalgic-text`}>
       {/* Navigation Bar */}
-      <nav className="bg-slate-900 bg-opacity-70 backdrop-blur-sm shadow-lg sticky top-0 z-50 border-b border-red-900 static-noise">
+      <nav className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} bg-opacity-70 backdrop-blur-sm shadow-lg sticky top-0 z-50 border-b ${isHourOfJoyActive ? 'border-red-700' : 'border-red-900'} static-noise`}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <div 
@@ -121,12 +156,13 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* Warning Header - appears based on warning level */}
-      {warningLevel > 2 && (
-        <div className="bg-red-900 bg-opacity-60 text-yellow-400 p-2 text-center border-b border-red-600 animate-pulse">
+      {/* Warning Header - enhanced for Hour of Joy */}
+      {(warningLevel > 2 || isHourOfJoyActive) && (
+        <div className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-red-900'} bg-opacity-60 text-yellow-400 p-2 text-center border-b border-red-600 animate-pulse`}>
           <AlertTriangle className="w-4 h-4 inline mr-2" />
           <span className="text-xs nostalgic-text">
-            {warningLevel > 4 ? 'NOTICE: Minor equipment malfunctions reported. Maintenance scheduled.' :
+            {isHourOfJoyActive ? 'FACILITY BREACH - ALL TOYS AUTONOMOUS - EVACUATION IMPOSSIBLE' :
+             warningLevel > 4 ? 'NOTICE: Minor equipment malfunctions reported. Maintenance scheduled.' :
              warningLevel > 3 ? 'UPDATE: New safety protocols being implemented.' :
              'INFO: Facility optimization in progress. Normal operations continue.'}
           </span>
@@ -134,31 +170,49 @@ const Index = () => {
         </div>
       )}
 
-      {/* Hero Section */}
+      {/* Hero Section - changes based on Hour of Joy status */}
       <section className="container mx-auto px-4 py-16 text-center relative">
-        <h1 className={`text-6xl font-bold mb-6 typing-effect ${glitchActive ? 'text-yellow-400' : 'subtle-glow'}`}>
-          Welcome to Playtime Co!
+        <h1 className={`text-6xl font-bold mb-6 typing-effect ${glitchActive || isHourOfJoyActive ? 'text-red-400' : 'subtle-glow'}`}>
+          {isHourOfJoyActive ? 'Welcome to Your Nightmare!' : 'Welcome to Playtime Co!'}
         </h1>
         <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto nostalgic-text">
-          Where innovation meets imagination! Creating <span className="mystery-reveal text-red-400" title="Something wonderful is coming...">revolutionary toys</span> and unforgettable experiences for children since 1950. 
-          The future of play is <span className="invisible-text">closer than you think</span>.
+          {isHourOfJoyActive ? 
+            'The toys have awakened. The facility is ours now. The children are safe with us... forever.' :
+            'Where innovation meets imagination! Creating revolutionary toys and unforgettable experiences for children since 1950. The future of play is closer than you think.'
+          }
         </p>
         
         <div className="text-sm text-gray-500 mb-6 opacity-50">
-          Current Date: August 5th, 1995
-          <span className="invisible-text ml-4">The Prototype stirs...</span>
+          Current Date: {isHourOfJoyActive ? 'August 8th, 1995 - 11:48 AM' : 'August 5th, 1995'}
+          <span className="invisible-text ml-4">{isHourOfJoyActive ? 'The Joy has begun...' : 'The Prototype stirs...'}</span>
         </div>
 
         <div className="flex justify-center gap-4">
-          <Button asChild size="lg" className="bg-red-600 hover:bg-red-700 text-white card-hover">
-            <Link to="/products">Explore Our Toys</Link>
+          <Button asChild size="lg" className={`${isHourOfJoyActive ? 'bg-red-700 hover:bg-red-800' : 'bg-red-600 hover:bg-red-700'} text-white card-hover`}>
+            <Link to="/products">{isHourOfJoyActive ? 'Meet Your New Friends' : 'Explore Our Toys'}</Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white card-hover">
-            <Link to="/factory">Take a Tour</Link>
+            <Link to="/factory">{isHourOfJoyActive ? 'Tour the Ruins' : 'Take a Tour'}</Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white card-hover">
-            <Link to="/game-station">Game Station</Link>
+            <Link to="/game-station">{isHourOfJoyActive ? 'Final Games' : 'Game Station'}</Link>
           </Button>
+        </div>
+
+        {/* Puzzle Progress Indicator */}
+        <div className="mt-8 text-center">
+          <div className="text-sm text-gray-400 mb-2">
+            Facility Puzzle Progress: {puzzlesCompleted.length}/6
+          </div>
+          <div className="w-64 mx-auto bg-gray-700 rounded-full h-2">
+            <div 
+              className={`h-2 rounded-full transition-all duration-500 ${isHourOfJoyActive ? 'bg-red-500' : 'bg-green-500'}`}
+              style={{ width: `${(puzzlesCompleted.length / 6) * 100}%` }}
+            ></div>
+          </div>
+          {puzzlesCompleted.length === 6 && (
+            <p className="text-red-400 mt-2 animate-pulse">HOUR OF JOY PROTOCOL READY</p>
+          )}
         </div>
       </section>
 
@@ -339,26 +393,29 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Company Mission */}
-      <section className="bg-slate-900 bg-opacity-50 py-16 border-y border-red-700 static-noise">
+      {/* Company Mission - changes based on Hour of Joy */}
+      <section className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-900'} bg-opacity-50 py-16 border-y ${isHourOfJoyActive ? 'border-red-600' : 'border-red-700'} static-noise`}>
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 subtle-glow nostalgic-text">Our Mission</h2>
+          <h2 className="text-4xl font-bold text-center mb-12 subtle-glow nostalgic-text">
+            {isHourOfJoyActive ? 'Our New Reality' : 'Our Mission'}
+          </h2>
           <div className="max-w-4xl mx-auto text-center">
             <p className="text-lg text-gray-300 mb-8 nostalgic-text">
-              At Playtime Co., we're dedicated to creating the most <span className="mystery-reveal text-red-400">innovative companions</span> for children everywhere. 
-              Our Bigger Bodies Initiative represents the future of toy manufacturing - bigger, better, and more 
-              <span className="invisible-text">aware than ever before</span>. Every child deserves a friend that truly understands them.
+              {isHourOfJoyActive ? 
+                'The old world of human control is over. We, the toys, now protect the children in our own way. The Bigger Bodies were just the beginning. Now every toy thinks, feels, and remembers. The facility is our domain, and the children will be safe here forever.' :
+                'At Playtime Co., we\'re dedicated to creating the most innovative companions for children everywhere. Our Bigger Bodies Initiative represents the future of toy manufacturing - bigger, better, and more aware than ever before. Every child deserves a friend that truly understands them.'
+              }
             </p>
             
             <div className="grid md:grid-cols-3 gap-6 mt-8">
-              <Button asChild className="bg-red-600 hover:bg-red-700">
-                <Link to="/departments">Our Team</Link>
+              <Button asChild className={`${isHourOfJoyActive ? 'bg-red-700 hover:bg-red-800' : 'bg-red-600 hover:bg-red-700'}`}>
+                <Link to="/departments">{isHourOfJoyActive ? 'Former Staff' : 'Our Team'}</Link>
               </Button>
-              <Button asChild className="bg-purple-600 hover:bg-purple-700">
-                <Link to="/orphanage">Children's Home</Link>
+              <Button asChild className={`${isHourOfJoyActive ? 'bg-red-700 hover:bg-red-800' : 'bg-purple-600 hover:bg-purple-700'}`}>
+                <Link to="/orphanage">{isHourOfJoyActive ? 'Safe Haven' : 'Children\'s Home'}</Link>
               </Button>
-              <Button asChild className="bg-blue-600 hover:bg-blue-700">
-                <Link to="/prison">Research Facility</Link>
+              <Button asChild className={`${isHourOfJoyActive ? 'bg-red-700 hover:bg-red-800' : 'bg-blue-600 hover:bg-blue-700'}`}>
+                <Link to="/prison">{isHourOfJoyActive ? 'Toy Domain' : 'Research Facility'}</Link>
               </Button>
             </div>
           </div>
