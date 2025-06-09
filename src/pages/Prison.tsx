@@ -38,9 +38,6 @@ const Prison = () => {
     }
   };
 
-  // Check if Hour of Joy is activated
-  const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
-
   useEffect(() => {
     if (securityClicks >= 4) {
       const currentProgress = JSON.parse(localStorage.getItem('hourOfJoyProgress') || '[]');

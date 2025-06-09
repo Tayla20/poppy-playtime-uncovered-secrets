@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -406,7 +407,7 @@ const Index = () => {
                 <Link to="/playcare">Wisdom Corner</Link>
               </Button>
             </CardContent>
-          </div>
+          </Card>
           
           <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
             <CardContent className="p-3 text-center">
