@@ -16,25 +16,33 @@ const Index = () => {
   const [sawyerTransformed, setSawyerTransformed] = useState(false);
   const [hourOfJoyActivated, setHourOfJoyActivated] = useState(false);
   const [puzzlesCompleted, setPuzzlesCompleted] = useState<string[]>([]);
+  const [morseInput, setMorseInput] = useState<string>("");
+  const [morseTimeout, setMorseTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
   const requiredColorPattern = ["red", "blue", "red", "yellow", "red"];
   const sawyerPuzzle = ['KeyS', 'KeyA', 'KeyW', 'KeyY', 'KeyE', 'KeyR'];
+  
+  // PROTOTYPE in morse code: .--. .-. --- - --- - -.-- .--. .
+  const prototypeMorse = ".--. .-. --- - --- - -.-- .--. .";
 
-  // Check if Hour of Joy should be activated
+  // Check if Hour of Joy should be activated - now requires 10 puzzles
   useEffect(() => {
     const completedPuzzles = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
     setPuzzlesCompleted(completedPuzzles);
     
-    // Need all 6 main puzzles completed to trigger Hour of Joy
-    const requiredPuzzles = ['konami', 'sawyer', 'logo-clicks', 'color-sequence', 'morse-code', 'time-anomaly'];
+    // Need all 10 puzzles completed to trigger Hour of Joy
+    const requiredPuzzles = [
+      'konami', 'sawyer', 'logo-clicks', 'color-sequence', 'morse-prototype', 
+      'time-anomaly', 'orphanage-investigation', 'factory-production', 
+      'prison-breach', 'staff-directory'
+    ];
     const allComplete = requiredPuzzles.every(puzzle => completedPuzzles.includes(puzzle));
     
     if (allComplete && !hourOfJoyActivated) {
       setHourOfJoyActivated(true);
       localStorage.setItem('hourOfJoyActivated', 'true');
-      setHiddenMessage("🚨 HOUR OF JOY PROTOCOL ACTIVATED 🚨 All systems compromised. The toys are free. Welcome to the new Playtime Co.");
-      setTimeout(() => setHiddenMessage(""), 8000);
+      showMessageWithJump("🚨 HOUR OF JOY PROTOCOL ACTIVATED 🚨 All systems compromised. The toys are free. Welcome to the new Playtime Co.");
     }
   }, [puzzlesCompleted]);
 
@@ -45,6 +53,18 @@ const Index = () => {
       localStorage.setItem('completedPuzzles', JSON.stringify(completed));
       setPuzzlesCompleted(completed);
     }
+  };
+
+  const showMessageWithJump = (message: string, duration: number = 8000) => {
+    setHiddenMessage(message);
+    // Scroll to message
+    setTimeout(() => {
+      const messageElement = document.querySelector('.hidden-message');
+      if (messageElement) {
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+    setTimeout(() => setHiddenMessage(""), duration);
   };
 
   useEffect(() => {
@@ -60,29 +80,38 @@ const Index = () => {
     }, 12000);
 
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Konami Code
       const newSequence = [...konamiSequence, event.code].slice(-10);
       setKonamiSequence(newSequence);
       
       if (JSON.stringify(newSequence) === JSON.stringify(konamiCode)) {
         addCompletedPuzzle('konami');
-        setHiddenMessage("◈ SYSTEM ACCESS GRANTED ◈ Employee credentials discovered. The prototype network awaits those who know the codes...");
-        setTimeout(() => setHiddenMessage(""), 15000);
+        showMessageWithJump("◈ SYSTEM ACCESS GRANTED ◈ Employee credentials discovered. The prototype network awaits those who know the codes...", 15000);
       }
 
+      // Sawyer Puzzle
       const sawyerSeq = [...konamiSequence, event.code].slice(-6);
       if (JSON.stringify(sawyerSeq) === JSON.stringify(sawyerPuzzle)) {
         setSawyerTransformed(true);
         addCompletedPuzzle('sawyer');
-        setHiddenMessage("⚠ DR. SAWYER TRANSFORMATION COMPLETE ⚠ Security protocols now under new management. The Doctor watches all.");
-        setTimeout(() => setHiddenMessage(""), 12000);
+        showMessageWithJump("⚠ DR. SAWYER TRANSFORMATION COMPLETE ⚠ Security protocols now under new management. The Doctor watches all.", 12000);
       }
 
+      // Morse Code for PROTOTYPE
       if (event.key === '.' || event.key === '-' || event.key === ' ') {
-        if (event.key === '.') {
-          addCompletedPuzzle('morse-code');
-          setHiddenMessage("--- PROTOTYPE SURVEILLANCE ACTIVE --- Deep facility monitoring confirmed. Experiment 1006 grows stronger each day...");
-          setTimeout(() => setHiddenMessage(""), 12000);
-        }
+        const newMorse = morseInput + event.key;
+        setMorseInput(newMorse);
+        
+        if (morseTimeout) clearTimeout(morseTimeout);
+        
+        const timeout = setTimeout(() => {
+          if (newMorse.trim() === prototypeMorse) {
+            addCompletedPuzzle('morse-prototype');
+            showMessageWithJump("--- PROTOTYPE SURVEILLANCE ACTIVE --- Deep facility monitoring confirmed. Experiment 1006 grows stronger each day...", 12000);
+          }
+          setMorseInput("");
+        }, 3000);
+        setMorseTimeout(timeout);
       }
     };
 
@@ -91,23 +120,29 @@ const Index = () => {
     return () => {
       clearInterval(interval);
       window.removeEventListener('keydown', handleKeyDown);
+      if (morseTimeout) clearTimeout(morseTimeout);
     };
-  }, [konamiSequence]);
+  }, [konamiSequence, morseInput, morseTimeout]);
 
   const handleLogoClick = () => {
     const now = Date.now();
-    setTimeClicks(prev => [...prev, now]);
+    const newTimeClicks = [...timeClicks, now].slice(-5);
+    setTimeClicks(newTimeClicks);
     setClickCount(prev => prev + 1);
+    
+    // Check for rapid clicks (time anomaly)
+    if (newTimeClicks.length === 5) {
+      const timeDiff = newTimeClicks[4] - newTimeClicks[0];
+      if (timeDiff < 3000) { // 5 clicks within 3 seconds
+        addCompletedPuzzle('time-anomaly');
+        showMessageWithJump("⚠ TEMPORAL SEQUENCE DETECTED ⚠ August 8th approaches. All toys positioned. Final preparations underway.", 8000);
+      }
+    }
     
     if (clickCount >= 12) {
       setSecretFound(true);
       addCompletedPuzzle('logo-clicks');
-    }
-
-    if (clickCount === 8) {
-      addCompletedPuzzle('time-anomaly');
-      setHiddenMessage("⚠ TEMPORAL SEQUENCE DETECTED ⚠ August 8th approaches. All toys positioned. Final preparations underway.");
-      setTimeout(() => setHiddenMessage(""), 8000);
+      showMessageWithJump("◈ STAFF ACCESS UNLOCKED ◈ Hidden pathways revealed. The facility remembers all who enter...", 10000);
     }
   };
 
@@ -117,8 +152,7 @@ const Index = () => {
     
     if (JSON.stringify(newSequence) === JSON.stringify(requiredColorPattern)) {
       addCompletedPuzzle('color-sequence');
-      setHiddenMessage("☾ BIGGER BODIES INITIATIVE CONFIRMED ☽ All subjects ready for integration. The prototype commands from the depths.");
-      setTimeout(() => setHiddenMessage(""), 10000);
+      showMessageWithJump("☾ BIGGER BODIES INITIATIVE CONFIRMED ☽ All subjects ready for integration. The prototype commands from the depths.", 10000);
     }
   };
 
@@ -199,20 +233,23 @@ const Index = () => {
           </Button>
         </div>
 
-        {/* Puzzle Progress Indicator */}
+        {/* Enhanced Puzzle Progress Indicator */}
         <div className="mt-8 text-center">
           <div className="text-sm text-gray-400 mb-2">
-            Facility Puzzle Progress: {puzzlesCompleted.length}/6
+            Facility Puzzle Progress: {puzzlesCompleted.length}/10
           </div>
-          <div className="w-64 mx-auto bg-gray-700 rounded-full h-2">
+          <div className="w-64 mx-auto bg-gray-700 rounded-full h-3">
             <div 
-              className={`h-2 rounded-full transition-all duration-500 ${isHourOfJoyActive ? 'bg-red-500' : 'bg-green-500'}`}
-              style={{ width: `${(puzzlesCompleted.length / 6) * 100}%` }}
+              className={`h-3 rounded-full transition-all duration-500 ${isHourOfJoyActive ? 'bg-red-500' : 'bg-green-500'}`}
+              style={{ width: `${(puzzlesCompleted.length / 10) * 100}%` }}
             ></div>
           </div>
-          {puzzlesCompleted.length === 6 && (
+          {puzzlesCompleted.length === 10 && (
             <p className="text-red-400 mt-2 animate-pulse">HOUR OF JOY PROTOCOL READY</p>
           )}
+          <div className="text-xs text-gray-500 mt-2">
+            Remaining: {10 - puzzlesCompleted.length} puzzles | Current input: {morseInput || "..."} 
+          </div>
         </div>
       </section>
 
@@ -369,7 +406,7 @@ const Index = () => {
                 <Link to="/playcare">Wisdom Corner</Link>
               </Button>
             </CardContent>
-          </Card>
+          </div>
           
           <Card className="bg-slate-800 bg-opacity-30 border-red-600 group cursor-pointer hover:border-yellow-500 transition-all card-hover">
             <CardContent className="p-3 text-center">
@@ -422,9 +459,9 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Hidden Messages */}
+      {/* Hidden Messages with enhanced positioning */}
       {hiddenMessage && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-95 text-green-400 p-6 rounded-lg font-mono text-sm max-w-2xl text-center z-50 border border-green-400 vintage-border static-noise">
+        <div className="hidden-message fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-95 text-green-400 p-6 rounded-lg font-mono text-sm max-w-2xl text-center z-50 border border-green-400 vintage-border static-noise animate-pulse">
           <div className="glitch-text" data-text={hiddenMessage}>
             {hiddenMessage}
           </div>

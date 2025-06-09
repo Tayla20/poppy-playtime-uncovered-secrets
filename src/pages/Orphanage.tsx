@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,19 +6,37 @@ import { Users, Heart, Star, Eye, FileText, AlertTriangle, Skull } from "lucide-
 const Orphanage = () => {
   const [hoveredChild, setHoveredChild] = useState<string | null>(null);
   const [puzzleClicks, setPuzzleClicks] = useState(0);
+  const [hiddenMessage, setHiddenMessage] = useState("");
 
   // Check if Hour of Joy is activated
   const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
 
-  useEffect(() => {
-    if (puzzleClicks >= 3) {
-      const currentProgress = JSON.parse(localStorage.getItem('hourOfJoyProgress') || '[]');
-      if (!currentProgress.includes('orphanage-investigation')) {
-        currentProgress.push('orphanage-investigation');
-        localStorage.setItem('hourOfJoyProgress', JSON.stringify(currentProgress));
-      }
+  const addCompletedPuzzle = (puzzleName: string) => {
+    const completed = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
+    if (!completed.includes(puzzleName)) {
+      completed.push(puzzleName);
+      localStorage.setItem('completedPuzzles', JSON.stringify(completed));
     }
-  }, [puzzleClicks]);
+  };
+
+  const showMessageWithJump = (message: string, duration: number = 8000) => {
+    setHiddenMessage(message);
+    setTimeout(() => {
+      const messageElement = document.querySelector('.hidden-message');
+      if (messageElement) {
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+    setTimeout(() => setHiddenMessage(""), duration);
+  };
+
+  const handleSecretClick = () => {
+    setPuzzleClicks(prev => prev + 1);
+    if (puzzleClicks >= 2) {
+      addCompletedPuzzle('orphanage-investigation');
+      showMessageWithJump("👶 ORPHANAGE INVESTIGATION COMPLETE 👶 Missing children files accessed. The truth about their transformation is darker than imagined...", 10000);
+    }
+  };
 
   const children = [
     {
@@ -65,10 +82,6 @@ const Orphanage = () => {
       image: "https://static.wikia.nocookie.net/poppyplaytime/images/f/f7/Kissy_Missy_Render.png"
     }
   ];
-
-  const handleSecretClick = () => {
-    setPuzzleClicks(prev => prev + 1);
-  };
 
   return (
     <div className={`min-h-screen ${isHourOfJoyActive ? 'bg-gradient-to-br from-red-900 via-black to-purple-900' : 'poppy-gradient'} text-white`}>
@@ -149,16 +162,20 @@ const Orphanage = () => {
           </Card>
         </section>
 
-        {/* Adoption Success Stories / Missing Children */}
+        {/* Adoption Success Stories / Missing Children - ENHANCED PUZZLE */}
         <section className="mb-16">
           <h2 className={`text-3xl font-bold mb-8 text-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
             {isHourOfJoyActive ? 'Missing Children Files' : 'Adoption Success Stories'}
           </h2>
+          <p className="text-center text-gray-400 mb-4">
+            {puzzleClicks > 0 && `Investigation progress: ${puzzleClicks}/3 - `}
+            Click on the children's profiles to investigate their cases...
+          </p>
           <div className="grid md:grid-cols-3 gap-8">
             {children.map((child) => (
               <Card 
                 key={child.id}
-                className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 hover:border-red-500 transition-all duration-300 cursor-pointer poppy-card-glow`}
+                className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 hover:border-red-500 transition-all duration-300 cursor-pointer poppy-card-glow ${puzzleClicks > 0 ? 'ring-2 ring-yellow-400' : ''}`}
                 onMouseEnter={() => setHoveredChild(child.id)}
                 onMouseLeave={() => setHoveredChild(null)}
                 onClick={handleSecretClick}
@@ -271,6 +288,15 @@ const Orphanage = () => {
           </p>
         </div>
       </div>
+
+      {/* Hidden Messages */}
+      {hiddenMessage && (
+        <div className="hidden-message fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-95 text-green-400 p-6 rounded-lg font-mono text-sm max-w-2xl text-center z-50 border border-green-400 vintage-border static-noise animate-pulse">
+          <div className="glitch-text" data-text={hiddenMessage}>
+            {hiddenMessage}
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} text-white py-8 border-t ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>

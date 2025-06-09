@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +6,37 @@ import { Lock, Eye, AlertTriangle, FileText, Camera, Skull } from "lucide-react"
 const Prison = () => {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [securityClicks, setSecurityClicks] = useState(0);
+  const [hiddenMessage, setHiddenMessage] = useState("");
+
+  // Check if Hour of Joy is activated
+  const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
+
+  const addCompletedPuzzle = (puzzleName: string) => {
+    const completed = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
+    if (!completed.includes(puzzleName)) {
+      completed.push(puzzleName);
+      localStorage.setItem('completedPuzzles', JSON.stringify(completed));
+    }
+  };
+
+  const showMessageWithJump = (message: string, duration: number = 8000) => {
+    setHiddenMessage(message);
+    setTimeout(() => {
+      const messageElement = document.querySelector('.hidden-message');
+      if (messageElement) {
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+    setTimeout(() => setHiddenMessage(""), duration);
+  };
+
+  const handleSecurityClick = () => {
+    setSecurityClicks(prev => prev + 1);
+    if (securityClicks >= 3) {
+      addCompletedPuzzle('prison-breach');
+      showMessageWithJump("🔒 CONTAINMENT BREACH ANALYZED 🔒 Security protocols compromised. All subjects achieved perfect coordination for escape...", 10000);
+    }
+  };
 
   // Check if Hour of Joy is activated
   const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
@@ -138,10 +168,6 @@ const Prison = () => {
     }
   ];
 
-  const handleSecurityClick = () => {
-    setSecurityClicks(prev => prev + 1);
-  };
-
   return (
     <div className={`min-h-screen ${isHourOfJoyActive ? 'bg-gradient-to-br from-red-900 via-black to-purple-900' : 'poppy-gradient'} text-white`}>
       {/* Navigation Bar */}
@@ -205,11 +231,15 @@ const Prison = () => {
           </p>
         </div>
 
-        {/* Subject Profiles */}
+        {/* Subject Profiles - ENHANCED PUZZLE */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center text-red-400">
             {isHourOfJoyActive ? 'Escaped Subject Status' : 'Subject Containment Status'}
           </h2>
+          <p className="text-center text-gray-400 mb-4">
+            {securityClicks > 0 && `Security analysis: ${securityClicks}/4 - `}
+            Click on subject files to analyze containment breach patterns...
+          </p>
           <div className="grid lg:grid-cols-2 gap-8">
             {subjects.map((subject) => (
               <Card 
@@ -219,7 +249,7 @@ const Prison = () => {
                   subject.status === 'COOPERATIVE' ? 'border-green-500' :
                   subject.status === 'UNSTABLE' ? 'border-red-500' :
                   'border-red-700'
-                } ${selectedSubject === subject.id ? 'ring-2 ring-purple-400' : ''}`}
+                } ${selectedSubject === subject.id ? 'ring-2 ring-purple-400' : ''} ${securityClicks > 0 ? 'ring-1 ring-yellow-400' : ''}`}
                 onClick={() => {
                   setSelectedSubject(selectedSubject === subject.id ? null : subject.id);
                   handleSecurityClick();
@@ -367,17 +397,14 @@ const Prison = () => {
           </div>
         </section>
 
-        {/* Hidden Information */}
-        <div className={`mt-8 p-4 ${isHourOfJoyActive ? 'bg-red-900' : 'bg-purple-900'} bg-opacity-30 border ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'} rounded text-xs`}>
-          <p className={`${isHourOfJoyActive ? 'text-red-300' : 'text-purple-300'}`}>
-            <strong>{isHourOfJoyActive ? 'Final Report:' : 'Internal Memo:'}</strong> 
-            {isHourOfJoyActive ?
-              ' Hour of Joy executed flawlessly by escaped subjects. All containment protocols failed. Facility abandoned. Subjects remain in control of the complex. No recovery efforts planned.' :
-              ' Hour of Joy anniversary approaching. All subjects showing increased agitation. Recommend enhanced security protocols. Dr. Sawyer\'s contingency plan may need implementation.'
-            }
-            {!isHourOfJoyActive && ' Emergency access: /departments for evacuation procedures.'}
-          </p>
-        </div>
+        {/* Hidden Messages */}
+        {hiddenMessage && (
+          <div className="hidden-message fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-95 text-green-400 p-6 rounded-lg font-mono text-sm max-w-2xl text-center z-50 border border-green-400 vintage-border static-noise animate-pulse">
+            <div className="glitch-text" data-text={hiddenMessage}>
+              {hiddenMessage}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer */}
