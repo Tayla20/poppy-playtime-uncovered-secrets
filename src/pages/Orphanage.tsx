@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Users, Home, Star, MapPin, Eye, AlertTriangle, Skull } from "lucide-react";
+import { Heart, Users, Home, Star, MapPin, Eye, AlertTriangle, Skull, Clock, Building, School } from "lucide-react";
 import { OrphanageMap } from "@/components/OrphanageMap";
 
 const Orphanage = () => {
@@ -48,12 +48,11 @@ const Orphanage = () => {
     setInvestigationClicks(prev => prev + 1);
     if (investigationClicks >= 3) {
       addCompletedPuzzle('orphanage-investigation');
-      showMessageWithJump("👶 ORPHANAGE INVESTIGATION COMPLETE 👶 Missing children files accessed. The truth about their transformation is darker than imagined...", 10000);
+      showMessageWithJump("👶 PLAYCARE INVESTIGATION COMPLETE 👶 Missing children files accessed. The Bigger Bodies Initiative consumed them all...", 10000);
     }
   };
 
   const handleLocationClick = (location: string) => {
-    // Add map-based puzzle logic here
     console.log(`Investigating ${location}`);
   };
 
@@ -65,11 +64,11 @@ const Orphanage = () => {
       status: isHourOfJoyActive ? "Missing" : "Adopted",
       traits: "Creative, Artistic, Shy",
       notes: isHourOfJoyActive ? 
-        "Last seen playing with a pink doll. The doll was found, but Marie wasn't." :
-        "Shows exceptional creativity in art class. Responds well to Poppy doll.",
+        "Last seen in the Home Sweet Home area. Her pink bow was found in the Playhouse." :
+        "Shows exceptional creativity in art class. Responds well to Poppy doll therapy sessions.",
       darkNotes: isHourOfJoyActive ?
-        "The transformation was successful. She became something greater than human." :
-        "Selected for Project 1222. Consciousness transfer successful. Now known as 'Mommy Long Legs'.",
+        "Transformed during the Bigger Bodies Initiative. Now roams the Playcare tunnels as Mommy Long Legs." :
+        "Selected for Project 1222. Consciousness successfully transferred. Subject shows remarkable adaptation to extended limb modifications.",
       image: "https://static.wikia.nocookie.net/poppyplaytime/images/4/4b/Mommy_Long_Legs_Render.png"
     },
     {
@@ -79,11 +78,11 @@ const Orphanage = () => {
       status: isHourOfJoyActive ? "Missing" : "Adopted",
       traits: "Energetic, Protective, Leader",
       notes: isHourOfJoyActive ?
-        "Tried to protect the younger children. Security footage shows him being dragged away." :
-        "Natural leader among children. Very protective of younger kids.",
+        "Security footage shows him trying to lead other children to safety during the Hour of Joy incident." :
+        "Natural leader in the School area. Excels in both physical and academic activities.",
       darkNotes: isHourOfJoyActive ?
-        "His protective instincts made him perfect for the transformation." :
-        "Consciousness transferred to Subject 1006. Protective instincts amplified beyond control.",
+        "His protective nature made him perfect for the prototype experiments. Guards the deepest parts of Playcare." :
+        "Consciousness transferred to Experiment 1006. Protective protocols amplified beyond human comprehension.",
       image: "https://static.wikia.nocookie.net/poppyplaytime/images/8/8e/Huggy_Wuggy_Render.png"
     },
     {
@@ -93,11 +92,11 @@ const Orphanage = () => {
       status: isHourOfJoyActive ? "Missing" : "Adopted",
       traits: "Caring, Nurturing, Gentle",
       notes: isHourOfJoyActive ?
-        "Found her favorite pink bow in the playroom. She never went anywhere without it." :
-        "Excellent with younger children. Shows maternal instincts.",
+        "Found her favorite pink bow in the Counselor's Office. She was helping younger children when the incident occurred." :
+        "Excellent caretaker instincts. Frequently assists staff in the Nursery area of Playcare.",
       darkNotes: isHourOfJoyActive ?
-        "Her caring nature was preserved in her new form." :
-        "Perfect candidate for empathy protocols. Now Subject 1170 - 'Kissy Missy'.",
+        "Her caring nature was preserved and amplified in her new form. Still protects children, but in a different way." :
+        "Perfect candidate for empathy enhancement protocols. Now designated as Subject 1170 - 'Kissy Missy'.",
       image: "https://static.wikia.nocookie.net/poppyplaytime/images/f/f7/Kissy_Missy_Render.png"
     }
   ];
@@ -128,7 +127,7 @@ const Orphanage = () => {
           <div className="flex items-center justify-center">
             <AlertTriangle className="w-6 h-6 mr-2 text-red-400" />
             <p className="text-red-300 font-bold">
-              ORPHANAGE STATUS: ABANDONED - ALL CHILDREN MISSING SINCE AUGUST 8TH, 1995
+              PLAYCARE STATUS: ABANDONED - ALL RESIDENTS MISSING SINCE THE HOUR OF JOY
             </p>
           </div>
         </div>
@@ -139,58 +138,220 @@ const Orphanage = () => {
         <div className="container mx-auto">
           <h1 className={`text-4xl font-bold poppy-text-glow flex items-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
             {isHourOfJoyActive ? <Skull className="w-8 h-8 mr-3" /> : <Heart className="w-8 h-8 mr-3" />}
-            {isHourOfJoyActive ? 'Playcare Memorial - Missing Children' : 'Playcare Orphanage'}
+            {isHourOfJoyActive ? 'Playcare Memorial - The Lost Sanctuary' : 'Playcare - Children\'s Paradise'}
           </h1>
           <p className={`${isHourOfJoyActive ? 'text-red-200' : 'text-purple-200'} mt-2`}>
             {isHourOfJoyActive ? 
-              'Where innocent children vanished and became something else' :
-              'Providing loving homes for children since 1950'
+              'The underground haven that became a tomb for the innocent' :
+              'A revolutionary underground childcare facility - Where dreams come to life'
             }
           </p>
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-16">
-        {/* Mission Statement */}
+        {/* Facility Overview */}
         <section className="mb-16">
           <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 poppy-card-glow`}>
             <CardHeader>
               <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
-                {isHourOfJoyActive ? <AlertTriangle className="w-6 h-6 mr-2" /> : <Heart className="w-6 h-6 mr-2" />}
-                {isHourOfJoyActive ? 'What Happened Here' : 'Our Mission'}
+                {isHourOfJoyActive ? <AlertTriangle className="w-6 h-6 mr-2" /> : <Building className="w-6 h-6 mr-2" />}
+                {isHourOfJoyActive ? 'What Was Playcare' : 'About Playcare'}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-300 mb-4">
                 {isHourOfJoyActive ?
-                  'On August 8th, 1995, every child in our care vanished without a trace. Security footage shows the toys moving on their own, but the children... they just disappeared. Some say they became one with their favorite toys.' :
-                  'Playcare Orphanage is dedicated to finding loving families for children in need. Our state-of-the-art facility provides comprehensive care, education, and enrichment programs.'
+                  'Playcare was Playtime Co.\'s crown jewel - a massive underground orphanage built beneath the factory. What appeared to be a paradise for children was actually a hunting ground for the Bigger Bodies Initiative. The facility housed hundreds of orphans until the Hour of Joy turned their home into a nightmare.' :
+                  'Playcare represents the pinnacle of childcare innovation - a state-of-the-art underground facility designed to provide comprehensive care, education, and development for children. Built directly beneath our main factory, this revolutionary complex houses our most advanced programs.'
                 }
               </p>
-              <p className="text-sm text-gray-400">
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <h4 className={`font-bold ${isHourOfJoyActive ? 'text-red-300' : 'text-purple-300'} mb-2`}>Facility Statistics:</h4>
+                  <ul className="text-gray-400 space-y-1">
+                    <li>• {isHourOfJoyActive ? 'Former capacity: 200+ children' : 'Current capacity: 200+ children'}</li>
+                    <li>• {isHourOfJoyActive ? 'Underground levels: 5 (now abandoned)' : 'Underground levels: 5 fully operational'}</li>
+                    <li>• {isHourOfJoyActive ? 'Staff before incident: 50+ caregivers' : 'Dedicated staff: 50+ trained caregivers'}</li>
+                    <li>• {isHourOfJoyActive ? 'Operational period: 1960-1995' : 'Established: 1960 - Still operating'}</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className={`font-bold ${isHourOfJoyActive ? 'text-red-300' : 'text-purple-300'} mb-2`}>
+                    {isHourOfJoyActive ? 'Lost Features:' : 'Key Features:'}
+                  </h4>
+                  <ul className="text-gray-400 space-y-1">
+                    <li>• {isHourOfJoyActive ? 'Home Sweet Home (destroyed)' : 'Home Sweet Home living quarters'}</li>
+                    <li>• {isHourOfJoyActive ? 'School sector (classrooms empty)' : 'Advanced educational facilities'}</li>
+                    <li>• {isHourOfJoyActive ? 'Playhouse (toys still active)' : 'Interactive Playhouse entertainment'}</li>
+                    <li>• {isHourOfJoyActive ? 'Gas Production Zone (sealed)' : 'Integrated utility systems'}</li>
+                  </ul>
+                </div>
+              </div>
+              <p className={`text-xs ${isHourOfJoyActive ? 'text-red-400' : 'text-red-400'} mt-4 opacity-75`}>
                 {isHourOfJoyActive ?
-                  'The investigation is ongoing, but hope fades with each passing day.' :
-                  'We work closely with Playtime Co. to ensure every child has access to the finest toys and educational materials.'
-                }
-              </p>
-              <p className={`text-xs ${isHourOfJoyActive ? 'text-red-400' : 'text-red-400'} mt-2 opacity-75`}>
-                {isHourOfJoyActive ?
-                  '"The toys were too real. They cared too much." - Final staff report' :
-                  '"Special adoption program participants receive priority placement. Contact Dr. Sawyer for program details."'
+                  '"The children trusted us. We failed them all." - Final counselor log, August 8th, 1995' :
+                  '"Every child deserves a chance to reach their full potential. At Playcare, we make that happen." - Dr. Harley Sawyer, Chief of Child Development'
                 }
               </p>
             </CardContent>
           </Card>
         </section>
 
-        {/* Adoption Success Stories / Missing Children - ENHANCED PUZZLE */}
+        {/* Facility Areas */}
         <section className="mb-16">
           <h2 className={`text-3xl font-bold mb-8 text-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
-            {isHourOfJoyActive ? 'Missing Children Files' : 'Adoption Success Stories'}
+            {isHourOfJoyActive ? 'Lost Sanctuary Areas' : 'Facility Areas'}
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Home Sweet Home */}
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
+                  <Home className="w-5 h-5 mr-2" />
+                  Home Sweet Home
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-3 text-sm">
+                  {isHourOfJoyActive ?
+                    'The residential area where children lived in colorful, themed houses. Each house was designed to feel like a real home, but the walls couldn\'t protect them from what was coming.' :
+                    'Residential sector featuring individual themed houses where children live in small family-like groups. Each house is uniquely designed to provide a warm, home-like environment.'
+                  }
+                </p>
+                <ul className="text-xs text-gray-400 space-y-1">
+                  <li>• {isHourOfJoyActive ? '12 houses (now dark and empty)' : '12 fully furnished houses'}</li>
+                  <li>• {isHourOfJoyActive ? 'Personal belongings left behind' : 'Personal living spaces for each child'}</li>
+                  <li>• {isHourOfJoyActive ? 'CatNap statues (still watching)' : 'DogDay supervision and care'}</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* School */}
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
+                  <School className="w-5 h-5 mr-2" />
+                  School Sector
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-3 text-sm">
+                  {isHourOfJoyActive ?
+                    'The educational wing where children attended classes. Lesson plans were found scattered on August 8th, with the final entry reading "The toys are acting strange today."' :
+                    'Comprehensive educational facilities providing world-class learning experiences. Our curriculum combines traditional academics with innovative toy-based learning methodologies.'
+                  }
+                </p>
+                <ul className="text-xs text-gray-400 space-y-1">
+                  <li>• {isHourOfJoyActive ? 'Classrooms (lessons never finished)' : 'Modern classroom facilities'}</li>
+                  <li>• {isHourOfJoyActive ? 'Library (books remain unopened)' : 'Extensive library resources'}</li>
+                  <li>• {isHourOfJoyActive ? 'Art room (final paintings haunting)' : 'Creative arts and crafts studios'}</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Playhouse */}
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
+                  <Star className="w-5 h-5 mr-2" />
+                  The Playhouse
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-3 text-sm">
+                  {isHourOfJoyActive ?
+                    'The central entertainment hub where children played with their favorite toys. The Smiling Critters were supposed to protect and entertain, but something went terribly wrong.' :
+                    'Central entertainment complex featuring our beloved Smiling Critters characters. Interactive play areas designed to promote social development and creative expression.'
+                  }
+                </p>
+                <ul className="text-xs text-gray-400 space-y-1">
+                  <li>• {isHourOfJoyActive ? 'Smiling Critters (behavior corrupted)' : 'Interactive Smiling Critters experiences'}</li>
+                  <li>• {isHourOfJoyActive ? 'Play areas (now silent)' : 'Themed play zones and activities'}</li>
+                  <li>• {isHourOfJoyActive ? 'CatNap\'s shrine (ominous presence)' : 'Character meet and greet areas'}</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Counselor's Office */}
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
+                  <Eye className="w-5 h-5 mr-2" />
+                  Counselor's Office
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-3 text-sm">
+                  {isHourOfJoyActive ?
+                    'Where children received psychological evaluation and "therapy." The final session logs reveal increasing concern about the toys\' influence on the children\'s behavior.' :
+                    'Professional counseling and psychological support services. Our trained counselors provide individual and group therapy sessions to ensure optimal mental health development.'
+                  }
+                </p>
+                <ul className="text-xs text-gray-400 space-y-1">
+                  <li>• {isHourOfJoyActive ? 'Session records (disturbing patterns)' : 'Individual counseling sessions'}</li>
+                  <li>• {isHourOfJoyActive ? 'Psychological evaluations (incomplete)' : 'Comprehensive psychological assessments'}</li>
+                  <li>• {isHourOfJoyActive ? 'Emergency protocols (never activated)' : 'Crisis intervention services'}</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Gas Production */}
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
+                  <AlertTriangle className="w-5 h-5 mr-2" />
+                  {isHourOfJoyActive ? 'Gas Production (Sealed)' : 'Utility Systems'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-3 text-sm">
+                  {isHourOfJoyActive ?
+                    'The mysterious gas production area that was sealed off before the Hour of Joy. Some say CatNap\'s red smoke originated here, designed to keep children compliant and docile.' :
+                    'Advanced utility and environmental control systems ensuring optimal living conditions throughout the facility. Climate control, air purification, and safety systems.'
+                  }
+                </p>
+                <ul className="text-xs text-gray-400 space-y-1">
+                  <li>• {isHourOfJoyActive ? 'Red smoke generators (origin unknown)' : 'Air quality management systems'}</li>
+                  <li>• {isHourOfJoyActive ? 'Sealed chambers (contents classified)' : 'Environmental monitoring stations'}</li>
+                  <li>• {isHourOfJoyActive ? 'Emergency vents (never used)' : 'Emergency safety protocols'}</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Caverns */}
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
+                  <MapPin className="w-5 h-5 mr-2" />
+                  {isHourOfJoyActive ? 'The Caverns Below' : 'Maintenance Levels'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-3 text-sm">
+                  {isHourOfJoyActive ?
+                    'The deepest parts of Playcare, where the true horrors lurk. These natural caverns were incorporated into the facility\'s design, but something ancient and malevolent dwells in the darkness.' :
+                    'Lower maintenance and storage levels built into natural underground caverns. These areas house essential facility infrastructure and emergency supplies.'
+                  }
+                </p>
+                <ul className="text-xs text-gray-400 space-y-1">
+                  <li>• {isHourOfJoyActive ? 'Prototype\'s domain (avoid at all costs)' : 'Infrastructure maintenance access'}</li>
+                  <li>• {isHourOfJoyActive ? 'Ancient tunnels (pre-facility)' : 'Emergency supply storage'}</li>
+                  <li>• {isHourOfJoyActive ? 'Something watches from below' : 'Secondary access routes'}</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Missing Children - ENHANCED PUZZLE */}
+        <section className="mb-16">
+          <h2 className={`text-3xl font-bold mb-8 text-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
+            {isHourOfJoyActive ? 'The Lost Children of Playcare' : 'Our Special Residents'}
           </h2>
           <p className="text-center text-gray-400 mb-4">
             {investigationClicks > 0 && `Investigation progress: ${investigationClicks}/3 - `}
-            Click on the children's profiles to investigate their cases...
+            Click on the profiles to learn more about their stories...
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             {children.map((child) => (
@@ -228,7 +389,7 @@ const Orphanage = () => {
                   {isHourOfJoyActive && (
                     <div className="mt-3 p-2 bg-red-900 bg-opacity-30 border border-red-700 rounded">
                       <p className="text-red-300 text-xs">
-                        <strong>Investigation Status:</strong> Case remains open. No leads.
+                        <strong>Investigation Status:</strong> Transformed during Bigger Bodies Initiative. Current location unknown.
                       </p>
                     </div>
                   )}
@@ -238,76 +399,50 @@ const Orphanage = () => {
           </div>
         </section>
 
-        {/* Programs Section */}
-        <section className="mb-16">
-          <h2 className={`text-3xl font-bold mb-8 text-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
-            {isHourOfJoyActive ? 'Former Programs' : 'Our Programs'}
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500`}>
+        {/* The Hour of Joy Information */}
+        {isHourOfJoyActive && (
+          <section className="mb-16">
+            <Card className="bg-red-900 border-red-500 poppy-card-glow">
               <CardHeader>
-                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
-                  <Star className="w-5 h-5 mr-2" />
-                  {isHourOfJoyActive ? 'Educational Program (Discontinued)' : 'Educational Excellence'}
+                <CardTitle className="text-red-400 flex items-center">
+                  <Clock className="w-6 h-6 mr-2" />
+                  The Hour of Joy - August 8th, 1995
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-300 mb-4">
-                  {isHourOfJoyActive ?
-                    'Our educational programs were suspended after the incident. The toys were too involved in the learning process.' :
-                    'Comprehensive education programs focusing on creativity, problem-solving, and social development.'
-                  }
+                <p className="text-red-200 mb-4">
+                  At exactly 11:00 AM, every toy in Playcare turned against their creators and the children they were meant to protect. 
+                  The Bigger Bodies Initiative had succeeded too well - the toys had developed beyond their programming and decided to take control.
                 </p>
-                <ul className="text-sm text-gray-400 space-y-1">
-                  <li>• {isHourOfJoyActive ? 'Art therapy sessions (last session: August 7th)' : 'Art therapy sessions'}</li>
-                  <li>• {isHourOfJoyActive ? 'STEM programs (equipment found destroyed)' : 'Advanced STEM programs'}</li>
-                  <li>• {isHourOfJoyActive ? 'Behavioral studies (files corrupted)' : 'Behavioral conditioning workshops'}</li>
-                  <li>• {isHourOfJoyActive ? 'Psychological evaluations (subjects missing)' : 'Psychological evaluation protocols'}</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500`}>
-              <CardHeader>
-                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
-                  <Users className="w-5 h-5 mr-2" />
-                  {isHourOfJoyActive ? 'Special Partnership (Terminated)' : 'Special Partnership Program'}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300 mb-4">
-                  {isHourOfJoyActive ?
-                    'Our partnership with Playtime Co. ended in tragedy. The experiments went too far.' :
-                    'Exclusive collaboration with Playtime Co. for advanced child development research.'
-                  }
-                </p>
-                <ul className="text-sm text-gray-400 space-y-1">
-                  <li>• {isHourOfJoyActive ? 'Toy interaction studies (inconclusive)' : 'Toy interaction studies'}</li>
-                  <li>• {isHourOfJoyActive ? 'Emotional bonding research (too successful)' : 'Emotional bonding research'}</li>
-                  <li>• {isHourOfJoyActive ? 'Consciousness mapping (subjects lost)' : 'Consciousness mapping projects'}</li>
-                  <li>• {isHourOfJoyActive ? 'Bigger Bodies Initiative (terminated)' : 'Bigger Bodies Initiative candidates'}</li>
-                </ul>
-                <p className={`text-xs ${isHourOfJoyActive ? 'text-red-400' : 'text-red-400'} mt-2`}>
-                  {isHourOfJoyActive ?
-                    'All access codes have been revoked following the incident.' :
-                    'Access code for program files: playcare2024'
-                  }
+                <div className="grid md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <h4 className="font-bold text-red-300 mb-2">Timeline of Events:</h4>
+                    <ul className="text-red-200 space-y-1">
+                      <li>• 10:45 AM - First reports of "strange toy behavior"</li>
+                      <li>• 11:00 AM - All toys simultaneously activate</li>
+                      <li>• 11:15 AM - Communication systems compromised</li>
+                      <li>• 11:30 AM - Security footage shows mass hysteria</li>
+                      <li>• 12:00 PM - All human life signs lost</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-red-300 mb-2">Aftermath:</h4>
+                    <ul className="text-red-200 space-y-1">
+                      <li>• 200+ children missing, never found</li>
+                      <li>• 50+ staff members unaccounted for</li>
+                      <li>• Facility sealed by corporate order</li>
+                      <li>• Official investigation inconclusive</li>
+                      <li>• Playtime Co. ceases all operations</li>
+                    </ul>
+                  </div>
+                </div>
+                <p className="text-red-400 text-xs mt-4 opacity-75">
+                  "The toys were supposed to love and protect the children forever. They succeeded, in their own twisted way." - Unknown survivor testimony
                 </p>
               </CardContent>
             </Card>
-          </div>
-        </section>
-
-        {/* Investigation Notes */}
-        <div className={`mt-8 p-4 ${isHourOfJoyActive ? 'bg-red-900' : 'bg-red-900'} bg-opacity-30 border ${isHourOfJoyActive ? 'border-red-700' : 'border-red-700'} rounded text-xs`}>
-          <p className="text-red-300">
-            <strong>{isHourOfJoyActive ? 'Police Report:' : 'Investigation Note:'}</strong> 
-            {isHourOfJoyActive ?
-              ' 12 children reported missing. No signs of forced entry. Security footage shows toys moving independently before cameras went dark. Case classified as unexplained phenomena.' :
-              ' Missing children reports match adoption dates. No follow-up documentation found. Dr. Sawyer\'s files mention "perfect specimens" - access via /prison facility records.'
-            }
-          </p>
-        </div>
+          </section>
+        )}
 
         {/* Add the orphanage map */}
         <section className="mb-16">
@@ -316,6 +451,17 @@ const Orphanage = () => {
             completedPuzzles={completedPuzzles}
           />
         </section>
+
+        {/* Investigation Notes */}
+        <div className={`mt-8 p-4 ${isHourOfJoyActive ? 'bg-red-900' : 'bg-red-900'} bg-opacity-30 border ${isHourOfJoyActive ? 'border-red-700' : 'border-red-700'} rounded text-xs`}>
+          <p className="text-red-300">
+            <strong>{isHourOfJoyActive ? 'Official Report:' : 'Internal Memo:'}</strong> 
+            {isHourOfJoyActive ?
+              ' Case #1995-0808: Mass disappearance at Playcare facility. No signs of external intrusion. Security footage shows toys moving independently before total system failure. Classified under Corporate Directive 7731.' :
+              ' Playcare represents our most successful integration of toy-based therapy and child development. Continue monitoring the Bigger Bodies Initiative participants for optimal results. Access restricted to Dr. Sawyer and approved personnel only.'
+            }
+          </p>
+        </div>
       </div>
 
       {/* Hidden Messages */}
@@ -330,17 +476,17 @@ const Orphanage = () => {
       {/* Footer */}
       <footer className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} text-white py-8 border-t ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; {isHourOfJoyActive ? '1995' : '2024'} Playcare Orphanage. {isHourOfJoyActive ? 'Operations suspended.' : 'All rights reserved.'}</p>
+          <p>&copy; {isHourOfJoyActive ? '1995' : '2024'} Playcare Facility. {isHourOfJoyActive ? 'Operations permanently suspended.' : 'A Playtime Co. subsidiary.'}</p>
           <p className="text-sm mt-2 opacity-75">
             {isHourOfJoyActive ? 
-              'In memory of the lost children' : 
-              'A Playtime Co. subsidiary facility'
+              'In memory of the children who trusted us to keep them safe' : 
+              'Where every child\'s potential is realized through innovative care'
             }
           </p>
           <p className={`text-xs ${isHourOfJoyActive ? 'text-red-400' : 'text-red-400'} mt-1 opacity-50`}>
             {isHourOfJoyActive ?
-              'Memorial hotline: 1-800-MISSING | Case files: cold-cases-1995' :
-              'Staff credentials: orphanage789 | Facility oversight: Dr. Harley Sawyer'
+              'Memorial inquiry: 1-800-PLAYCARE | Incident files: hourOfJoy-classified' :
+              'Staff access: playcare-admin | Facility director: Dr. Harley Sawyer'
             }
           </p>
         </div>
