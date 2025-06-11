@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Users, Home, Star, MapPin, Eye } from "lucide-react";
+import { Heart, Users, Home, Star, MapPin, Eye, AlertTriangle, Skull } from "lucide-react";
 import { OrphanageMap } from "@/components/OrphanageMap";
 
 const Orphanage = () => {
@@ -349,5 +350,3 @@ const Orphanage = () => {
 };
 
 export default Orphanage;
-
-</edits_to_apply>
