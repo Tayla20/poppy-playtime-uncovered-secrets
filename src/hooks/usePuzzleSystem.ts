@@ -15,11 +15,18 @@ export const usePuzzleSystem = () => {
   const [puzzlesCompleted, setPuzzlesCompleted] = useState<string[]>([]);
   const [morseInput, setMorseInput] = useState<string>("");
   const [morseTimeout, setMorseTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [visitedPages, setVisitedPages] = useState<string[]>([]);
 
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
   const requiredColorPattern = ["red", "blue", "red", "yellow", "red"];
   const sawyerPuzzle = ['KeyS', 'KeyA', 'KeyW', 'KeyY', 'KeyE', 'KeyR'];
   const prototypeMorse = ".--. .-. --- - --- - -.-- .--. .";
+
+  // Required pages to visit for puzzle completion
+  const requiredPages = [
+    'home', 'about', 'products', 'factory', 'orphanage', 'prison', 
+    'contact', 'game-station', 'playcare', 'departments'
+  ];
 
   const addCompletedPuzzle = (puzzleName: string) => {
     const completed = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
@@ -27,6 +34,22 @@ export const usePuzzleSystem = () => {
       completed.push(puzzleName);
       localStorage.setItem('completedPuzzles', JSON.stringify(completed));
       setPuzzlesCompleted(completed);
+    }
+  };
+
+  const trackPageVisit = (pageName: string) => {
+    const visited = JSON.parse(localStorage.getItem('visitedPages') || '[]');
+    if (!visited.includes(pageName)) {
+      visited.push(pageName);
+      localStorage.setItem('visitedPages', JSON.stringify(visited));
+      setVisitedPages(visited);
+      
+      // Check if all pages visited
+      const allPagesVisited = requiredPages.every(page => visited.includes(page));
+      if (allPagesVisited && !puzzlesCompleted.includes('page-explorer')) {
+        addCompletedPuzzle('page-explorer');
+        showMessageWithJump("🗺️ FACILITY EXPLORATION COMPLETE 🗺️ You have discovered all major areas. The facility layout is now clear. Hidden passages await...", 12000);
+      }
     }
   };
 
@@ -75,12 +98,14 @@ export const usePuzzleSystem = () => {
   // Check if Hour of Joy should be activated
   useEffect(() => {
     const completedPuzzles = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
+    const visited = JSON.parse(localStorage.getItem('visitedPages') || '[]');
     setPuzzlesCompleted(completedPuzzles);
+    setVisitedPages(visited);
     
     const requiredPuzzles = [
       'konami', 'sawyer', 'logo-clicks', 'color-sequence', 'morse-prototype', 
       'time-anomaly', 'orphanage-investigation', 'factory-production', 
-      'prison-breach', 'staff-directory'
+      'prison-breach', 'staff-directory', 'page-explorer'
     ];
     const allComplete = requiredPuzzles.every(puzzle => completedPuzzles.includes(puzzle));
     
@@ -119,7 +144,13 @@ export const usePuzzleSystem = () => {
         showMessageWithJump("⚠ DR. SAWYER TRANSFORMATION COMPLETE ⚠ Security protocols now under new management. The Doctor watches all.", 12000);
       }
 
+      // Morse code input with scroll prevention
       if (event.key === '.' || event.key === '-' || event.key === ' ') {
+        // Prevent page scrolling when typing morse code
+        if (event.key === ' ') {
+          event.preventDefault();
+        }
+        
         const newMorse = morseInput + event.key;
         setMorseInput(newMorse);
         
@@ -157,8 +188,10 @@ export const usePuzzleSystem = () => {
     puzzlesCompleted,
     morseInput,
     isHourOfJoyActive,
+    visitedPages,
     handleLogoClick,
     handleProductHover,
-    showMessageWithJump
+    showMessageWithJump,
+    trackPageVisit
   };
 };

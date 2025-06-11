@@ -1,12 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Heart, Star, Eye, FileText, AlertTriangle, Skull } from "lucide-react";
+import { Heart, Users, Home, Star, MapPin, Eye } from "lucide-react";
+import { OrphanageMap } from "@/components/OrphanageMap";
 
 const Orphanage = () => {
-  const [hoveredChild, setHoveredChild] = useState<string | null>(null);
-  const [puzzleClicks, setPuzzleClicks] = useState(0);
+  const [selectedChild, setSelectedChild] = useState<string | null>(null);
+  const [investigationClicks, setInvestigationClicks] = useState(0);
   const [hiddenMessage, setHiddenMessage] = useState("");
+
+  // Track page visit
+  useEffect(() => {
+    const trackPageVisit = (pageName: string) => {
+      const visited = JSON.parse(localStorage.getItem('visitedPages') || '[]');
+      if (!visited.includes(pageName)) {
+        visited.push(pageName);
+        localStorage.setItem('visitedPages', JSON.stringify(visited));
+      }
+    };
+    trackPageVisit('orphanage');
+  }, []);
 
   // Check if Hour of Joy is activated
   const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
@@ -31,11 +44,16 @@ const Orphanage = () => {
   };
 
   const handleSecretClick = () => {
-    setPuzzleClicks(prev => prev + 1);
-    if (puzzleClicks >= 2) {
+    setInvestigationClicks(prev => prev + 1);
+    if (investigationClicks >= 3) {
       addCompletedPuzzle('orphanage-investigation');
       showMessageWithJump("👶 ORPHANAGE INVESTIGATION COMPLETE 👶 Missing children files accessed. The truth about their transformation is darker than imagined...", 10000);
     }
+  };
+
+  const handleLocationClick = (location: string) => {
+    // Add map-based puzzle logic here
+    console.log(`Investigating ${location}`);
   };
 
   const children = [
@@ -83,8 +101,10 @@ const Orphanage = () => {
     }
   ];
 
+  const completedPuzzles = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
+
   return (
-    <div className={`min-h-screen ${isHourOfJoyActive ? 'bg-gradient-to-br from-red-900 via-black to-purple-900' : 'poppy-gradient'} text-white`}>
+    <div className="min-h-screen poppy-gradient text-white">
       {/* Navigation Bar */}
       <nav className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} shadow-lg sticky top-0 z-50 border-b ${isHourOfJoyActive ? 'border-red-500' : 'border-purple-500'}`}>
         <div className="container mx-auto px-4">
@@ -168,16 +188,16 @@ const Orphanage = () => {
             {isHourOfJoyActive ? 'Missing Children Files' : 'Adoption Success Stories'}
           </h2>
           <p className="text-center text-gray-400 mb-4">
-            {puzzleClicks > 0 && `Investigation progress: ${puzzleClicks}/3 - `}
+            {investigationClicks > 0 && `Investigation progress: ${investigationClicks}/3 - `}
             Click on the children's profiles to investigate their cases...
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             {children.map((child) => (
               <Card 
                 key={child.id}
-                className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 hover:border-red-500 transition-all duration-300 cursor-pointer poppy-card-glow ${puzzleClicks > 0 ? 'ring-2 ring-yellow-400' : ''}`}
-                onMouseEnter={() => setHoveredChild(child.id)}
-                onMouseLeave={() => setHoveredChild(null)}
+                className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 hover:border-red-500 transition-all duration-300 cursor-pointer poppy-card-glow ${investigationClicks > 0 ? 'ring-2 ring-yellow-400' : ''}`}
+                onMouseEnter={() => setSelectedChild(child.id)}
+                onMouseLeave={() => setSelectedChild(null)}
                 onClick={handleSecretClick}
               >
                 <CardHeader className="text-center">
@@ -190,7 +210,7 @@ const Orphanage = () => {
                       }`}
                     />
                   </div>
-                  <CardTitle className={`${hoveredChild === child.id ? 'text-red-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
+                  <CardTitle className={`${selectedChild === child.id ? 'text-red-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
                     {child.name}
                   </CardTitle>
                   <p className="text-gray-400">Age: {child.age} | Status: {child.status}</p>
@@ -200,9 +220,9 @@ const Orphanage = () => {
                     <strong>Traits:</strong> {child.traits}
                   </p>
                   <p className={`text-sm transition-all duration-500 ${
-                    hoveredChild === child.id ? 'text-red-300' : 'text-gray-400'
+                    selectedChild === child.id ? 'text-red-300' : 'text-gray-400'
                   }`}>
-                    {hoveredChild === child.id ? child.darkNotes : child.notes}
+                    {selectedChild === child.id ? child.darkNotes : child.notes}
                   </p>
                   {isHourOfJoyActive && (
                     <div className="mt-3 p-2 bg-red-900 bg-opacity-30 border border-red-700 rounded">
@@ -287,6 +307,14 @@ const Orphanage = () => {
             }
           </p>
         </div>
+
+        {/* Add the orphanage map */}
+        <section className="mb-16">
+          <OrphanageMap 
+            onLocationClick={handleLocationClick}
+            completedPuzzles={completedPuzzles}
+          />
+        </section>
       </div>
 
       {/* Hidden Messages */}
@@ -321,3 +349,5 @@ const Orphanage = () => {
 };
 
 export default Orphanage;
+
+</edits_to_apply>

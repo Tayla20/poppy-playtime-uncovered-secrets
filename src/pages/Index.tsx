@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { usePuzzleSystem } from "@/hooks/usePuzzleSystem";
 import { Navigation } from "@/components/Navigation";
 import { WarningBanner } from "@/components/WarningBanner";
@@ -7,6 +8,7 @@ import { ProductsShowcase } from "@/components/ProductsShowcase";
 import { CompanyMission } from "@/components/CompanyMission";
 import { HiddenElements } from "@/components/HiddenElements";
 import { Footer } from "@/components/Footer";
+import { PuzzleHints } from "@/components/PuzzleHints";
 
 const Index = () => {
   const {
@@ -19,9 +21,15 @@ const Index = () => {
     puzzlesCompleted,
     morseInput,
     isHourOfJoyActive,
+    visitedPages,
     handleLogoClick,
-    handleProductHover
+    handleProductHover,
+    trackPageVisit
   } = usePuzzleSystem();
+
+  useEffect(() => {
+    trackPageVisit('home');
+  }, []);
 
   return (
     <div className={`min-h-screen ${isHourOfJoyActive ? 'bg-red-900' : 'welcome-gradient'} text-white nostalgic-text`}>
@@ -50,6 +58,12 @@ const Index = () => {
       />
 
       <CompanyMission 
+        isHourOfJoyActive={isHourOfJoyActive}
+      />
+
+      <PuzzleHints 
+        puzzlesCompleted={puzzlesCompleted}
+        visitedPages={visitedPages}
         isHourOfJoyActive={isHourOfJoyActive}
       />
 
