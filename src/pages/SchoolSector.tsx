@@ -79,6 +79,18 @@ const SchoolSector = () => {
 
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
 
+  const teachingItems = isHourOfJoyActive ? [
+    '• Prevents students from leaving the classroom',
+    '• Obsesses over perfect attendance',
+    '• Lessons focus on disturbing topics',
+    '• Becomes violent when students attempt to escape'
+  ] : [
+    '• Mathematics and problem-solving',
+    '• Reading comprehension and literacy',
+    '• Creative writing and expression',
+    '• Social skills and cooperation'
+  ];
+
   return (
     <div className="min-h-screen poppy-gradient text-white">
       {/* Navigation */}
@@ -286,17 +298,7 @@ const SchoolSector = () => {
                       {isHourOfJoyActive ? 'Warning Signs:' : 'Teaching Specialties:'}
                     </h4>
                     <ul className="text-gray-400 text-sm space-y-1">
-                      {isHourOfJoyActive ? [
-                        '• Prevents students from leaving the classroom',
-                        '• Obsesses over perfect attendance',
-                        '• Lessons focus on disturbing topics',
-                        '• Becomes violent when students attempt to escape'
-                      ] : [
-                        '• Mathematics and problem-solving',
-                        '• Reading comprehension and literacy',
-                        '• Creative writing and expression',
-                        '• Social skills and cooperation'
-                      ]}.map((item, index) => (
+                      {teachingItems.map((item, index) => (
                         <li key={index}>{item}</li>
                       ))}
                     </ul>
