@@ -22,6 +22,7 @@ const Index = () => {
     morseInput,
     isHourOfJoyActive,
     visitedPages,
+    mandatoryPuzzles,
     handleLogoClick,
     handleProductHover,
     trackPageVisit
@@ -65,6 +66,7 @@ const Index = () => {
         puzzlesCompleted={puzzlesCompleted}
         visitedPages={visitedPages}
         isHourOfJoyActive={isHourOfJoyActive}
+        mandatoryPuzzles={mandatoryPuzzles}
       />
 
       <HiddenElements 
