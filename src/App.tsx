@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +22,8 @@ import PrototypeConversations from "./pages/PrototypeConversations";
 import MakeAFriend from "./pages/MakeAFriend";
 import ElliotLudwig from "./pages/ElliotLudwig";
 import TheDoctor from "./pages/TheDoctor";
+import VHSTapes from "./pages/VHSTapes";
+import ResearchLab from "./pages/ResearchLab";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,8 @@ const App = () => (
           <Route path="/make-a-friend" element={<MakeAFriend />} />
           <Route path="/elliot-ludwig" element={<ElliotLudwig />} />
           <Route path="/the-doctor" element={<TheDoctor />} />
+          <Route path="/vhs-tapes" element={<VHSTapes />} />
+          <Route path="/research-lab" element={<ResearchLab />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

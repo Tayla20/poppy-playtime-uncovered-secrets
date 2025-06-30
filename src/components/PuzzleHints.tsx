@@ -1,4 +1,3 @@
-
 import { Eye, Map, Clock, Keyboard, Mouse, Navigation, Zap, Binary, Heart, Skull, School, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -10,7 +9,7 @@ interface PuzzleHintsProps {
 }
 
 export const PuzzleHints = ({ puzzlesCompleted, visitedPages, isHourOfJoyActive, mandatoryPuzzles = [] }: PuzzleHintsProps) => {
-  const totalPuzzles = mandatoryPuzzles.length || 19;
+  const totalPuzzles = mandatoryPuzzles.length || 29;
   const completedCount = puzzlesCompleted.length;
   const progressPercentage = (completedCount / totalPuzzles) * 100;
 
@@ -28,7 +27,9 @@ export const PuzzleHints = ({ puzzlesCompleted, visitedPages, isHourOfJoyActive,
     { name: 'elliot-ludwig', display: 'Elliot Ludwig', visited: visitedPages.includes('elliot-ludwig') },
     { name: 'the-doctor', display: 'The Doctor', visited: visitedPages.includes('the-doctor') },
     { name: 'prototype-conversations', display: 'Prototype', visited: visitedPages.includes('prototype-conversations') },
-    { name: 'school-sector', display: 'School Sector', visited: visitedPages.includes('school-sector') }
+    { name: 'school-sector', display: 'School Sector', visited: visitedPages.includes('school-sector') },
+    { name: 'vhs-tapes', display: 'VHS Archives', visited: visitedPages.includes('vhs-tapes') },
+    { name: 'research-lab', display: 'Research Lab', visited: visitedPages.includes('research-lab') }
   ];
 
   const hints = [
@@ -122,6 +123,34 @@ export const PuzzleHints = ({ puzzlesCompleted, visitedPages, isHourOfJoyActive,
       hint: 'Solve the educational puzzle in the School Sector.',
       icon: <School className="w-4 h-4" />,
       completed: puzzlesCompleted.includes('school-nightmare')
+    },
+    {
+      id: 'dna-sequence',
+      title: 'Genetic Integration',
+      hint: 'Enter the DNA sequence pattern: ATCGATCGATCG in the Research Lab',
+      icon: <Binary className="w-4 h-4" />,
+      completed: puzzlesCompleted.includes('dna-sequence')
+    },
+    {
+      id: 'chemical-formula',
+      title: 'Chemical Synthesis',
+      hint: 'Click all 8 chemical vials in the Research Lab to create the consciousness serum',
+      icon: <Zap className="w-4 h-4" />,
+      completed: puzzlesCompleted.includes('chemical-formula')
+    },
+    {
+      id: 'tape-collection',
+      title: 'VHS Archive Discovery',
+      hint: 'Visit the VHS Tapes page and unlock recordings by completing other puzzles',
+      icon: <Eye className="w-4 h-4" />,
+      completed: puzzlesCompleted.some(p => p.startsWith('tape-'))
+    },
+    {
+      id: 'school-spelling',
+      title: 'Miss Delight\'s Spelling Lesson',
+      hint: 'Complete the alphabet spelling puzzle in the School Sector',
+      icon: <School className="w-4 h-4" />,
+      completed: puzzlesCompleted.includes('school-spelling')
     }
   ];
 

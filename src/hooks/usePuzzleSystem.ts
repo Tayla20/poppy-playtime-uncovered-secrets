@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 export const usePuzzleSystem = () => {
@@ -32,7 +31,8 @@ export const usePuzzleSystem = () => {
   const requiredPages = [
     'home', 'about', 'products', 'factory', 'orphanage', 'prison', 
     'contact', 'game-station', 'playcare', 'departments', 'make-a-friend',
-    'elliot-ludwig', 'the-doctor', 'prototype-conversations', 'school-sector'
+    'elliot-ludwig', 'the-doctor', 'prototype-conversations', 'school-sector',
+    'vhs-tapes', 'research-lab'
   ];
 
   // All mandatory puzzles - ALL must be completed
@@ -41,7 +41,11 @@ export const usePuzzleSystem = () => {
     'time-anomaly', 'orphanage-investigation', 'factory-production', 
     'prison-breach', 'staff-directory', 'page-explorer', 'huggy-wuggy',
     'binary-poppy', 'elliot-code', 'catnap-shrine', 'make-a-friend-puzzle',
-    'prototype-communication', 'school-nightmare', 'doctor-experiments'
+    'prototype-communication', 'school-nightmare', 'doctor-experiments',
+    'school-spelling', 'miss-delight-encounter', 'dna-sequence', 'chemical-formula',
+    'tape-experiment-1006', 'tape-hour-of-joy-log', 'tape-bigger-bodies-meeting',
+    'tape-catnap-worship', 'tape-poppy-awakening', 'tape-huggy-wuggy-creation',
+    'tape-school-incident'
   ];
 
   const addCompletedPuzzle = (puzzleName: string) => {
@@ -69,6 +73,14 @@ export const usePuzzleSystem = () => {
     }
   };
 
+  const unlockTape = (tapeId: string) => {
+    const unlocked = JSON.parse(localStorage.getItem('unlockedTapes') || '[]');
+    if (!unlocked.includes(tapeId)) {
+      unlocked.push(tapeId);
+      localStorage.setItem('unlockedTapes', JSON.stringify(unlocked));
+    }
+  };
+
   const showMessageWithJump = (message: string, duration: number = 8000) => {
     setHiddenMessage(message);
     setTimeout(() => {
@@ -90,6 +102,7 @@ export const usePuzzleSystem = () => {
       const timeDiff = newTimeClicks[4] - newTimeClicks[0];
       if (timeDiff < 3000) {
         addCompletedPuzzle('time-anomaly');
+        unlockTape('hour-of-joy-log');
         showMessageWithJump("⚠ TEMPORAL SEQUENCE DETECTED ⚠ August 8th approaches. All toys positioned. Final preparations underway.", 8000);
       }
     }
@@ -107,6 +120,7 @@ export const usePuzzleSystem = () => {
     
     if (JSON.stringify(newSequence) === JSON.stringify(requiredColorPattern)) {
       addCompletedPuzzle('color-sequence');
+      unlockTape('bigger-bodies-meeting');
       showMessageWithJump("☾ BIGGER BODIES INITIATIVE CONFIRMED ☽ All subjects ready for integration. The prototype commands from the depths.", 10000);
     }
   };
@@ -115,6 +129,7 @@ export const usePuzzleSystem = () => {
     setCatnipClicks(prev => prev + 1);
     if (catnipClicks >= 9) {
       addCompletedPuzzle('catnap-shrine');
+      unlockTape('catnap-worship');
       showMessageWithJump("😴 CATNAP'S BLESSING RECEIVED 😴 The red smoke embraces you. Sleep is eternal. Dreams become reality.", 10000);
     }
   };
@@ -163,6 +178,7 @@ export const usePuzzleSystem = () => {
       if (JSON.stringify(sawyerSeq) === JSON.stringify(sawyerPuzzle)) {
         setSawyerTransformed(true);
         addCompletedPuzzle('sawyer');
+        unlockTape('experiment-1006');
         showMessageWithJump("⚠ DR. SAWYER TRANSFORMATION COMPLETE ⚠ Security protocols now under new management. The Doctor watches all.", 12000);
       }
 
@@ -171,6 +187,7 @@ export const usePuzzleSystem = () => {
       setHuggySequence(huggySeq);
       if (JSON.stringify(huggySeq) === JSON.stringify(huggyWuggySequence)) {
         addCompletedPuzzle('huggy-wuggy');
+        unlockTape('huggy-wuggy-creation');
         showMessageWithJump("🫂 HUGGY WUGGY AWAKENED 🫂 The blue beast stirs. Endless hugs await in the factory shadows...", 10000);
       }
 
@@ -178,6 +195,7 @@ export const usePuzzleSystem = () => {
       const elliotSeq = [...konamiSequence, event.code].slice(-6);
       if (JSON.stringify(elliotSeq) === JSON.stringify(elliotSequence)) {
         addCompletedPuzzle('elliot-code');
+        unlockTape('bigger-bodies-meeting');
         showMessageWithJump("👨‍💼 ELLIOT LUDWIG MEMORIAL ACCESSED 👨‍💼 The founder's legacy lives on. Innovation through any means necessary.", 12000);
       }
 
@@ -209,6 +227,7 @@ export const usePuzzleSystem = () => {
         
         if (newBinary.trim() === binaryPoppy) {
           addCompletedPuzzle('binary-poppy');
+          unlockTape('poppy-awakening');
           showMessageWithJump("🎀 POPPY'S DIGITAL SIGNATURE CONFIRMED 🎀 The doll speaks in ones and zeros. Her consciousness transcends flesh.", 12000);
         }
         
@@ -247,6 +266,7 @@ export const usePuzzleSystem = () => {
     handleCatnipClick,
     showMessageWithJump,
     trackPageVisit,
-    addCompletedPuzzle
+    addCompletedPuzzle,
+    unlockTape
   };
 };
