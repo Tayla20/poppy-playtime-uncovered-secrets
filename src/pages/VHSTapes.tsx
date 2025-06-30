@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Cassette, Play, Lock, AlertTriangle, Volume2, Eye } from "lucide-react";
+import { CassetteTape, Play, Lock, AlertTriangle, Volume2, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const VHSTapes = () => {
@@ -165,7 +164,7 @@ const VHSTapes = () => {
       <header className={`${isHourOfJoyActive ? 'bg-red-900' : 'bg-purple-900'} text-white p-6 shadow-lg border-b ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
         <div className="container mx-auto">
           <h1 className={`text-4xl font-bold poppy-text-glow flex items-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
-            <Cassette className="w-8 h-8 mr-3" />
+            <CassetteTape className="w-8 h-8 mr-3" />
             {isHourOfJoyActive ? 'VHS Archive - Corrupted Recordings' : 'VHS Tape Archive - Corporate Documentation'}
           </h1>
           <p className={`${isHourOfJoyActive ? 'text-red-200' : 'text-purple-200'} mt-2`}>

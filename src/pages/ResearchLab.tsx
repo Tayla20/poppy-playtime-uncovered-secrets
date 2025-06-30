@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Microscope, Flask, AlertTriangle, Skull, Brain, Zap, Heart, Eye } from "lucide-react";
+import { Microscope, FlaskConical, AlertTriangle, Skull, Brain, Zap, Heart, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ResearchLab = () => {
@@ -221,7 +220,7 @@ const ResearchLab = () => {
                 <CardHeader>
                   <CardTitle className={`flex items-center justify-between text-sm ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'}`}>
                     <span className="flex items-center">
-                      <Flask className="w-4 h-4 mr-2" />
+                      <FlaskConical className="w-4 h-4 mr-2" />
                       {subject.name}
                     </span>
                     <span className={`text-xs px-2 py-1 rounded ${
