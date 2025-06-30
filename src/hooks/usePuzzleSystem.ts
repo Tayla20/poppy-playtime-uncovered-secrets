@@ -44,9 +44,11 @@ export const usePuzzleSystem = () => {
     'binary-poppy', 'elliot-code', 'catnap-shrine', 'make-a-friend-puzzle',
     'prototype-communication', 'school-nightmare', 'doctor-experiments',
     'school-spelling', 'miss-delight-encounter', 'dna-sequence', 'chemical-formula',
+    'temperature-control', 'pressure-chamber', 'microscope-analysis',
     'tape-experiment-1006', 'tape-hour-of-joy-log', 'tape-bigger-bodies-meeting',
     'tape-catnap-worship', 'tape-poppy-awakening', 'tape-huggy-wuggy-creation',
-    'tape-school-incident'
+    'tape-school-incident', 'archive-access-prototype', 'archive-access-sawyer',
+    'archive-access-ludwig', 'archive-access-bigbody'
   ];
 
   const addCompletedPuzzle = (puzzleName: string) => {
