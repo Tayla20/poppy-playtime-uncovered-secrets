@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePuzzleSystem } from "@/hooks/usePuzzleSystem";
 import { usePhase2System } from "@/hooks/usePhase2System";
 import { Navigation } from "@/components/Navigation";
@@ -12,8 +12,12 @@ import { CompanyMission } from "@/components/CompanyMission";
 import { HiddenElements } from "@/components/HiddenElements";
 import { Footer } from "@/components/Footer";
 import { PuzzleHints } from "@/components/PuzzleHints";
+import { Button } from "@/components/ui/button";
+import { Settings, RotateCcw } from "lucide-react";
 
 const Index = () => {
+  const [showResetMenu, setShowResetMenu] = useState(false);
+  
   const {
     glitchActive,
     secretFound,
@@ -45,6 +49,13 @@ const Index = () => {
     trackPageVisit('home');
   }, []);
 
+  const resetProgress = () => {
+    if (window.confirm("Are you sure you want to reset ALL progress? This cannot be undone.")) {
+      localStorage.clear();
+      window.location.reload();
+    }
+  };
+
   // Phase 2 Layout
   if (isPhase2Active) {
     return (
@@ -56,6 +67,29 @@ const Index = () => {
           memoryLevel={memoryLevel}
           onLogoClick={handleLogoClick}
         />
+
+        {/* Reset Menu for Phase 2 */}
+        <div className="fixed top-16 right-4 z-40">
+          <Button
+            onClick={() => setShowResetMenu(!showResetMenu)}
+            variant="outline"
+            size="sm"
+            className="text-blue-400 border-blue-600 hover:text-white bg-gray-900"
+          >
+            <Settings className="w-4 h-4" />
+          </Button>
+          {showResetMenu && (
+            <div className="absolute right-0 top-10 bg-gray-800 border border-blue-600 p-4 rounded shadow-lg">
+              <Button onClick={resetProgress} variant="outline" size="sm" className="text-red-400 border-red-600 w-full">
+                <RotateCcw className="w-4 h-4 mr-2" />
+                Reset All Progress
+              </Button>
+              <Button onClick={() => setShowResetMenu(false)} variant="outline" size="sm" className="mt-2 w-full">
+                Cancel
+              </Button>
+            </div>
+          )}
+        </div>
 
         <Phase2HeroSection 
           glitchActive={glitchActive}
@@ -81,6 +115,26 @@ const Index = () => {
               <h3 className="text-blue-400 font-bold mb-2">Facility Access</h3>
               <p className="text-sm text-gray-300">Level 5 Clearance</p>
               <p className="text-xs text-gray-500 mt-2">Why do you have this access?</p>
+            </div>
+          </div>
+
+          {/* Login Credential Hints for Phase 2 */}
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-gray-800 bg-opacity-30 p-4 rounded border border-cyan-500">
+              <h3 className="text-cyan-400 font-bold mb-2">Employee Records</h3>
+              <p className="text-xs text-gray-400 mb-2">Last known staff members:</p>
+              <div className="text-xs space-y-1">
+                <p className="text-green-400">Mike worked the nightshift since 1995...</p>
+                <p className="text-blue-400">Dr. Chen studied psychology with case number 101...</p>
+                <p className="text-purple-400">Ludwig's vision was about bigger bodies...</p>
+                <p className="text-red-400">Pierre worked on prototype 1170...</p>
+                <p className="text-yellow-400">The Doctor knew Sawyer was weak...</p>
+              </div>
+            </div>
+            <div className="bg-gray-800 bg-opacity-30 p-4 rounded border border-cyan-500">
+              <h3 className="text-cyan-400 font-bold mb-2">Access Terminal</h3>
+              <p className="text-xs text-gray-400">Staff login protocols still active...</p>
+              <p className="text-xs text-cyan-300 mt-2">🔍 Search for "staff portal" or look for login access</p>
             </div>
           </div>
         </div>
@@ -125,6 +179,29 @@ const Index = () => {
         onLogoClick={handleLogoClick}
       />
 
+      {/* Reset Menu for Phase 1 */}
+      <div className="fixed top-16 right-4 z-40">
+        <Button
+          onClick={() => setShowResetMenu(!showResetMenu)}
+          variant="outline"
+          size="sm"
+          className="text-red-400 border-red-600 hover:text-white bg-gray-900"
+        >
+          <Settings className="w-4 h-4" />
+        </Button>
+        {showResetMenu && (
+          <div className="absolute right-0 top-10 bg-gray-800 border border-red-600 p-4 rounded shadow-lg">
+            <Button onClick={resetProgress} variant="outline" size="sm" className="text-red-400 border-red-600 w-full">
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Reset All Progress
+            </Button>
+            <Button onClick={() => setShowResetMenu(false)} variant="outline" size="sm" className="mt-2 w-full">
+              Cancel
+            </Button>
+          </div>
+        )}
+      </div>
+
       <WarningBanner 
         warningLevel={warningLevel}
         isHourOfJoyActive={isHourOfJoyActive}
@@ -136,6 +213,34 @@ const Index = () => {
         puzzlesCompleted={puzzlesCompleted}
         morseInput={morseInput}
       />
+
+      {/* Login Credential Hints for Phase 1 */}
+      <section className="container mx-auto px-4 py-8">
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-gray-800 bg-opacity-50 p-4 rounded border border-yellow-500">
+            <h3 className="text-yellow-400 font-bold mb-2">🔍 Security Notice</h3>
+            <p className="text-xs text-gray-300 mb-2">Staff access protocols remain active...</p>
+            <div className="text-xs space-y-1 opacity-70">
+              <p>• Night security: Mike, shift started in 1995</p>
+              <p>• Psychology dept: Dr. Chen, case studies 101</p>
+              <p>• Leadership: Ludwig's bigger vision</p>
+              <p>• Special projects: Pierre, prototype series 1170</p>
+              <p>• New security chief replaced the weak one</p>
+            </div>
+            <p className="text-xs text-yellow-300 mt-2">💡 Username format: department.name</p>
+          </div>
+          <div className="bg-gray-800 bg-opacity-50 p-4 rounded border border-green-500">
+            <h3 className="text-green-400 font-bold mb-2">🎮 Hidden Access</h3>
+            <p className="text-xs text-gray-300 mb-2">Complete puzzles to unlock secret areas:</p>
+            <div className="text-xs space-y-1">
+              <p className="text-green-400">• Click logo 13+ times for staff portal</p>
+              <p className="text-red-400">• Type SAWYER for doctor access</p>
+              <p className="text-blue-400">• Konami code unlocks systems</p>
+              <p className="text-purple-400">• Morse code: prototype message</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <ProductsShowcase 
         onProductHover={handleProductHover}

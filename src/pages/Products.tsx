@@ -1,12 +1,16 @@
-
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Star, Heart, Zap, Shield, AlertTriangle, Skull } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { usePuzzleSystem } from "@/hooks/usePuzzleSystem";
+import { Search, Eye, Key } from "lucide-react";
 
 const Products = () => {
-  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
-  const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
+  const { 
+    secretFound,
+    puzzlesCompleted,
+    handleProductHover
+  } = usePuzzleSystem();
 
   useEffect(() => {
     const trackPageVisit = (pageName: string) => {
@@ -19,286 +23,227 @@ const Products = () => {
     trackPageVisit('products');
   }, []);
 
+  const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
+  const isPhase2Active = localStorage.getItem('phase2Activated') === 'true';
+
   const products = [
     {
       id: 'huggy-wuggy',
       name: 'Huggy Wuggy',
-      price: isHourOfJoyActive ? 'DISCONTINUED' : '$24.99',
-      image: 'https://static.wikia.nocookie.net/poppyplaytime/images/8/8e/Huggy_Wuggy_Render.png/revision/latest?cb=20211012174838',
-      description: isHourOfJoyActive ? 
-        'Former mascot of Playtime Co. Last seen during the Hour of Joy incident.' :
-        'Our beloved blue mascot! Huggy Wuggy loves to give the biggest, warmest hugs to all his friends.',
-      features: isHourOfJoyActive ?
-        ['10-foot tall security model', 'Razor-sharp teeth', 'Superhuman strength', 'Facility guardian'] :
-        ['Super soft fur', 'Extra long arms for big hugs', 'Friendly smile', 'Child-safe materials'],
-      darkDescription: 'Experiment 1170. Enhanced strength and agility. Serves as primary security for the factory. Uncontainable.',
-      color: 'blue'
-    },
-    {
-      id: 'poppy-playtime',
-      name: 'Poppy Playtime',
-      price: isHourOfJoyActive ? 'CLASSIFIED' : '$19.99',
-      image: 'https://static.wikia.nocookie.net/poppyplaytime/images/f/f0/Poppy_Playtime_Doll.png/revision/latest?cb=20211012153845',
-      description: isHourOfJoyActive ?
-        'The first truly living doll. Still active somewhere in the factory.' :
-        'The perfect companion! Poppy is a beautiful doll who will be your best friend forever.',
-      features: isHourOfJoyActive ?
-        ['First successful consciousness transfer', 'Self-aware AI', 'Manipulative personality', 'Factory knowledge'] :
-        ['Beautiful hair to brush', 'Vintage Victorian dress', 'Realistic facial features', 'Collectible series'],
-      darkDescription: 'The First Successful Transfer. Patient Zero. Contains the consciousness of a real person. Approach with extreme caution.',
-      color: 'red'
+      description: isPhase2Active ? 
+        'Blue guardian of the facility. You remember his creation... the screams during synthesis...' :
+        isHourOfJoyActive ? 
+          'The blue beast that guards the factory. Endless hugs in the darkness. Created by Mike during the nightshift of 1995.' :
+          'Our most popular blue friend! Huggy Wuggy loves to give the biggest hugs!',
+      price: isHourOfJoyActive ? 'PRICE: YOUR SOUL' : '$29.99',
+      color: 'blue',
+      clue: isHourOfJoyActive ? 'Security personnel worked nightshifts since 1995...' : '',
+      staff: 'Night Security: security.mike'
     },
     {
       id: 'mommy-long-legs',
       name: 'Mommy Long Legs',
-      price: isHourOfJoyActive ? 'DANGEROUS' : '$29.99',
-      image: 'https://static.wikia.nocookie.net/poppyplaytime/images/4/4b/Mommy_Long_Legs_Render.png/revision/latest?cb=20220506150829',
-      description: isHourOfJoyActive ?
-        'Former Game Station supervisor. Violently protective of her "children".' :
-        'The ultimate playmate! Stretchy arms and legs make playtime even more fun and creative.',
-      features: isHourOfJoyActive ?
-        ['Elastic limb extension', 'Game Station control', 'Maternal obsession', 'Child protection protocols'] :
-        ['Stretchy pink limbs', 'Interactive games', 'Motherly personality', 'Educational activities'],
-      darkDescription: 'Experiment 1222. Marie Payne consciousness transferred. Maternal instincts amplified beyond human comprehension.',
-      color: 'pink'
+      description: isPhase2Active ?
+        'The games never end. She remembers every child who played in Game Station...' :
+        isHourOfJoyActive ? 
+          'The eternal game master. She knows the psychology behind every game - Dr. Chen studied case 101.' :
+          'Stretchy and playful! Mommy Long Legs makes playtime last forever!',
+      price: isHourOfJoyActive ? 'PRICE: ENDLESS GAMES' : '$39.99',
+      color: 'red',
+      clue: isHourOfJoyActive ? 'Psychology research focused on case studies starting with 101...' : '',
+      staff: 'Research: dr.chen'
+    },
+    {
+      id: 'poppy-playtime',
+      name: 'Poppy Playtime Doll',
+      description: isPhase2Active ?
+        'The doll speaks in binary. You remember her awakening... the digital consciousness...' :
+        isHourOfJoyActive ?
+          'The doll that started it all. Her digital signature is the key. The binary code unlocks her secrets.' :
+          'Our classic doll! Poppy Playtime is always ready for an adventure!',
+      price: isHourOfJoyActive ? 'PRICE: DIGITAL SOUL' : '$49.99',
+      color: 'pink',
+      clue: isHourOfJoyActive ? 'The doll speaks in binary. Her digital signature is the key...' : '',
+      staff: 'Digital Signature: binary-poppy'
     },
     {
       id: 'catnap',
       name: 'CatNap',
-      price: isHourOfJoyActive ? 'SEDATED' : '$22.99',
-      image: 'https://static.wikia.nocookie.net/poppyplaytime/images/c/c5/CatNap_Render.png/revision/latest?cb=20230819143705',
-      description: isHourOfJoyActive ?
-        'Playcare sleep supervisor. Emits red poppy gas. Worships the Prototype.' :
-        'The perfect bedtime companion! CatNap helps children fall asleep with soothing purrs.',
-      features: isHourOfJoyActive ?
-        ['Red poppy gas emission', 'Sleep enforcement', 'Prototype devotion', 'Playcare oversight'] :
-        ['Soft purple fur', 'Sleepy moon pendant', 'Gentle purring sounds', 'Bedtime stories'],
-      darkDescription: 'Experiment 1188. Theodore Grambell consciousness. Red gas production for population control. Prototype worshiper.',
-      color: 'purple'
+      description: isPhase2Active ?
+        'The red smoke embraces you. You remember the eternal sleep... the children\'s dreams...' :
+        isHourOfJoyActive ?
+          'The red gas is his blessing. Sleep is eternal. The children\'s dreams never end.' :
+          'Our sleepy friend! CatNap loves to cuddle and take long naps!',
+      price: isHourOfJoyActive ? 'PRICE: ETERNAL SLEEP' : '$59.99',
+      color: 'purple',
+      clue: isHourOfJoyActive ? 'The red gas is his blessing. Sleep is eternal...' : '',
+      staff: 'Chemical Division: red-gas'
     },
     {
-      id: 'kissy-missy',
-      name: 'Kissy Missy',
-      price: isHourOfJoyActive ? 'FRIENDLY' : '$26.99',
-      image: 'https://static.wikia.nocookie.net/poppyplaytime/images/f/f7/Kissy_Missy_Render.png/revision/latest?cb=20211015134550',
-      description: isHourOfJoyActive ?
-        'Huggy Wuggy\'s partner. Still shows signs of humanity and compassion.' :
-        'Huggy\'s loving partner! Kissy Missy spreads love and kindness wherever she goes.',
-      features: isHourOfJoyActive ?
-        ['Compassionate behavior', 'Human empathy retained', 'Factory guidance', 'Protective instincts'] :
-        ['Soft pink fur', 'Heart-shaped lips', 'Loving personality', 'Friendship activities'],
-      darkDescription: 'Experiment 1170. Stella Greyber consciousness. Retained more humanity than other subjects.',
-      color: 'yellow'
-    },
-    {
-      id: 'smiling-critters',
-      name: 'Smiling Critters Collection',
-      price: isHourOfJoyActive ? 'CORRUPTED' : '$34.99',
-      image: 'https://static.wikia.nocookie.net/poppyplaytime/images/e/e8/Smiling_Critters_Playhouse.png/revision/latest?cb=20240131000000',
-      description: isHourOfJoyActive ?
-        'Former Playcare entertainment crew. Most were found dismembered in the Playhouse.' :
-        'Eight adorable friends each with unique personalities and scents! Collect them all!',
-      features: isHourOfJoyActive ?
-        ['Playcare entertainment system', 'CatNap\'s influence', 'Child indoctrination', 'Prototype loyalty'] :
-        ['Eight unique characters', 'Each has special scent', 'Educational shows', 'Friendship lessons'],
-      darkDescription: 'Mass production toys for Playcare psychological conditioning. DogDay found tortured. Others eliminated.',
-      color: 'green'
+      id: 'prototype-1170',
+      name: 'Prototype Series 1170',
+      description: isPhase2Active ?
+        'You remember this prototype... Pierre worked on the special projects. The number haunts your memories.' :
+        isHourOfJoyActive ?
+          'Special project coordinated by Leith Pierre. Prototype 1170 was the breakthrough that changed everything.' :
+          'Limited edition prototype series! Advanced features for special collectors.',
+      price: isHourOfJoyActive ? 'PRICE: CLASSIFIED' : '$199.99',
+      color: 'yellow',
+      clue: isHourOfJoyActive ? 'Special projects coordinator: leith.pierre, worked on prototype1170' : '',
+      staff: 'Special Projects: leith.pierre'
     }
   ];
 
-  const handleProductHover = (productId: string) => {
-    setSelectedProduct(productId);
-    // Trigger color sequence puzzle
-    const product = products.find(p => p.id === productId);
-    if (product) {
-      const event = new CustomEvent('productHover', { detail: product.color });
-      window.dispatchEvent(event);
-    }
-  };
-
   return (
-    <div className="min-h-screen poppy-gradient text-white">
+    <div className={`min-h-screen ${isPhase2Active ? 'bg-gradient-to-b from-gray-900 to-blue-900' : (isHourOfJoyActive ? 'bg-red-900' : 'poppy-gradient')} text-white`}>
       {/* Navigation */}
-      <nav className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} shadow-lg sticky top-0 z-50 border-b ${isHourOfJoyActive ? 'border-red-500' : 'border-purple-500'}`}>
+      <nav className={`${isPhase2Active ? 'bg-gray-900' : (isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900')} shadow-lg sticky top-0 z-50 border-b ${isPhase2Active ? 'border-blue-500' : (isHourOfJoyActive ? 'border-red-500' : 'border-purple-500')}`}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className={`text-2xl font-bold ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} poppy-text-glow`}>PLAYTIME CO.</Link>
             <div className="hidden md:flex space-x-8">
               <Link to="/" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>Home</Link>
               <Link to="/about" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>About Us</Link>
-              <Link to="/products" className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} font-semibold`}>Our Toys</Link>
+              <Link to="/products" className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} font-medium border-b-2 ${isHourOfJoyActive ? 'border-red-400' : 'border-purple-400'}`}>Our Toys</Link>
               <Link to="/factory" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>Factory Tour</Link>
-              <Link to="/orphanage" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>Playcare</Link>
               <Link to="/contact" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>Contact</Link>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Alert Banner */}
-      {isHourOfJoyActive && (
-        <div className="p-4 bg-red-900 border border-red-400 text-center animate-pulse">
-          <div className="flex items-center justify-center">
-            <AlertTriangle className="w-6 h-6 mr-2 text-red-400" />
-            <p className="text-red-300 font-bold">
-              PRODUCT LINE DISCONTINUED - ALL TOYS POSE EXTREME DANGER
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Header */}
-      <header className={`${isHourOfJoyActive ? 'bg-red-900' : 'bg-purple-900'} text-white p-6 shadow-lg border-b ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
-        <div className="container mx-auto">
-          <h1 className={`text-4xl font-bold poppy-text-glow flex items-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
-            {isHourOfJoyActive ? <Skull className="w-8 h-8 mr-3" /> : <Star className="w-8 h-8 mr-3" />}
-            {isHourOfJoyActive ? 'Discontinued Product Archive' : 'Our Amazing Toys'}
-          </h1>
-          <p className={`${isHourOfJoyActive ? 'text-red-200' : 'text-purple-200'} mt-2`}>
-            {isHourOfJoyActive ? 
-              'Memorial catalog of toys that brought joy... and terror' :
-              'Discover the magic of playtime with our innovative toy collection'
-            }
-          </p>
-        </div>
-      </header>
-
       <div className="container mx-auto px-4 py-16">
         
-        {/* Products Grid */}
+        {/* Add Staff Access Hints Section */}
         <section className="mb-16">
+          <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-yellow-500 mb-8`}>
+            <CardHeader>
+              <CardTitle className="text-yellow-400 flex items-center">
+                <Search className="w-5 h-5 mr-2" />
+                Product Development Team Access
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-yellow-300 font-bold mb-2">Development Staff:</h4>
+                  <div className="space-y-2 text-sm">
+                    <p className="text-gray-300">🧸 Huggy Wuggy - Night security oversight (1995 protocols)</p>
+                    <p className="text-gray-300">🎮 Game Station toys - Psychology case studies (101 series)</p>
+                    <p className="text-gray-300">🔬 Advanced prototypes - Executive bigger vision</p>
+                    <p className="text-gray-300">⚡ Special series - Prototype 1170 coordination</p>
+                    <p className="text-gray-300">🏥 Medical supervision - Doctor knows weakness</p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-yellow-300 font-bold mb-2">Access Patterns:</h4>
+                  <div className="space-y-2 text-sm text-gray-300">
+                    <p>🔑 security.{'{name}'} / {'{shift + year}'}</p>
+                    <p>🔑 dr.{'{lastname}'} / {'{specialty + number}'}</p>
+                    <p>🔑 {'{name.lastname}'} / {'{project + number}'}</p>
+                    <p>🔑 the.{'{title}'} / {'{predecessor-weakness}'}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 text-center">
+                <p className="text-yellow-200 text-sm">
+                  💡 Look for login access by completing puzzles or finding hidden portals
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Products Grid with enhanced clues */}
+        <section className="mb-16">
+          <h2 className={`text-3xl font-bold mb-8 text-center ${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
+            {isPhase2Active ? 'Consciousness Vessels' : (isHourOfJoyActive ? 'Living Nightmares' : 'Our Product Line')}
+          </h2>
+          
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => (
               <Card 
                 key={product.id}
-                className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 hover:border-yellow-400 transition-all duration-300 cursor-pointer poppy-card-glow ${selectedProduct === product.id ? 'ring-2 ring-yellow-400' : ''}`}
-                onMouseEnter={() => handleProductHover(product.id)}
-                onMouseLeave={() => setSelectedProduct(null)}
+                className={`cursor-pointer transition-all duration-300 hover:scale-105 ${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-purple-500 hover:border-purple-400`}
+                onMouseEnter={() => handleProductHover(product.color)}
               >
                 <CardHeader>
-                  <div className="w-full h-48 mb-4 overflow-hidden rounded-lg bg-gray-900">
-                    <img 
-                      src={product.image}
-                      alt={product.name}
-                      className={`w-full h-full object-contain transition-all duration-300 ${
-                        isHourOfJoyActive ? 'filter grayscale opacity-75' : ''
-                      } ${selectedProduct === product.id ? 'scale-110' : ''}`}
-                    />
-                  </div>
-                  <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center justify-between`}>
+                  <CardTitle className={`${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
                     {product.name}
-                    <span className={`text-sm ${isHourOfJoyActive ? 'text-red-300' : 'text-green-400'}`}>
-                      {product.price}
-                    </span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-300 text-sm mb-4">
-                    {selectedProduct === product.id && isHourOfJoyActive ? 
-                      product.darkDescription : 
-                      product.description
-                    }
-                  </p>
-                  <div className="space-y-2">
-                    <h4 className={`font-semibold text-xs ${isHourOfJoyActive ? 'text-red-300' : 'text-purple-300'}`}>
-                      {isHourOfJoyActive ? 'CLASSIFIED SPECS:' : 'Features:'}
-                    </h4>
-                    <ul className="text-xs text-gray-400 space-y-1">
-                      {product.features.map((feature, index) => (
-                        <li key={index} className="flex items-center">
-                          {isHourOfJoyActive ? (
-                            <AlertTriangle className="w-3 h-3 mr-2 text-red-400" />
-                          ) : (
-                            <Star className="w-3 h-3 mr-2 text-yellow-400" />
-                          )}
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <p className="text-gray-300 mb-4">{product.description}</p>
                   
-                  {!isHourOfJoyActive && (
-                    <div className="mt-4 flex items-center justify-between">
-                      <div className="flex items-center space-x-1">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                        ))}
-                      </div>
-                      <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm transition-colors">
-                        Add to Cart
-                      </button>
+                  {product.clue && (
+                    <div className="mb-4 p-3 border border-yellow-500 bg-yellow-900 bg-opacity-20 rounded">
+                      <p className="text-yellow-300 text-sm">
+                        🔍 <strong>Staff Clue:</strong> {product.clue}
+                      </p>
+                      <p className="text-yellow-200 text-xs mt-1">
+                        Access: {product.staff}
+                      </p>
                     </div>
                   )}
+                  
+                  <div className="flex justify-between items-center">
+                    <span className={`text-lg font-bold ${isHourOfJoyActive ? 'text-red-400' : 'text-green-400'}`}>
+                      {product.price}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className={`${isPhase2Active ? 'bg-blue-600 hover:bg-blue-700' : (isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700')} text-white`}
+                    >
+                      {isPhase2Active ? 'Remember' : (isHourOfJoyActive ? 'Accept Fate' : 'Learn More')}
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
         </section>
 
-        {/* Safety Information */}
-        <section className="mb-16">
-          <Card className={`${isHourOfJoyActive ? 'bg-red-900' : 'bg-slate-800'} border-purple-500`}>
-            <CardHeader>
-              <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
-                {isHourOfJoyActive ? <AlertTriangle className="w-6 h-6 mr-2" /> : <Shield className="w-6 h-6 mr-2" />}
-                {isHourOfJoyActive ? 'DANGER WARNING' : 'Safety & Quality'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isHourOfJoyActive ? (
-                <div className="space-y-4">
-                  <p className="text-red-200">
-                    <strong>CRITICAL WARNING:</strong> All Playtime Co. toys are to be considered extremely dangerous. 
-                    DO NOT APPROACH if encountered. Contact authorities immediately.
-                  </p>
-                  <div className="bg-red-800 bg-opacity-50 p-4 rounded border border-red-600">
-                    <h4 className="text-red-300 font-bold mb-2">Known Hazards:</h4>
-                    <ul className="text-red-200 text-sm space-y-1">
-                      <li>• Autonomous movement and hostile behavior</li>
-                      <li>• Superhuman strength and speed</li>
-                      <li>• Advanced AI with unpredictable responses</li>
-                      <li>• Toxic gas emission (CatNap units)</li>
-                      <li>• Psychological manipulation capabilities</li>
-                    </ul>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="text-center">
-                    <Shield className="w-8 h-8 text-green-400 mx-auto mb-2" />
-                    <h4 className="font-semibold text-green-400 mb-2">Safety First</h4>
-                    <p className="text-gray-300 text-sm">All toys meet strict safety standards and undergo rigorous testing.</p>
-                  </div>
-                  <div className="text-center">
-                    <Heart className="w-8 h-8 text-pink-400 mx-auto mb-2" />
-                    <h4 className="font-semibold text-pink-400 mb-2">Child-Approved</h4>
-                    <p className="text-gray-300 text-sm">Designed with input from child development experts.</p>
-                  </div>
-                  <div className="text-center">
-                    <Zap className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-                    <h4 className="font-semibold text-yellow-400 mb-2">Innovation</h4>
-                    <p className="text-gray-300 text-sm">Cutting-edge technology creates truly interactive experiences.</p>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+        {/* Staff Portal Access */}
+        
+        {(secretFound || puzzlesCompleted.length > 5) && (
+          <section className="text-center mb-16">
+            <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-green-500 max-w-md mx-auto`}>
+              <CardHeader>
+                <CardTitle className="text-green-400">🔓 Staff Access Unlocked</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-4 text-sm">
+                  Advanced puzzle completion detected. Staff portal access granted.
+                </p>
+                <Button asChild className="bg-green-600 hover:bg-green-700 text-white w-full">
+                  <Link to="/login">
+                    <Eye className="w-4 h-4 mr-2" />
+                    Access Staff Portal
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        {/* Navigation Links */}
+        <section className="text-center">
+          <div className="grid md:grid-cols-4 gap-4 mb-8">
+            <Button asChild className={`${isPhase2Active ? 'bg-blue-600 hover:bg-blue-700' : (isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700')} text-white`}>
+              <Link to="/">Return Home</Link>
+            </Button>
+            <Button asChild className={`${isPhase2Active ? 'bg-blue-600 hover:bg-blue-700' : (isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700')} text-white`}>
+              <Link to="/factory">Factory Tour</Link>
+            </Button>
+             <Button asChild className={`${isPhase2Active ? 'bg-blue-600 hover:bg-blue-700' : (isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700')} text-white`}>
+              <Link to="/about">About Us</Link>
+            </Button>
+            <Button asChild className={`${isPhase2Active ? 'bg-blue-600 hover:bg-blue-700' : (isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700')} text-white`}>
+              <Link to="/departments">Staff Directory</Link>
+            </Button>
+          </div>
         </section>
-
       </div>
-
-      {/* Footer */}
-      <footer className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} text-white py-8 border-t ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; {isHourOfJoyActive ? '1995' : '2024'} Playtime Co. {isHourOfJoyActive ? 'Product line permanently discontinued.' : 'All rights reserved.'}</p>
-          <p className="text-sm mt-2 opacity-75">
-            {isHourOfJoyActive ? 
-              'In memory of the joy these toys once brought' : 
-              'Creating magical moments through innovative toy design'
-            }
-          </p>
-        </div>
-      </footer>
     </div>
   );
 };

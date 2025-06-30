@@ -1,11 +1,15 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Building, Users, Award, Clock, Skull, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Users, Building, Award, Calendar, Eye, Search, Clock } from "lucide-react";
 
 const About = () => {
+  const [secretClicked, setSecretClicked] = useState(0);
+  const [showHiddenInfo, setShowHiddenInfo] = useState(false);
   const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
+  const isPhase2Active = localStorage.getItem('phase2Activated') === 'true';
 
   useEffect(() => {
     const trackPageVisit = (pageName: string) => {
@@ -18,49 +22,43 @@ const About = () => {
     trackPageVisit('about');
   }, []);
 
+  const handleSecretClick = () => {
+    setSecretClicked(prev => prev + 1);
+    if (secretClicked >= 4) {
+      setShowHiddenInfo(true);
+    }
+  };
+
   return (
-    <div className="min-h-screen poppy-gradient text-white">
+    <div className={`min-h-screen ${isPhase2Active ? 'bg-gradient-to-b from-gray-900 to-blue-900' : (isHourOfJoyActive ? 'bg-red-900' : 'welcome-gradient')} text-white`}>
       {/* Navigation */}
-      <nav className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} shadow-lg sticky top-0 z-50 border-b ${isHourOfJoyActive ? 'border-red-500' : 'border-purple-500'}`}>
+      <nav className={`${isPhase2Active ? 'bg-gray-900' : (isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900')} shadow-lg sticky top-0 z-50 border-b border-red-900`}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
-            <Link to="/" className={`text-2xl font-bold ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} poppy-text-glow`}>PLAYTIME CO.</Link>
+            <Link to="/" className={`text-2xl font-bold ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>PLAYTIME CO.</Link>
             <div className="hidden md:flex space-x-8">
               <Link to="/" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>Home</Link>
-              <Link to="/about" className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} font-semibold`}>About Us</Link>
+              <Link to="/about" className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} font-medium border-b-2 ${isHourOfJoyActive ? 'border-red-400' : 'border-purple-400'}`}>About Us</Link>
               <Link to="/products" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>Our Toys</Link>
               <Link to="/factory" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>Factory Tour</Link>
-              <Link to="/orphanage" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>Playcare</Link>
               <Link to="/contact" className={`text-gray-300 ${isHourOfJoyActive ? 'hover:text-red-400' : 'hover:text-purple-400'} transition-colors`}>Contact</Link>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Alert Banner */}
-      {isHourOfJoyActive && (
-        <div className="p-4 bg-red-900 border border-red-400 text-center animate-pulse">
-          <div className="flex items-center justify-center">
-            <AlertTriangle className="w-6 h-6 mr-2 text-red-400" />
-            <p className="text-red-300 font-bold">
-              COMPANY STATUS: OPERATIONS SUSPENDED - ALL FACILITIES ABANDONED SINCE 1995
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* Header */}
-      <header className={`${isHourOfJoyActive ? 'bg-red-900' : 'bg-purple-900'} text-white p-6 shadow-lg border-b ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
+      <header className={`${isPhase2Active ? 'bg-blue-900' : (isHourOfJoyActive ? 'bg-red-900' : 'bg-purple-900')} text-white p-6 shadow-lg`}>
         <div className="container mx-auto">
-          <h1 className={`text-4xl font-bold poppy-text-glow flex items-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
-            {isHourOfJoyActive ? <Skull className="w-8 h-8 mr-3" /> : <Building className="w-8 h-8 mr-3" />}
-            {isHourOfJoyActive ? 'Playtime Co. - Corporate Memorial' : 'About Playtime Co.'}
+          <h1 className={`text-4xl font-bold ${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
+            {isPhase2Active ? 'Neural Recovery Archives' : 
+             isHourOfJoyActive ? 'The Truth About Playtime Co.' : 
+             'About Playtime Co.'}
           </h1>
-          <p className={`${isHourOfJoyActive ? 'text-red-200' : 'text-purple-200'} mt-2`}>
-            {isHourOfJoyActive ? 
-              'The rise and fall of the world\'s largest toy manufacturer' :
-              'The world\'s most innovative toy manufacturer since 1930'
-            }
+          <p className={`${isPhase2Active ? 'text-blue-200' : (isHourOfJoyActive ? 'text-red-200' : 'text-purple-200')} mt-2`}>
+            {isPhase2Active ? 'Reconstructing memories of what really happened...' :
+             isHourOfJoyActive ? 'The children will be safe with us... forever.' :
+             'Creating magical experiences since 1950'}
           </p>
         </div>
       </header>
@@ -69,238 +67,307 @@ const About = () => {
         
         {/* Company History */}
         <section className="mb-16">
-          <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 poppy-card-glow`}>
+          <h2 className={`text-3xl font-bold mb-8 text-center ${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>Our Story</h2>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')} flex items-center`}>
+                  <Building className="w-5 h-5 mr-2" />
+                  Company Foundation
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 mb-4">
+                  {isPhase2Active ? 
+                    'You worked here... Employee #1006. The memories are fragmenting back. The facility was more than it seemed.' :
+                    isHourOfJoyActive ? 
+                      'Founded by Elliot Ludwig in 1950, Playtime Co. began with a noble vision: to create toys that would bring joy to every child. But the vision became twisted...' :
+                      'Founded by visionary Elliot Ludwig in 1950, Playtime Co. revolutionized the toy industry with innovative designs and breakthrough manufacturing techniques.'
+                  }
+                </p>
+                <div className="text-sm text-gray-400">
+                  <p className="mb-2">📅 <strong>Founded:</strong> 1950</p>
+                  <p className="mb-2">👨‍💼 <strong>Founder:</strong> Elliot Ludwig</p>
+                  <p className="mb-2">🏭 <strong>Headquarters:</strong> {isHourOfJoyActive ? 'Abandoned Facility' : 'Industrial District'}</p>
+                  <p>🎯 <strong>Mission:</strong> {isPhase2Active ? 'Preserve consciousness forever' : (isHourOfJoyActive ? 'Eternal protection for children' : 'Innovation in Play')}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')} flex items-center`}>
+                  <Award className="w-5 h-5 mr-2" />
+                  Breakthrough Innovations
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <div className={`w-3 h-3 ${isPhase2Active ? 'bg-blue-500' : (isHourOfJoyActive ? 'bg-red-500' : 'bg-purple-500')} rounded-full mr-3`}></div>
+                    <span className="text-gray-300">
+                      {isPhase2Active ? 'Consciousness Transfer Technology' : (isHourOfJoyActive ? 'Bigger Bodies Initiative (Classified)' : 'Make-A-Friend Technology')}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className={`w-3 h-3 ${isPhase2Active ? 'bg-blue-500' : (isHourOfJoyActive ? 'bg-red-500' : 'bg-purple-500')} rounded-full mr-3`}></div>
+                    <span className="text-gray-300">
+                      {isPhase2Active ? 'Memory Preservation Systems' : (isHourOfJoyActive ? 'Synthetic Life Integration' : 'Interactive Toy Experiences')}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className={`w-3 h-3 ${isPhase2Active ? 'bg-blue-500' : (isHourOfJoyActive ? 'bg-red-500' : 'bg-purple-500')} rounded-full mr-3`}></div>
+                    <span className="text-gray-300">
+                      {isPhase2Active ? 'Neural Interface Development' : (isHourOfJoyActive ? 'Living Toy Manufacturing' : 'Advanced Manufacturing Processes')}
+                    </span>
+                  </div>
+                </div>
+                {showHiddenInfo && (
+                  <div className="mt-4 p-3 border border-yellow-500 bg-yellow-900 bg-opacity-20 rounded">
+                    <p className="text-yellow-300 text-sm">
+                      🔍 <strong>Staff Access Hint:</strong> Night security worked since 1995, research focused on psychology case 101, 
+                      executive vision was about bigger bodies, special projects involved prototype 1170, 
+                      and the weak security chief was replaced.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Leadership Team */}
+        <section className="mb-16">
+          <h2 className={`text-3xl font-bold mb-8 text-center ${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
+            {isPhase2Active ? 'Recovered Personnel Files' : (isHourOfJoyActive ? 'Former Leadership' : 'Leadership Team')}
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-purple-500 cursor-pointer`} onClick={handleSecretClick}>
+              <CardHeader>
+                <CardTitle className={`${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
+                  {isPhase2Active ? 'Dr. Ludwig (Deceased)' : (isHourOfJoyActive ? 'Elliot Ludwig †' : 'Elliot Ludwig')}
+                </CardTitle>
+                <p className="text-gray-400 text-sm">
+                  {isPhase2Active ? 'Former CEO - Consciousness Archived' : (isHourOfJoyActive ? 'Visionary & Victim' : 'CEO & Founder')}
+                </p>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-sm">
+                  {isPhase2Active ? 
+                    'His dream of preserving consciousness led to your transformation. The bigger bodies project was his obsession after losing his wife.' :
+                    isHourOfJoyActive ? 
+                      'His vision of "bigger bodies" led to the facility\'s downfall. Username: dr.ludwig, Password: biggerbodies' :
+                      'Revolutionary leader in toy innovation and child psychology applications in manufacturing.'
+                  }
+                </p>
+                <div className="mt-3 text-xs text-gray-400">
+                  <p>🔑 Access Level: Executive</p>
+                  <p>📧 Username pattern: dr.lastname</p>
+                  {!isPhase2Active && <p className="text-yellow-400">💡 His vision was about "bigger bodies"</p>}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
+                  {isPhase2Active ? 'Dr. Sawyer → The Doctor' : (isHourOfJoyActive ? 'The Doctor (Entity)' : 'Dr. Harley Sawyer')}
+                </CardTitle>
+                <p className="text-gray-400 text-sm">
+                  {isPhase2Active ? 'Consciousness Merged - No Longer Human' : (isHourOfJoyActive ? 'Security Override' : 'Chief Medical Officer')}
+                </p>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-sm">
+                  {isPhase2Active ? 
+                    'Sawyer was weak. The Doctor sees what he could not. They know the truth about your transformation.' :
+                    isHourOfJoyActive ? 
+                      'Dr. Sawyer was weak, but The Doctor is strong. Username: the.doctor, Password: sawyer-was-weak' :
+                      'Leading researcher in consciousness studies and experimental psychology applications.'
+                  }
+                </p>
+                <div className="mt-3 text-xs text-gray-400">
+                  <p>🔑 Access Level: Security Director</p>
+                  <p>⚠️ Entity Classification: Non-Human</p>
+                  {!isPhase2Active && <p className="text-red-400">💡 Knows that "sawyer-was-weak"</p>}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-purple-500`}>
+              <CardHeader>
+                <CardTitle className={`${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
+                  {isPhase2Active ? 'Leith Pierre (Missing)' : (isHourOfJoyActive ? 'Leith Pierre †' : 'Leith Pierre')}
+                </CardTitle>
+                <p className="text-gray-400 text-sm">
+                  {isPhase2Active ? 'Special Projects - Last Seen Aug 8th' : (isHourOfJoyActive ? 'Special Projects Coordinator' : 'Innovation Director')}
+                </p>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-sm">
+                  {isPhase2Active ? 
+                    'Worked on prototype 1170... the number rings familiar. You may have worked with them on classified projects.' :
+                    isHourOfJoyActive ? 
+                      'Coordinated the prototype series including 1170. Username: leith.pierre, Password: prototype1170' :
+                      'Spearheads breakthrough projects and coordinates advanced manufacturing initiatives.'
+                  }
+                </p>
+                <div className="mt-3 text-xs text-gray-400">
+                  <p>🔑 Access Level: Executive</p>
+                  <p>🔬 Project Focus: Prototype Series</p>
+                  {!isPhase2Active && <p className="text-purple-400">💡 Worked on "prototype1170"</p>}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Additional Staff Information */}
+        <section className="mb-16">
+          <h2 className={`text-3xl font-bold mb-8 text-center ${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
+            {isPhase2Active ? 'Personnel Database Recovery' : 'Department Staff'}
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-green-500`}>
+              <CardHeader>
+                <CardTitle className="text-green-400 flex items-center">
+                  <Users className="w-5 h-5 mr-2" />
+                  Security & Operations
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-300">Mike Schmidt - Night Security</span>
+                    <span className="text-green-400">Active since 1995</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-300">Bob Matthews - Maintenance</span>
+                    <span className="text-blue-400">Engineering Team</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-300">Sarah Johnson - Tour Guide</span>
+                    <span className="text-purple-400">Public Relations</span>
+                  </div>
+                  {showHiddenInfo && (
+                    <div className="mt-4 p-2 border border-green-500 bg-green-900 bg-opacity-20 rounded">
+                      <p className="text-green-300 text-xs">
+                        🔍 Username: security.mike | Password hint: nightshift1995
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-blue-500`}>
+              <CardHeader>
+                <CardTitle className="text-blue-400 flex items-center">
+                  <Search className="w-5 h-5 mr-2" />
+                  Research Division
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-300">Dr. Sarah Chen - Psychology</span>
+                    <span className="text-blue-400">Case Studies 101+</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-300">Marcus Davis - Engineering</span>
+                    <span className="text-yellow-400">Blueprint Design</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-300">Amy Rodriguez - Lab Tech</span>
+                    <span className="text-red-400">Specimen Analysis</span>
+                  </div>
+                  {showHiddenInfo && (
+                    <div className="mt-4 p-2 border border-blue-500 bg-blue-900 bg-opacity-20 rounded">
+                      <p className="text-blue-300 text-xs">
+                        🔍 Username: dr.chen | Password hint: psychology101
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Access Hints */}
+        <section className="mb-16">
+          <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} border-yellow-500`}>
             <CardHeader>
-              <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
-                <Clock className="w-6 h-6 mr-2" />
-                {isHourOfJoyActive ? 'Corporate Timeline - 1930 to 1995' : 'Our Legacy - Since 1930'}
+              <CardTitle className="text-yellow-400 flex items-center">
+                <Eye className="w-5 h-5 mr-2" />
+                {isPhase2Active ? 'Memory Access Protocols' : 'Staff Access Information'}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <img 
-                    src="https://static.wikia.nocookie.net/poppyplaytime/images/a/a1/Playtime_Co._Logo.png/revision/latest?cb=20211012153845"
-                    alt="Playtime Co. Logo"
-                    className="w-full h-48 object-contain rounded-lg border border-purple-500 bg-gray-900"
-                  />
-                  <p className="text-xs text-gray-400 mt-2 text-center">Original Playtime Co. Corporate Logo</p>
+                  <h4 className="text-yellow-300 font-bold mb-3">Access Methods:</h4>
+                  <ul className="space-y-2 text-sm text-gray-300">
+                    <li>🖱️ Click company logo 13+ times for staff access</li>
+                    <li>⌨️ Type "SAWYER" to access The Doctor's terminal</li>
+                    <li>🎮 Use Konami code for system access</li>
+                    <li>📡 Morse code reveals prototype secrets</li>
+                    <li>🔢 Binary code unlocks Poppy's messages</li>
+                  </ul>
                 </div>
-                <div className="space-y-4">
-                  <div className={`p-4 ${isHourOfJoyActive ? 'bg-red-900' : 'bg-purple-900'} bg-opacity-30 rounded border ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
-                    <h3 className={`font-bold ${isHourOfJoyActive ? 'text-red-300' : 'text-purple-300'} mb-2`}>Founded 1930</h3>
-                    <p className="text-gray-300 text-sm">
-                      Elliot Ludwig established Playtime Co. with a vision to create toys that would bring joy to children worldwide. 
-                      The company quickly became known for its innovative designs and high-quality manufacturing.
-                    </p>
-                  </div>
-                  <div className={`p-4 ${isHourOfJoyActive ? 'bg-red-900' : 'bg-purple-900'} bg-opacity-30 rounded border ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
-                    <h3 className={`font-bold ${isHourOfJoyActive ? 'text-red-300' : 'text-purple-300'} mb-2`}>{isHourOfJoyActive ? 'Closure 1995' : 'Innovation Era'}</h3>
-                    <p className="text-gray-300 text-sm">
-                      {isHourOfJoyActive ?
-                        'Following the Hour of Joy incident on August 8th, 1995, all Playtime Co. operations were permanently suspended. The factory remains sealed to this day.' :
-                        'Pioneering the Bigger Bodies Initiative and advanced AI integration, we continue to push the boundaries of what toys can achieve.'
-                      }
-                    </p>
-                  </div>
+                <div>
+                  <h4 className="text-yellow-300 font-bold mb-3">Username Patterns:</h4>
+                  <ul className="space-y-2 text-sm text-gray-300">
+                    <li>👮 Security: department.firstname</li>
+                    <li>🔬 Research: dr.lastname</li>
+                    <li>💼 Executive: dr.lastname / firstname.lastname</li>
+                    <li>🎯 Special: the.title</li>
+                    <li>🔒 Hidden: insider / prototype</li>
+                  </ul>
                 </div>
+              </div>
+              
+              <div className="mt-6 p-4 border border-yellow-500 bg-yellow-900 bg-opacity-20 rounded">
+                <p className="text-yellow-200 text-sm text-center">
+                  💡 <strong>Hint:</strong> Click on leadership cards above 5 times to reveal more specific access details
+                </p>
               </div>
             </CardContent>
           </Card>
         </section>
 
-        {/* Key Figures */}
-        <section className="mb-16">
-          <h2 className={`text-3xl font-bold mb-8 text-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
-            {isHourOfJoyActive ? 'Memorial - Key Personnel' : 'Leadership Team'}
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            
-            {/* Elliot Ludwig */}
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 hover:border-blue-400 transition-all`}>
-              <CardHeader>
-                <div className="w-full h-40 mb-3 overflow-hidden rounded-lg bg-gray-900">
-                  <img 
-                    src="https://static.wikia.nocookie.net/poppyplaytime/images/7/7c/Elliot_Ludwig_Portrait.png/revision/latest?cb=20220506150829"
-                    alt="Elliot Ludwig"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'}`}>
-                  Elliot Ludwig
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300 text-sm mb-3">
-                  {isHourOfJoyActive ? 'Founder & Former CEO (Deceased)' : 'Founder & CEO'}
-                </p>
-                <p className="text-gray-400 text-xs">
-                  {isHourOfJoyActive ?
-                    'Visionary founder who disappeared under mysterious circumstances. His legacy lives on in every toy we created.' :
-                    'Visionary leader dedicated to bringing joy and innovation to children worldwide through revolutionary toy design.'
-                  }
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Dr. Harley Sawyer */}
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 hover:border-yellow-400 transition-all`}>
-              <CardHeader>
-                <div className="w-full h-40 mb-3 overflow-hidden rounded-lg bg-gray-900">
-                  <img 
-                    src="https://static.wikia.nocookie.net/poppyplaytime/images/3/3e/Dr._Harley_Sawyer.png/revision/latest?cb=20220506150829"
-                    alt="Dr. Harley Sawyer"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-yellow-400'}`}>
-                  Dr. Harley Sawyer
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300 text-sm mb-3">
-                  {isHourOfJoyActive ? 'Former Head of Innovation (Missing)' : 'Head of Innovation'}
-                </p>
-                <p className="text-gray-400 text-xs">
-                  {isHourOfJoyActive ?
-                    'Lead scientist behind the Bigger Bodies Initiative. Last seen during the Hour of Joy incident.' :
-                    'Brilliant scientist leading our breakthrough research in advanced toy development and child psychology.'
-                  }
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Leith Pierre */}
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 hover:border-green-400 transition-all`}>
-              <CardHeader>
-                <div className="w-full h-40 mb-3 overflow-hidden rounded-lg bg-gray-900">
-                  <img 
-                    src="https://static.wikia.nocookie.net/poppyplaytime/images/1/1b/Leith_Pierre.png/revision/latest?cb=20220506150829"
-                    alt="Leith Pierre"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-green-400'}`}>
-                  Leith Pierre
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300 text-sm mb-3">
-                  {isHourOfJoyActive ? 'Former Head of Security (Deceased)' : 'Head of Security'}
-                </p>
-                <p className="text-gray-400 text-xs">
-                  {isHourOfJoyActive ?
-                    'Security chief who tried to contain the Hour of Joy outbreak. His efforts were ultimately unsuccessful.' :
-                    'Experienced security professional ensuring the safety and protection of all Playtime Co. facilities and personnel.'
-                  }
-                </p>
-              </CardContent>
-            </Card>
-
+        {/* Navigation Links */}
+        <section className="text-center">
+          <div className="grid md:grid-cols-4 gap-4 mb-8">
+            <Button asChild className={`${isPhase2Active ? 'bg-blue-600 hover:bg-blue-700' : (isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700')} text-white`}>
+              <Link to="/">Return Home</Link>
+            </Button>
+            <Button asChild className={`${isPhase2Active ? 'bg-blue-600 hover:bg-blue-700' : (isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700')} text-white`}>
+              <Link to="/factory">Factory Tour</Link>
+            </Button>
+            <Button asChild className={`${isPhase2Active ? 'bg-blue-600 hover:bg-blue-700' : (isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700')} text-white`}>
+              <Link to="/products">View Products</Link>
+            </Button>
+            <Button asChild className={`${isPhase2Active ? 'bg-blue-600 hover:bg-blue-700' : (isHourOfJoyActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700')} text-white`}>
+              <Link to="/departments">Staff Directory</Link>
+            </Button>
           </div>
+          
+          {(secretClicked >= 3 || showHiddenInfo) && (
+            <div className="mt-8">
+              <Button asChild variant="outline" className="border-green-500 text-green-400 hover:bg-green-500 hover:text-white">
+                <Link to="/login">
+                  <Eye className="w-4 h-4 mr-2" />
+                  Staff Login Portal
+                </Link>
+              </Button>
+            </div>
+          )}
         </section>
-
-        {/* Company Values */}
-        <section className="mb-16">
-          <h2 className={`text-3xl font-bold mb-8 text-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
-            {isHourOfJoyActive ? 'What We Stood For' : 'Our Values'}
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center`}>
-              <CardContent className="pt-6">
-                <Heart className={`w-12 h-12 mx-auto mb-4 ${isHourOfJoyActive ? 'text-red-400' : 'text-pink-400'}`} />
-                <h3 className={`font-bold mb-2 ${isHourOfJoyActive ? 'text-red-400' : 'text-pink-400'}`}>Love</h3>
-                <p className="text-gray-300 text-sm">
-                  {isHourOfJoyActive ? 
-                    'Every toy was created with love, though that love became twisted.' :
-                    'Every toy is crafted with genuine care and affection for the children who will cherish them.'
-                  }
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center`}>
-              <CardContent className="pt-6">
-                <Users className={`w-12 h-12 mx-auto mb-4 ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'}`} />
-                <h3 className={`font-bold mb-2 ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'}`}>Community</h3>
-                <p className="text-gray-300 text-sm">
-                  {isHourOfJoyActive ?
-                    'We built a community that ultimately turned against itself.' :
-                    'Building stronger communities through shared play experiences and lasting friendships.'
-                  }
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center`}>
-              <CardContent className="pt-6">
-                <Award className={`w-12 h-12 mx-auto mb-4 ${isHourOfJoyActive ? 'text-red-400' : 'text-yellow-400'}`} />
-                <h3 className={`font-bold mb-2 ${isHourOfJoyActive ? 'text-red-400' : 'text-yellow-400'}`}>Excellence</h3>
-                <p className="text-gray-300 text-sm">
-                  {isHourOfJoyActive ?
-                    'Our pursuit of excellence led us too far down a dark path.' :
-                    'Maintaining the highest standards in toy design, safety, and manufacturing quality.'
-                  }
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center`}>
-              <CardContent className="pt-6">
-                <Building className={`w-12 h-12 mx-auto mb-4 ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`} />
-                <h3 className={`font-bold mb-2 ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>Innovation</h3>
-                <p className="text-gray-300 text-sm">
-                  {isHourOfJoyActive ?
-                    'Innovation without restraint brought our downfall.' :
-                    'Pioneering new technologies and methods to create toys that inspire and educate.'
-                  }
-                </p>
-              </CardContent>
-            </Card>
-
-          </div>
-        </section>
-
-        {/* Memorial Section for Hour of Joy */}
-        {isHourOfJoyActive && (
-          <section className="mb-16">
-            <Card className="bg-red-900 border-red-500 poppy-card-glow">
-              <CardHeader>
-                <CardTitle className="text-red-400 flex items-center">
-                  <Skull className="w-6 h-6 mr-2" />
-                  In Memory of All Who Were Lost
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-red-200 mb-4">
-                  Playtime Co. officially acknowledges the tragic events of August 8th, 1995. We remember all employees, 
-                  children, and visitors who were lost during the Hour of Joy incident.
-                </p>
-                <div className="bg-red-800 bg-opacity-50 p-4 rounded border border-red-600">
-                  <p className="text-red-300 text-sm text-center italic">
-                    "We made toys to bring joy. In the end, they brought only darkness. May those we lost find the peace we could not give them."
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-        )}
-
       </div>
-
-      {/* Footer */}
-      <footer className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} text-white py-8 border-t ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; {isHourOfJoyActive ? '1930-1995' : '2024'} Playtime Co. {isHourOfJoyActive ? 'Corporate operations permanently ceased.' : 'All rights reserved.'}</p>
-          <p className="text-sm mt-2 opacity-75">
-            {isHourOfJoyActive ? 
-              'Memorial site maintained by surviving stakeholders' : 
-              'Creating joyful experiences through innovative toy design'
-            }
-          </p>
-        </div>
-      </footer>
     </div>
   );
 };
