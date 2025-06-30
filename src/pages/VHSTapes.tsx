@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { CassetteTape, Play, Lock, AlertTriangle, Volume2, Eye, Settings, RotateCcw, Search, FileText } from "lucide-react";
@@ -335,13 +334,6 @@ const VHSTapes = () => {
       } else {
         showMessageWithJump(`📼 TAPE ACCESSED: ${tape.title} - Corporate secrets revealed`, 8000);
       }
-    }
-  };
-
-  const resetProgress = () => {
-    if (window.confirm("Are you sure you want to reset ALL progress? This cannot be undone.")) {
-      localStorage.clear();
-      window.location.reload();
     }
   };
 
