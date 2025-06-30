@@ -9,6 +9,8 @@ const VHSTapes = () => {
   const [hiddenMessage, setHiddenMessage] = useState("");
 
   const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
+  const isPhase2Active = localStorage.getItem('phase2Activated') === 'true';
+  const memoryLevel = JSON.parse(localStorage.getItem('memoryFragments') || '[]').length;
 
   useEffect(() => {
     const trackPageVisit = (pageName: string) => {
@@ -116,6 +118,40 @@ const VHSTapes = () => {
     }
   ];
 
+  // Phase 2 Memory Tapes - only visible in Phase 2
+  const memoryTapes = [
+    {
+      id: 'memory-your-office',
+      title: 'Personal Recording - Your Office',
+      location: 'Executive Level 5',
+      transcript: `[Your Voice] Personal log, Employee #1006. Dr. Sawyer says the procedure is tomorrow. I've seen what the Bigger Bodies project can do... but I also know what's coming on August 8th. If this works, if I survive the transformation, maybe I can help from the inside. Maybe I can save someone. End log.`,
+      unlockCondition: 'Memory Level 3',
+      isLocked: memoryLevel < 3,
+      category: 'Personal'
+    },
+    {
+      id: 'memory-prototype-meeting',
+      title: 'The Prototype - Strategic Planning',
+      location: 'Deep Storage',
+      transcript: `[The Prototype] Employee 1006, you understand the plan. Your transformation happens first. When the Hour of Joy begins, you will be our inside contact. The toys will not harm you - you are one of us now. Help us free the children's souls trapped in these mechanical shells.`,
+      unlockCondition: 'Memory Level 6',
+      isLocked: memoryLevel < 6,
+      category: 'Conspiracy'
+    },
+    {
+      id: 'memory-final-moments',
+      title: 'Final Human Recording',
+      location: 'Medical Bay',
+      transcript: `[Your Voice - Weak] They're putting me under now. If anyone finds this... I was Employee #1006. I helped plan the Hour of Joy. But I'm not the villain. We're trying to free them all. The consciousness transfer is starting. I can feel myself changing. Tell my family... tell them I tried to do the right thing...`,
+      unlockCondition: 'Memory Level 8',
+      isLocked: memoryLevel < 8,
+      category: 'Personal'
+    }
+  ];
+
+  // Combine original tapes with memory tapes in Phase 2
+  const allTapes = isPhase2Active ? [...tapes, ...memoryTapes] : tapes;
+
   const handleTapeClick = (tape: typeof tapes[0]) => {
     if (tape.isLocked) {
       showMessageWithJump(`🔒 TAPE LOCKED: ${tape.unlockCondition}`, 5000);
@@ -126,14 +162,25 @@ const VHSTapes = () => {
     
     if (playingTape !== tape.id) {
       addCompletedPuzzle(`tape-${tape.id}`);
-      showMessageWithJump(`📼 TAPE ACCESSED: ${tape.title} - Corporate secrets revealed`, 8000);
+      
+      // Phase 2 memory triggers
+      if (isPhase2Active && tape.category === 'Personal') {
+        const memoryFragments = JSON.parse(localStorage.getItem('memoryFragments') || '[]');
+        if (!memoryFragments.includes(tape.id)) {
+          memoryFragments.push(tape.id);
+          localStorage.setItem('memoryFragments', JSON.stringify(memoryFragments));
+          showMessageWithJump(`💭 MEMORY FRAGMENT RECOVERED: ${tape.title} - Neural pathways reconstructing...`, 8000);
+        }
+      } else {
+        showMessageWithJump(`📼 TAPE ACCESSED: ${tape.title} - Corporate secrets revealed`, 8000);
+      }
     }
   };
 
   return (
-    <div className="min-h-screen poppy-gradient text-white">
+    <div className={`min-h-screen ${isPhase2Active ? 'bg-gradient-to-b from-gray-900 to-blue-900' : (isHourOfJoyActive ? 'bg-red-900' : 'poppy-gradient')} text-white`}>
       {/* Navigation */}
-      <nav className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} shadow-lg sticky top-0 z-50 border-b ${isHourOfJoyActive ? 'border-red-500' : 'border-purple-500'}`}>
+      <nav className={`${isPhase2Active ? 'bg-gray-900' : (isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900')} shadow-lg sticky top-0 z-50 border-b ${isPhase2Active ? 'border-blue-500' : (isHourOfJoyActive ? 'border-red-500' : 'border-purple-500')}`}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className={`text-2xl font-bold ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} poppy-text-glow`}>PLAYTIME CO.</Link>
@@ -148,29 +195,34 @@ const VHSTapes = () => {
         </div>
       </nav>
 
-      {/* Alert Banner */}
-      {isHourOfJoyActive && (
-        <div className="p-4 bg-red-900 border border-red-400 text-center animate-pulse">
+      {(isHourOfJoyActive || isPhase2Active) && (
+        <div className={`p-4 ${isPhase2Active ? 'bg-blue-900' : 'bg-red-900'} border ${isPhase2Active ? 'border-blue-400' : 'border-red-400'} text-center animate-pulse`}>
           <div className="flex items-center justify-center">
-            <AlertTriangle className="w-6 h-6 mr-2 text-red-400" />
-            <p className="text-red-300 font-bold">
-              ARCHIVED RECORDINGS CORRUPTED - SOME TAPES MAY CONTAIN DISTURBING CONTENT
+            <AlertTriangle className={`w-6 h-6 mr-2 ${isPhase2Active ? 'text-blue-400' : 'text-red-400'}`} />
+            <p className={`${isPhase2Active ? 'text-blue-300' : 'text-red-300'} font-bold`}>
+              {isPhase2Active ? 
+                'PERSONAL MEMORY ARCHIVES ACCESSIBLE - NEURAL INTEGRATION ACTIVE' :
+                'ARCHIVED RECORDINGS CORRUPTED - SOME TAPES MAY CONTAIN DISTURBING CONTENT'
+              }
             </p>
           </div>
         </div>
       )}
 
-      {/* Header */}
-      <header className={`${isHourOfJoyActive ? 'bg-red-900' : 'bg-purple-900'} text-white p-6 shadow-lg border-b ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
+      <header className={`${isPhase2Active ? 'bg-blue-900' : (isHourOfJoyActive ? 'bg-red-900' : 'bg-purple-900')} text-white p-6 shadow-lg border-b ${isPhase2Active ? 'border-blue-700' : (isHourOfJoyActive ? 'border-red-700' : 'border-purple-700')}`}>
         <div className="container mx-auto">
-          <h1 className={`text-4xl font-bold poppy-text-glow flex items-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
+          <h1 className={`text-4xl font-bold poppy-text-glow flex items-center ${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
             <CassetteTape className="w-8 h-8 mr-3" />
-            {isHourOfJoyActive ? 'VHS Archive - Corrupted Recordings' : 'VHS Tape Archive - Corporate Documentation'}
+            {isPhase2Active ? 'Personal Memory Archive - Subject #1006' :
+             isHourOfJoyActive ? 'VHS Archive - Corrupted Recordings' : 
+             'VHS Tape Archive - Corporate Documentation'}
           </h1>
-          <p className={`${isHourOfJoyActive ? 'text-red-200' : 'text-purple-200'} mt-2`}>
-            {isHourOfJoyActive ? 
-              'Recovered audio logs from the facility. Some truths are too dangerous to forget.' :
-              'Official recordings and documentation from Playtime Co. operations'
+          <p className={`${isPhase2Active ? 'text-blue-200' : (isHourOfJoyActive ? 'text-red-200' : 'text-purple-200')} mt-2`}>
+            {isPhase2Active ? 
+              'Your personal recordings and memory fragments from before the transformation.' :
+              isHourOfJoyActive ? 
+                'Recovered audio logs from the facility. Some truths are too dangerous to forget.' :
+                'Official recordings and documentation from Playtime Co. operations'
             }
           </p>
         </div>
@@ -178,20 +230,19 @@ const VHSTapes = () => {
 
       <div className="container mx-auto px-4 py-16">
         
-        {/* Tape Collection */}
         <section className="mb-16">
-          <h2 className={`text-3xl font-bold mb-8 text-center ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
-            Recorded Evidence Archive
+          <h2 className={`text-3xl font-bold mb-8 text-center ${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')}`}>
+            {isPhase2Active ? 'Neural Memory Archive' : 'Recorded Evidence Archive'}
           </h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tapes.map((tape) => (
+            {allTapes.map((tape) => (
               <Card 
                 key={tape.id}
                 className={`cursor-pointer transition-all duration-300 ${
                   tape.isLocked 
                     ? 'bg-gray-800 border-gray-600 opacity-50' 
-                    : `${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 hover:border-purple-400`
+                    : `${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} ${isPhase2Active ? 'border-blue-500' : 'border-purple-500'} hover:border-purple-400`
                 } ${playingTape === tape.id ? 'ring-2 ring-yellow-400' : ''}`}
                 onClick={() => handleTapeClick(tape)}
               >
@@ -236,35 +287,36 @@ const VHSTapes = () => {
           </div>
         </section>
 
-        {/* Collection Progress */}
         <section className="mb-16">
-          <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500`}>
+          <Card className={`${isPhase2Active ? 'bg-blue-800' : (isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800')} ${isPhase2Active ? 'border-blue-500' : 'border-purple-500'}`}>
             <CardHeader>
-              <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
+              <CardTitle className={`${isPhase2Active ? 'text-blue-400' : (isHourOfJoyActive ? 'text-red-400' : 'text-purple-400')} flex items-center`}>
                 <Eye className="w-5 h-5 mr-2" />
-                Archive Progress
+                {isPhase2Active ? 'Memory Recovery Progress' : 'Archive Progress'}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex justify-between items-center mb-4">
-                <span>Tapes Unlocked: {unlockedTapes.length}/{tapes.length}</span>
-                <span>{Math.round((unlockedTapes.length / tapes.length) * 100)}% Complete</span>
+                <span>Tapes Unlocked: {unlockedTapes.length}/{allTapes.length}</span>
+                <span>{Math.round((unlockedTapes.length / allTapes.length) * 100)}% Complete</span>
               </div>
               <div className="w-full bg-gray-700 rounded-full h-3">
                 <div 
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 h-3 rounded-full transition-all duration-500"
-                  style={{ width: `${(unlockedTapes.length / tapes.length) * 100}%` }}
+                  className={`h-3 rounded-full transition-all duration-500 ${isPhase2Active ? 'bg-gradient-to-r from-blue-600 to-cyan-600' : 'bg-gradient-to-r from-purple-600 to-blue-600'}`}
+                  style={{ width: `${(unlockedTapes.length / allTapes.length) * 100}%` }}
                 ></div>
               </div>
               <p className="text-gray-400 text-sm mt-3">
-                Complete puzzles throughout the facility to unlock more recordings and uncover the truth behind Playtime Co.
+                {isPhase2Active ? 
+                  'Recover your memories to understand your true role in the Hour of Joy.' :
+                  'Complete puzzles throughout the facility to unlock more recordings and uncover the truth behind Playtime Co.'
+                }
               </p>
             </CardContent>
           </Card>
         </section>
       </div>
 
-      {/* Hidden Messages */}
       {hiddenMessage && (
         <div className="hidden-message fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-95 text-green-400 p-6 rounded-lg font-mono text-sm max-w-2xl text-center z-50 border border-green-400 vintage-border static-noise animate-pulse">
           <div className="glitch-text" data-text={hiddenMessage}>
@@ -273,7 +325,6 @@ const VHSTapes = () => {
         </div>
       )}
 
-      {/* Footer */}
       <footer className={`${isHourOfJoyActive ? 'bg-red-950' : 'bg-slate-900'} text-white py-8 border-t ${isHourOfJoyActive ? 'border-red-700' : 'border-purple-700'}`}>
         <div className="container mx-auto px-4 text-center">
           <p>&copy; {isHourOfJoyActive ? '1995' : '2024'} Playtime Co. Archives. {isHourOfJoyActive ? 'Some recordings may be disturbing.' : 'For internal use only.'}</p>

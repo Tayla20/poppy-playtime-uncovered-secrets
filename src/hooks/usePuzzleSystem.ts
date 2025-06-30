@@ -11,6 +11,7 @@ export const usePuzzleSystem = () => {
   const [warningLevel, setWarningLevel] = useState(0);
   const [sawyerTransformed, setSawyerTransformed] = useState(false);
   const [hourOfJoyActivated, setHourOfJoyActivated] = useState(false);
+  const [phase2Activated, setPhase2Activated] = useState(false);
   const [puzzlesCompleted, setPuzzlesCompleted] = useState<string[]>([]);
   const [morseInput, setMorseInput] = useState<string>("");
   const [morseTimeout, setMorseTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -35,7 +36,7 @@ export const usePuzzleSystem = () => {
     'vhs-tapes', 'research-lab'
   ];
 
-  // All mandatory puzzles - ALL must be completed
+  // All mandatory puzzles - ALL must be completed for Phase 2
   const mandatoryPuzzles = [
     'konami', 'sawyer', 'logo-clicks', 'color-sequence', 'morse-prototype', 
     'time-anomaly', 'orphanage-investigation', 'factory-production', 
@@ -134,20 +135,34 @@ export const usePuzzleSystem = () => {
     }
   };
 
-  // Check if Hour of Joy should be activated - ALL puzzles must be completed
+  // Check Phase 2 activation - ALL puzzles must be completed
   useEffect(() => {
     const completedPuzzles = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
     const visited = JSON.parse(localStorage.getItem('visitedPages') || '[]');
+    const savedPhase2 = localStorage.getItem('phase2Activated') === 'true';
+    
     setPuzzlesCompleted(completedPuzzles);
     setVisitedPages(visited);
+    setPhase2Activated(savedPhase2);
     
-    // ALL mandatory puzzles must be completed
+    // ALL mandatory puzzles must be completed for Phase 2
     const allComplete = mandatoryPuzzles.every(puzzle => completedPuzzles.includes(puzzle));
     
-    if (allComplete && !hourOfJoyActivated) {
+    if (allComplete && !savedPhase2) {
+      setPhase2Activated(true);
+      localStorage.setItem('phase2Activated', 'true');
+      showMessageWithJump("🚨 MEMORY RESTORATION PROTOCOL INITIATED 🚨 Subject #1006 consciousness integration complete. Welcome back... Employee.", 20000);
+      
+      // Trigger first memory fragment
+      setTimeout(() => {
+        showMessageWithJump("💭 Something feels... familiar about this place... 💭", 10000);
+      }, 5000);
+    }
+    
+    // Hour of Joy for Phase 1 completion
+    if (allComplete && !hourOfJoyActivated && !savedPhase2) {
       setHourOfJoyActivated(true);
       localStorage.setItem('hourOfJoyActivated', 'true');
-      showMessageWithJump("🚨 HOUR OF JOY PROTOCOL ACTIVATED 🚨 All systems compromised. The toys are free. Welcome to the new Playtime Co.", 15000);
     }
   }, [puzzlesCompleted]);
 
@@ -247,6 +262,7 @@ export const usePuzzleSystem = () => {
   }, [konamiSequence, morseInput, morseTimeout, binaryInput, huggySequence, catnipClicks]);
 
   const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true' || hourOfJoyActivated;
+  const isPhase2Active = localStorage.getItem('phase2Activated') === 'true' || phase2Activated;
 
   return {
     glitchActive,
@@ -259,6 +275,7 @@ export const usePuzzleSystem = () => {
     morseInput,
     binaryInput,
     isHourOfJoyActive,
+    isPhase2Active,
     visitedPages,
     mandatoryPuzzles,
     handleLogoClick,
