@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 
 export const usePuzzleSystem = () => {
@@ -51,7 +52,7 @@ export const usePuzzleSystem = () => {
     'archive-access-ludwig', 'archive-access-bigbody',
     // New puzzles from updated pages
     'founder-devotion', 'timeline-sequence', 'prisoner-sequence', 'prison-lockdown',
-    'musical-sequence', 'speed-challenge', 'game-master-sequence', 'game-station-master',
+    'musical-sequence', 'speed-challenge', 'precision-game', 'game-master-sequence', 'game-station-master',
     'prison-file-0', 'prison-file-1', 'prison-file-2', 'prison-file-6'
   ];
 
