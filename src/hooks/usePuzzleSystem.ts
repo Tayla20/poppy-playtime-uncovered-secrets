@@ -36,7 +36,7 @@ export const usePuzzleSystem = () => {
     'vhs-tapes', 'research-lab'
   ];
 
-  // All mandatory puzzles - ALL must be completed for Phase 2
+  // All mandatory puzzles - expanded list with new ones
   const mandatoryPuzzles = [
     'konami', 'sawyer', 'logo-clicks', 'color-sequence', 'morse-prototype', 
     'time-anomaly', 'orphanage-investigation', 'factory-production', 
@@ -48,7 +48,11 @@ export const usePuzzleSystem = () => {
     'tape-experiment-1006', 'tape-hour-of-joy-log', 'tape-bigger-bodies-meeting',
     'tape-catnap-worship', 'tape-poppy-awakening', 'tape-huggy-wuggy-creation',
     'tape-school-incident', 'archive-access-prototype', 'archive-access-sawyer',
-    'archive-access-ludwig', 'archive-access-bigbody'
+    'archive-access-ludwig', 'archive-access-bigbody',
+    // New puzzles from updated pages
+    'founder-devotion', 'timeline-sequence', 'prisoner-sequence', 'prison-lockdown',
+    'musical-sequence', 'speed-challenge', 'game-master-sequence', 'game-station-master',
+    'prison-file-0', 'prison-file-1', 'prison-file-2', 'prison-file-6'
   ];
 
   const addCompletedPuzzle = (puzzleName: string) => {

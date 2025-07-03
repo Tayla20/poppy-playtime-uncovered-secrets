@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { usePuzzleSystem } from "@/hooks/usePuzzleSystem";
 import { usePhase2System } from "@/hooks/usePhase2System";
@@ -13,10 +12,11 @@ import { HiddenElements } from "@/components/HiddenElements";
 import { Footer } from "@/components/Footer";
 import { PuzzleHints } from "@/components/PuzzleHints";
 import { Button } from "@/components/ui/button";
-import { Settings, RotateCcw } from "lucide-react";
+import { Settings, RotateCcw, HelpCircle } from "lucide-react";
 
 const Index = () => {
   const [showResetMenu, setShowResetMenu] = useState(false);
+  const [showHints, setShowHints] = useState(false);
   
   const {
     glitchActive,
@@ -68,8 +68,16 @@ const Index = () => {
           onLogoClick={handleLogoClick}
         />
 
-        {/* Reset Menu for Phase 2 */}
-        <div className="fixed top-16 right-4 z-40">
+        {/* Menu for Phase 2 */}
+        <div className="fixed top-16 right-4 z-40 flex gap-2">
+          <Button
+            onClick={() => setShowHints(!showHints)}
+            variant="outline"
+            size="sm"
+            className="text-blue-400 border-blue-600 hover:text-white bg-gray-900"
+          >
+            <HelpCircle className="w-4 h-4" />
+          </Button>
           <Button
             onClick={() => setShowResetMenu(!showResetMenu)}
             variant="outline"
@@ -90,6 +98,21 @@ const Index = () => {
             </div>
           )}
         </div>
+
+        {/* Hints Panel for Phase 2 */}
+        {showHints && (
+          <div className="fixed top-16 right-20 z-40 bg-gray-800 border border-blue-600 p-4 rounded shadow-lg max-w-md">
+            <PuzzleHints 
+              puzzlesCompleted={puzzlesCompleted}
+              visitedPages={visitedPages}
+              isHourOfJoyActive={isHourOfJoyActive}
+              mandatoryPuzzles={mandatoryPuzzles}
+            />
+            <Button onClick={() => setShowHints(false)} variant="outline" size="sm" className="mt-2 w-full">
+              Close Hints
+            </Button>
+          </div>
+        )}
 
         <Phase2HeroSection 
           glitchActive={glitchActive}
@@ -179,8 +202,16 @@ const Index = () => {
         onLogoClick={handleLogoClick}
       />
 
-      {/* Reset Menu for Phase 1 */}
-      <div className="fixed top-16 right-4 z-40">
+      {/* Menu for Phase 1 */}
+      <div className="fixed top-16 right-4 z-40 flex gap-2">
+        <Button
+          onClick={() => setShowHints(!showHints)}
+          variant="outline"
+          size="sm"
+          className="text-red-400 border-red-600 hover:text-white bg-gray-900"
+        >
+          <HelpCircle className="w-4 h-4" />
+        </Button>
         <Button
           onClick={() => setShowResetMenu(!showResetMenu)}
           variant="outline"
@@ -202,6 +233,21 @@ const Index = () => {
         )}
       </div>
 
+      {/* Hints Panel for Phase 1 */}
+      {showHints && (
+        <div className="fixed top-16 right-20 z-40 bg-gray-800 border border-red-600 p-4 rounded shadow-lg max-w-md max-h-96 overflow-y-auto">
+          <PuzzleHints 
+            puzzlesCompleted={puzzlesCompleted}
+            visitedPages={visitedPages}
+            isHourOfJoyActive={isHourOfJoyActive}
+            mandatoryPuzzles={mandatoryPuzzles}
+          />
+          <Button onClick={() => setShowHints(false)} variant="outline" size="sm" className="mt-2 w-full">
+            Close Hints
+          </Button>
+        </div>
+      )}
+
       <WarningBanner 
         warningLevel={warningLevel}
         isHourOfJoyActive={isHourOfJoyActive}
@@ -214,31 +260,27 @@ const Index = () => {
         morseInput={morseInput}
       />
 
-      {/* Login Credential Hints for Phase 1 */}
+      {/* Subtle investigation progress without obvious hints */}
       <section className="container mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-gray-800 bg-opacity-50 p-4 rounded border border-yellow-500">
-            <h3 className="text-yellow-400 font-bold mb-2">🔍 Security Notice</h3>
-            <p className="text-xs text-gray-300 mb-2">Staff access protocols remain active...</p>
-            <div className="text-xs space-y-1 opacity-70">
-              <p>• Night security: Mike, shift started in 1995</p>
-              <p>• Psychology dept: Dr. Chen, case studies 101</p>
-              <p>• Leadership: Ludwig's bigger vision</p>
-              <p>• Special projects: Pierre, prototype series 1170</p>
-              <p>• New security chief replaced the weak one</p>
-            </div>
-            <p className="text-xs text-yellow-300 mt-2">💡 Username format: department.name</p>
+        <div className="text-center mb-6">
+          <p className="text-red-400 font-bold text-lg">
+            Investigation Progress: {puzzlesCompleted.length}/{mandatoryPuzzles.length}
+          </p>
+          <div className="w-64 mx-auto bg-gray-700 rounded-full h-3 mt-2">
+            <div 
+              className={`h-3 rounded-full transition-all duration-500 ${
+                puzzlesCompleted.length === mandatoryPuzzles.length 
+                  ? 'bg-gradient-to-r from-red-600 to-red-400 animate-pulse' 
+                  : 'bg-gradient-to-r from-green-600 to-yellow-500'
+              }`}
+              style={{ width: `${(puzzlesCompleted.length / mandatoryPuzzles.length) * 100}%` }}
+            ></div>
           </div>
-          <div className="bg-gray-800 bg-opacity-50 p-4 rounded border border-green-500">
-            <h3 className="text-green-400 font-bold mb-2">🎮 Hidden Access</h3>
-            <p className="text-xs text-gray-300 mb-2">Complete puzzles to unlock secret areas:</p>
-            <div className="text-xs space-y-1">
-              <p className="text-green-400">• Click logo 13+ times for staff portal</p>
-              <p className="text-red-400">• Type SAWYER for doctor access</p>
-              <p className="text-blue-400">• Konami code unlocks systems</p>
-              <p className="text-purple-400">• Morse code: prototype message</p>
-            </div>
-          </div>
+          {puzzlesCompleted.length === mandatoryPuzzles.length && (
+            <p className="text-red-400 mt-2 animate-pulse">
+              🚨 ALL MYSTERIES SOLVED - THE TRUTH AWAITS 🚨
+            </p>
+          )}
         </div>
       </section>
 
@@ -248,13 +290,6 @@ const Index = () => {
 
       <CompanyMission 
         isHourOfJoyActive={isHourOfJoyActive}
-      />
-
-      <PuzzleHints 
-        puzzlesCompleted={puzzlesCompleted}
-        visitedPages={visitedPages}
-        isHourOfJoyActive={isHourOfJoyActive}
-        mandatoryPuzzles={mandatoryPuzzles}
       />
 
       <HiddenElements 

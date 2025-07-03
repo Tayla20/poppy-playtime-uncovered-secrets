@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gamepad2, Crown, Star, AlertTriangle, Skull, Eye } from "lucide-react";
+import { Gamepad2, Crown, Star, AlertTriangle, Skull, Eye, Music, Timer, Target, Zap } from "lucide-react";
+import { usePuzzleSystem } from "@/hooks/usePuzzleSystem";
 
 const GameStation = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -10,11 +11,19 @@ const GameStation = () => {
   const [clickSequence, setClickSequence] = useState<number[]>([]);
   const [showClue, setShowClue] = useState("");
   const [horrorMode, setHorrorMode] = useState(false);
+  const [musicPattern, setMusicPattern] = useState<number[]>([]);
+  const [timeChallenge, setTimeChallenge] = useState<number[]>([]);
+  const [gameScores, setGameScores] = useState<{[key: string]: number}>({});
+  
+  const { trackPageVisit, addCompletedPuzzle, showMessageWithJump } = usePuzzleSystem();
 
   // Check if Hour of Joy is activated
   const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
+  const isPhase2Active = localStorage.getItem('phase2Activated') === 'true';
 
   useEffect(() => {
+    trackPageVisit('game-station');
+    
     const interval = setInterval(() => {
       if (Math.random() < 0.1) {
         setHorrorMode(true);
@@ -27,17 +36,76 @@ const GameStation = () => {
 
   const showRandomClue = (source: string) => {
     const clues = [
-      "🎮 CLUE: Mommy Long Legs remembers every game... and every player who tried to cheat",
-      "🎮 CLUE: The musical patterns in the games are actually communication codes",
-      "🎮 CLUE: Winners get prizes. Losers become... part of the game",
-      "🎮 CLUE: PJ Pug-a-Pillar never stops watching, even when you think the game is over",
-      "🎮 CLUE: The cymbals echo with the sounds of past players who couldn't keep up",
-      "🎮 CLUE: Game Station employees report toys moving when no one is playing",
+      "🎮 The games remember every player's pattern - some patterns unlock deeper access",
+      "🎮 Musical sequences in order: Red, Blue, Yellow, Green unlock staff areas",
+      "🎮 Time challenges must be completed in under 10 seconds for secret rewards",
+      "🎮 Perfect scores in all games reveal hidden facility access codes",
+      "🎮 Mommy's rules: Play fair, play forever, never try to leave",
+      "🎮 The Game Station was built over the old employee recreation center",
     ];
     
     const randomClue = clues[Math.floor(Math.random() * clues.length)];
     setShowClue(`${source}: ${randomClue}`);
     setTimeout(() => setShowClue(""), 6000);
+  };
+
+  const handleMusicGame = (note: number) => {
+    const newPattern = [...musicPattern, note];
+    setMusicPattern(newPattern);
+    
+    // Musical sequence: Red(0), Blue(1), Yellow(2), Green(3)
+    if (JSON.stringify(newPattern.slice(-4)) === JSON.stringify([0, 1, 2, 3])) {
+      addCompletedPuzzle('musical-sequence');
+      setGameScores({...gameScores, music: 100});
+      showMessageWithJump("🎵 PERFECT HARMONY ACHIEVED 🎵 Mommy Long Legs approves! Secret staff recreation area unlocked...", 10000);
+    }
+    
+    if (newPattern.length > 8) {
+      setMusicPattern([]);
+    }
+  };
+
+  const handleTimeChallenge = () => {
+    const startTime = Date.now();
+    setTimeChallenge([startTime]);
+    
+    setTimeout(() => {
+      const endTime = Date.now();
+      const duration = endTime - startTime;
+      
+      if (duration < 10000) { // Under 10 seconds
+        addCompletedPuzzle('speed-challenge');
+        setGameScores({...gameScores, speed: 100});
+        showMessageWithJump("⚡ LIGHTNING REFLEXES ⚡ Bunzo's cymbals crash in approval! Speed access protocols activated...", 8000);
+      }
+    }, 100);
+  };
+
+  const handleGameClick = (gameId: string, index: number) => {
+    setSelectedGame(selectedGame === gameId ? null : gameId);
+    const newSequence = [...clickSequence, index];
+    setClickSequence(newSequence);
+    
+    // Hidden sequence: 0,2,1,3 (musical-memory, bunzo, whack-a-wuggy, statue)
+    if (JSON.stringify(newSequence.slice(-4)) === JSON.stringify([0,2,1,3])) {
+      setHiddenAccess(true);
+      addCompletedPuzzle('game-master-sequence');
+      showRandomClue("GAME SEQUENCE");
+    }
+  };
+
+  const handlePerfectGame = (gameId: string) => {
+    const newScores = {...gameScores, [gameId]: 100};
+    setGameScores(newScores);
+    
+    // Check if all games have perfect scores
+    const totalGames = ['musical-memory', 'whack-a-wuggy', 'bunzo-bonanza', 'statue-game'];
+    const perfectCount = totalGames.filter(game => newScores[game] === 100).length;
+    
+    if (perfectCount === 4) {
+      addCompletedPuzzle('game-station-master');
+      showMessageWithJump("👑 GAME STATION MASTER 👑 All games conquered! Mommy recognizes your dedication. Master access granted to all facility areas...", 15000);
+    }
   };
 
   const games = [
@@ -86,18 +154,6 @@ const GameStation = () => {
       afterJoy: "The game became reality. Stone-still figures line the corridors."
     }
   ];
-
-  const handleGameClick = (gameId: string, index: number) => {
-    setSelectedGame(selectedGame === gameId ? null : gameId);
-    const newSequence = [...clickSequence, index];
-    setClickSequence(newSequence);
-    
-    // Hidden sequence: 0,2,1,3 (musical-memory, bunzo, whack-a-wuggy, statue)
-    if (JSON.stringify(newSequence.slice(-4)) === JSON.stringify([0,2,1,3])) {
-      setHiddenAccess(true);
-      showRandomClue("GAME SEQUENCE");
-    }
-  };
 
   return (
     <div className={`min-h-screen ${isHourOfJoyActive ? 'bg-gradient-to-br from-red-900 via-black to-purple-900' : 'welcome-gradient'} text-white nostalgic-text`}>
@@ -151,6 +207,156 @@ const GameStation = () => {
             <p className="text-yellow-300 text-center">{showClue}</p>
           </div>
         )}
+
+        {/* Interactive Game Challenges */}
+        <section className="mb-16">
+          <h2 className={`text-3xl font-bold mb-8 text-center ${isHourOfJoyActive ? 'text-red-400' : 'text-pink-400'}`}>
+            Interactive Challenges
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            
+            {/* Musical Memory Challenge */}
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-pink-500`}>
+              <CardHeader>
+                <CardTitle className="text-pink-400 flex items-center">
+                  <Music className="w-5 h-5 mr-2" />
+                  Musical Memory
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-sm mb-4">
+                  Click the colors in the correct sequence to unlock Mommy's approval.
+                </p>
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  <Button 
+                    onClick={() => handleMusicGame(0)}
+                    className="bg-red-600 hover:bg-red-700 h-12"
+                  >
+                    Red
+                  </Button>
+                  <Button 
+                    onClick={() => handleMusicGame(1)}
+                    className="bg-blue-600 hover:bg-blue-700 h-12"
+                  >
+                    Blue
+                  </Button>
+                  <Button 
+                    onClick={() => handleMusicGame(2)}
+                    className="bg-yellow-600 hover:bg-yellow-700 h-12"
+                  >
+                    Yellow
+                  </Button>
+                  <Button 
+                    onClick={() => handleMusicGame(3)}
+                    className="bg-green-600 hover:bg-green-700 h-12"
+                  >
+                    Green
+                  </Button>
+                </div>
+                <p className="text-xs text-gray-400">
+                  Pattern: {musicPattern.slice(-4).map(n => ['Red','Blue','Yellow','Green'][n]).join(', ')}
+                </p>
+                {gameScores.music === 100 && (
+                  <p className="text-green-400 text-sm mt-2">✓ Perfect Score Achieved!</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Speed Challenge */}
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-pink-500`}>
+              <CardHeader>
+                <CardTitle className="text-pink-400 flex items-center">
+                  <Timer className="w-5 h-5 mr-2" />
+                  Speed Challenge
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-sm mb-4">
+                  Click as fast as you can! Beat 10 seconds for Bunzo's respect.
+                </p>
+                <Button 
+                  onClick={handleTimeChallenge}
+                  className="bg-orange-600 hover:bg-orange-700 w-full mb-4 h-12"
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  START SPEED TEST
+                </Button>
+                {gameScores.speed === 100 && (
+                  <p className="text-green-400 text-sm">✓ Lightning Speed Achieved!</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Accuracy Challenge */}
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-pink-500`}>
+              <CardHeader>
+                <CardTitle className="text-pink-400 flex items-center">
+                  <Target className="w-5 h-5 mr-2" />
+                  Precision Game
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-sm mb-4">
+                  Hit the exact center for PJ's approval. Timing is everything.
+                </p>
+                <Button 
+                  onClick={() => handlePerfectGame('precision')}
+                  className="bg-purple-600 hover:bg-purple-700 w-full mb-4 h-12"
+                >
+                  🎯 PRECISION SHOT
+                </Button>
+                {gameScores.precision === 100 && (
+                  <p className="text-green-400 text-sm">✓ Perfect Precision!</p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Score Tracking */}
+        <section className="mb-16">
+          <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-pink-500`}>
+            <CardHeader>
+              <CardTitle className="text-pink-400">Game Master Progress</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-4 gap-4 text-center">
+                <div className={`p-3 rounded ${gameScores.music === 100 ? 'bg-green-800' : 'bg-gray-700'}`}>
+                  <h4 className="text-pink-400 font-bold">Musical Memory</h4>
+                  <p className="text-2xl">{gameScores.music || 0}%</p>
+                </div>
+                <div className={`p-3 rounded ${gameScores.speed === 100 ? 'bg-green-800' : 'bg-gray-700'}`}>
+                  <h4 className="text-pink-400 font-bold">Speed Challenge</h4>
+                  <p className="text-2xl">{gameScores.speed || 0}%</p>
+                </div>
+                <div className={`p-3 rounded ${gameScores.precision === 100 ? 'bg-green-800' : 'bg-gray-700'}`}>
+                  <h4 className="text-pink-400 font-bold">Precision Game</h4>
+                  <p className="text-2xl">{gameScores.precision || 0}%</p>
+                </div>
+                <div className={`p-3 rounded ${gameScores.strategy === 100 ? 'bg-green-800' : 'bg-gray-700'}`}>
+                  <h4 className="text-pink-400 font-bold">Strategy Test</h4>
+                  <p className="text-2xl">{gameScores.strategy || 0}%</p>
+                </div>
+              </div>
+              
+              {Object.keys(gameScores).length === 4 && Object.values(gameScores).every(score => score === 100) && (
+                <div className="mt-6 p-4 bg-gold-900 border border-yellow-400 rounded text-center animate-pulse">
+                  <p className="text-yellow-400 font-bold text-lg">
+                    👑 GAME STATION MASTER ACHIEVED 👑
+                  </p>
+                  <p className="text-yellow-300 text-sm mt-2">
+                    All games mastered! Special facility access codes revealed...
+                  </p>
+                  <div className="mt-3 text-xs text-green-400 space-y-1">
+                    <p>🔑 Staff Recreation: staff.games / perfectscores</p>
+                    <p>🔑 Maintenance Access: bunzo.cymbal / musical-timing</p>
+                    <p>🔑 Security Override: mommy.rules / neverstop-playing</p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </section>
 
         {/* Featured Host */}
         <section className="mb-16">
@@ -334,8 +540,10 @@ const GameStation = () => {
                     'You\'ve discovered the secret sequence! The toys have been watching your gameplay...'
                   }
                 </p>
-                <div className="text-xs text-gray-400 mb-4">
-                  Access Code: {isHourOfJoyActive ? 'eternal-games-never-end' : 'mommy-knows-best'}
+                <div className="text-xs text-gray-400 mb-4 space-y-1">
+                  <p>Game Access Code: eternal-games-never-end</p>
+                  <p>Facility Code: mommy-knows-best</p>
+                  <p>Maintenance: game-station-master</p>
                 </div>
                 <Button 
                   onClick={() => showRandomClue("SECRET ACCESS")}
