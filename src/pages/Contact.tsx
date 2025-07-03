@@ -1,8 +1,9 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Clock, AlertTriangle, Skull } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, AlertTriangle, Skull, Users, Building } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { usePuzzleSystem } from "@/hooks/usePuzzleSystem";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -11,16 +12,14 @@ const Contact = () => {
     subject: '',
     message: ''
   });
-  const isHourOfJoyActive = localStorage.getItem('hourOfJoyActivated') === 'true';
+  const [phoneClicks, setPhoneClicks] = useState(0);
+  const [emailSequence, setEmailSequence] = useState<string[]>([]);
+  const [clockTime, setClockTime] = useState('');
+  const [emergencyAccess, setEmergencyAccess] = useState(false);
+  
+  const { trackPageVisit, addCompletedPuzzle, showMessageWithJump, isHourOfJoyActive } = usePuzzleSystem();
 
   useEffect(() => {
-    const trackPageVisit = (pageName: string) => {
-      const visited = JSON.parse(localStorage.getItem('visitedPages') || '[]');
-      if (!visited.includes(pageName)) {
-        visited.push(pageName);
-        localStorage.setItem('visitedPages', JSON.stringify(visited));
-      }
-    };
     trackPageVisit('contact');
   }, []);
 
@@ -39,6 +38,56 @@ const Contact = () => {
       alert('Thank you for your message! We will get back to you within 24 hours.');
       setFormData({ name: '', email: '', subject: '', message: '' });
     }
+  };
+
+  // Phone number puzzle - click exactly 1006 times
+  const handlePhoneClick = () => {
+    setPhoneClicks(prev => prev + 1);
+    if (phoneClicks === 1005) { // Next click will be 1006
+      addCompletedPuzzle('phone-1006');
+      showMessageWithJump("📞 PROTOTYPE COMMUNICATION LINE ACTIVATED 📞 Subject #1006's direct line established. The prototype accepts calls from authorized personnel only.", 12000);
+    }
+  };
+
+  // Email sequence puzzle - click in specific order
+  const handleEmailClick = () => {
+    const newSequence = [...emailSequence, 'email'];
+    setEmailSequence(newSequence);
+    
+    // Check for specific pattern that spells "HELP"
+    if (newSequence.length >= 4) {
+      const last4 = newSequence.slice(-4);
+      if (JSON.stringify(last4) === JSON.stringify(['email', 'email', 'email', 'email'])) {
+        addCompletedPuzzle('email-help-signal');
+        showMessageWithJump("📧 DISTRESS SIGNAL DETECTED 📧 Hidden message protocols activated. Staff emergency channels now accessible.", 10000);
+        setEmergencyAccess(true);
+      }
+    }
+  };
+
+  // Clock time puzzle - set to specific time
+  const handleClockClick = () => {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', { 
+      hour12: false, 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+    setClockTime(timeString);
+    
+    // Check for Hour of Joy time (08:08)
+    if (timeString === '08:08' || timeString.includes('08:08')) {
+      addCompletedPuzzle('hour-of-joy-time');
+      showMessageWithJump("🕗 HOUR OF JOY TIMESTAMP RECOGNIZED 🕗 August 8th, 1995 - 08:08 AM. The moment everything changed. Memorial access granted.", 15000);
+    }
+  };
+
+  // Address puzzle - click multiple times to reveal hidden facility info
+  const handleAddressClick = () => {
+    if (!emergencyAccess) return;
+    
+    addCompletedPuzzle('facility-coordinates');
+    showMessageWithJump("🗺️ FACILITY COORDINATES UNLOCKED 🗺️ Deep underground levels revealed. Maintenance tunnels and restricted areas now accessible.", 12000);
   };
 
   return (
@@ -85,6 +134,11 @@ const Contact = () => {
               'Get in touch with us - We\'d love to hear from you!'
             }
           </p>
+          {emergencyAccess && (
+            <p className="text-green-400 text-sm mt-2 animate-pulse">
+              🔓 Emergency staff protocols now active - Additional contact methods available
+            </p>
+          )}
         </div>
       </header>
 
@@ -94,7 +148,7 @@ const Contact = () => {
         <section className="mb-16">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center poppy-card-glow`}>
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center poppy-card-glow cursor-pointer hover:bg-opacity-80 transition-all`} onClick={handlePhoneClick}>
               <CardContent className="pt-6">
                 <Phone className={`w-8 h-8 mx-auto mb-4 ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'}`} />
                 <h3 className={`font-bold mb-2 ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'}`}>Phone</h3>
@@ -110,10 +164,15 @@ const Contact = () => {
                     'Mon-Fri 9AM-6PM EST'
                   }
                 </p>
+                {phoneClicks > 0 && (
+                  <p className="text-xs text-green-400 mt-2">
+                    Signal attempts: {phoneClicks}/1006
+                  </p>
+                )}
               </CardContent>
             </Card>
 
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center poppy-card-glow`}>
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center poppy-card-glow cursor-pointer hover:bg-opacity-80 transition-all`} onClick={handleEmailClick}>
               <CardContent className="pt-6">
                 <Mail className={`w-8 h-8 mx-auto mb-4 ${isHourOfJoyActive ? 'text-red-400' : 'text-green-400'}`} />
                 <h3 className={`font-bold mb-2 ${isHourOfJoyActive ? 'text-red-400' : 'text-green-400'}`}>Email</h3>
@@ -129,10 +188,15 @@ const Contact = () => {
                     '24-hour response time'
                   }
                 </p>
+                {emailSequence.length > 0 && (
+                  <p className="text-xs text-yellow-400 mt-2">
+                    Transmission pattern detected...
+                  </p>
+                )}
               </CardContent>
             </Card>
 
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center poppy-card-glow`}>
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center poppy-card-glow ${emergencyAccess ? 'cursor-pointer hover:bg-opacity-80' : ''} transition-all`} onClick={handleAddressClick}>
               <CardContent className="pt-6">
                 <MapPin className={`w-8 h-8 mx-auto mb-4 ${isHourOfJoyActive ? 'text-red-400' : 'text-yellow-400'}`} />
                 <h3 className={`font-bold mb-2 ${isHourOfJoyActive ? 'text-red-400' : 'text-yellow-400'}`}>Address</h3>
@@ -141,10 +205,15 @@ const Contact = () => {
                   Industrial District<br />
                   {isHourOfJoyActive ? 'CONDEMNED' : 'Open for Tours'}
                 </p>
+                {emergencyAccess && (
+                  <p className="text-green-400 text-xs mt-2">
+                    🔓 Deep facility coordinates available
+                  </p>
+                )}
               </CardContent>
             </Card>
 
-            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center poppy-card-glow`}>
+            <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 text-center poppy-card-glow cursor-pointer hover:bg-opacity-80 transition-all`} onClick={handleClockClick}>
               <CardContent className="pt-6">
                 <Clock className={`w-8 h-8 mx-auto mb-4 ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`} />
                 <h3 className={`font-bold mb-2 ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>Hours</h3>
@@ -160,10 +229,83 @@ const Contact = () => {
                     'Weekends by appointment'
                   }
                 </p>
+                {clockTime && (
+                  <p className="text-xs text-blue-400 mt-2">
+                    Current time: {clockTime}
+                  </p>
+                )}
               </CardContent>
             </Card>
 
           </div>
+        </section>
+
+        {/* Staff Directory - New Section with Puzzle */}
+        <section className="mb-16">
+          <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 poppy-card-glow`}>
+            <CardHeader>
+              <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
+                <Users className="w-6 h-6 mr-2" />
+                Staff Directory {isHourOfJoyActive ? '(ARCHIVED)' : ''}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-2 bg-gray-700 rounded">
+                    <span className="text-gray-300">Dr. Harley Sawyer</span>
+                    <span className={`text-xs ${isHourOfJoyActive ? 'text-red-400' : 'text-blue-400'}`}>
+                      {isHourOfJoyActive ? 'MISSING' : 'Innovation'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-gray-700 rounded">
+                    <span className="text-gray-300">Elliot Ludwig</span>
+                    <span className={`text-xs ${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'}`}>
+                      {isHourOfJoyActive ? 'DECEASED' : 'CEO'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-gray-700 rounded">
+                    <span className="text-gray-300">Stella Greyber</span>
+                    <span className={`text-xs ${isHourOfJoyActive ? 'text-red-400' : 'text-green-400'}`}>
+                      {isHourOfJoyActive ? 'MISSING' : 'Operations'}
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-2 bg-gray-700 rounded">
+                    <span className="text-gray-300">Rich Morrison</span>
+                    <span className={`text-xs ${isHourOfJoyActive ? 'text-red-400' : 'text-yellow-400'}`}>
+                      {isHourOfJoyActive ? 'MISSING' : 'Security'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-gray-700 rounded">
+                    <span className="text-gray-300">Marie Payne</span>
+                    <span className={`text-xs ${isHourOfJoyActive ? 'text-red-400' : 'text-pink-400'}`}>
+                      {isHourOfJoyActive ? 'MISSING' : 'Care Staff'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-gray-700 rounded">
+                    <span className="text-gray-300">Subject #1006</span>
+                    <span className="text-xs text-red-500">
+                      {isHourOfJoyActive ? 'ACTIVE' : 'CLASSIFIED'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 p-3 bg-gray-800 rounded border border-gray-600">
+                <p className="text-gray-400 text-sm">
+                  📧 For specific department inquiries, please include the staff member's name in your message subject line.
+                </p>
+                <p className="text-gray-500 text-xs mt-2">
+                  {isHourOfJoyActive ? 
+                    'All staff directories archived as of 08/08/1995. No personnel currently available.' :
+                    'Remember: Our staff are here to help make your Playtime Co. experience magical!'
+                  }
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </section>
 
         {/* Contact Form */}
@@ -319,6 +461,51 @@ const Contact = () => {
             </Card>
           </section>
         )}
+
+        {/* Facility Information - New Section */}
+        <section className="mb-16">
+          <Card className={`${isHourOfJoyActive ? 'bg-red-800' : 'bg-slate-800'} border-purple-500 poppy-card-glow`}>
+            <CardHeader>
+              <CardTitle className={`${isHourOfJoyActive ? 'text-red-400' : 'text-purple-400'} flex items-center`}>
+                <Building className="w-6 h-6 mr-2" />
+                Facility Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-purple-400 font-semibold mb-3">Visitor Information</h4>
+                  <ul className="text-gray-300 space-y-2 text-sm">
+                    <li>🏭 Factory tours available Mon-Fri</li>
+                    <li>🎪 Playcare center open to families</li>
+                    <li>🎮 Game Station - Interactive entertainment</li>
+                    <li>🏫 School programs for educational visits</li>
+                    <li>🔬 Innovation wing - By appointment only</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-purple-400 font-semibold mb-3">Safety Guidelines</h4>
+                  <ul className="text-gray-300 space-y-2 text-sm">
+                    <li>⚠️ Always stay with your tour guide</li>
+                    <li>🚫 Restricted areas are clearly marked</li>
+                    <li>👥 Children must be accompanied by adults</li>
+                    <li>📋 Sign safety waivers at reception</li>
+                    <li className="text-yellow-400">🔒 Deep levels require special clearance</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="mt-6 p-3 bg-gray-800 rounded border border-gray-600">
+                <p className="text-gray-400 text-sm">
+                  💡 <strong>Tip:</strong> Mention specific interests when booking - our staff can customize your experience!
+                </p>
+                <p className="text-gray-500 text-xs mt-2">
+                  Some areas may have limited access due to ongoing renovation projects. Please check current availability.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
 
       </div>
 
